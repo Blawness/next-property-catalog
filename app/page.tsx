@@ -3,9 +3,8 @@ import { db } from "@/db"
 import { properties, propertyImages } from "@/db/schema"
 import { eq, desc } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
-import SearchBar from "@/components/SearchBar"
+import HeroSection from "@/components/HeroSection"
 import { Button } from "@/components/ui/button"
-import { Map } from "lucide-react"
 import type { PropertyWithImages } from "@/lib/types"
 
 async function getFeaturedProperties(): Promise<PropertyWithImages[]> {
@@ -33,31 +32,22 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="bg-gradient-to-b from-primary/5 to-background py-16 px-4">
-        <div className="container mx-auto text-center space-y-6">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Temukan Properti Impianmu
-          </h1>
-          <p className="text-muted-foreground max-w-lg mx-auto">
-            Ribuan listing rumah, apartemen, tanah, dan ruko di seluruh Indonesia
-          </p>
-          <div className="flex justify-center">
-            <SearchBar />
-          </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/peta">
-              <Map className="h-4 w-4 mr-2" />
-              Lihat di Peta
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <HeroSection />
 
-      <section className="container mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">Properti Terbaru</h2>
+      <section className="container mx-auto px-4 py-14">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight">
+              Properti Terbaru
+            </h2>
+            <p className="text-muted-foreground text-sm mt-1">
+              Listing pilihan yang baru ditambahkan
+            </p>
+          </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/properti">Lihat Semua →</Link>
+            <Link href="/properti" className="text-amber-600 hover:text-amber-700 font-medium">
+              Lihat Semua →
+            </Link>
           </Button>
         </div>
 
@@ -69,7 +59,7 @@ export default async function HomePage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {featured.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
