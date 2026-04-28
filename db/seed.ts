@@ -1,6 +1,8 @@
 import { db } from "./index"
 import { profiles, properties, propertyImages, favorites } from "./schema"
 
+type PropertyData = Omit<typeof properties.$inferInsert, 'id' | 'createdAt' | 'status' | 'agentId' | 'lat' | 'lng'> & { agentId?: string; lat?: string; lng?: string }
+
 // Dummy agent profiles
 const agents = [
   {
@@ -41,12 +43,12 @@ const cities = [
 ]
 
 // Realistic property data
-const propertyData = [
+const propertyData: PropertyData[] = [
   // Jakarta properties
   {
     title: "Rumah Mewah 3 Lantai di Jakarta Selatan",
     description: "Rumah minimalis modern dengan 4 kamar tidur, 3 kamar mandi, kolam renang pribadi, dan taman yang indah. Lokasi strategis dekat pusat perbelanjaan dan transportasi umum.",
-    price: 2500000000, // 2.5B IDR
+    price: "2500000000", // 2.5B IDR
     type: "rumah" as const,
     listingType: "jual" as const,
     city: "Jakarta",
@@ -59,7 +61,7 @@ const propertyData = [
   {
     title: "Apartemen Luxury di SCBD Jakarta",
     description: "Apartemen premium dengan pemandangan kota, fasilitas lengkap termasuk gym, kolam renang, dan security 24 jam. Unit 2BR dengan interior modern.",
-    price: 1800000000, // 1.8B IDR
+    price: "1800000000", // 1.8B IDR
     type: "apartemen" as const,
     listingType: "jual" as const,
     city: "Jakarta",
@@ -72,7 +74,7 @@ const propertyData = [
   {
     title: "Tanah Kavling Siap Bangun di Cibubur",
     description: "Tanah kavling seluas 200m² siap bangun dengan sertifikat SHM. Lokasi strategis, dekat tol dan stasiun kereta.",
-    price: 800000000, // 800M IDR
+    price: "800000000", // 800M IDR
     type: "tanah" as const,
     listingType: "jual" as const,
     city: "Jakarta",
@@ -85,7 +87,7 @@ const propertyData = [
   {
     title: "Ruko 2 Lantai di Jakarta Barat",
     description: "Ruko strategis dengan lokasi prima di jalan utama. Cocok untuk usaha retail atau kantor. Parkir luas dan akses mudah.",
-    price: 3500000000, // 3.5B IDR
+    price: "3500000000", // 3.5B IDR
     type: "ruko" as const,
     listingType: "jual" as const,
     city: "Jakarta",
@@ -98,7 +100,7 @@ const propertyData = [
   {
     title: "Rumah Sewa di Bandung",
     description: "Rumah nyaman 2 lantai dengan 3 kamar tidur. Lokasi tenang namun dekat dengan pusat kota. Furnished lengkap.",
-    price: 5000000, // 5M IDR/month
+    price: "5000000", // 5M IDR/month
     type: "rumah" as const,
     listingType: "sewa" as const,
     city: "Bandung",
@@ -112,7 +114,7 @@ const propertyData = [
   {
     title: "Apartemen Mewah di Tunjungan Plaza",
     description: "Apartemen premium dengan fasilitas hotel bintang 5. 3BR dengan kitchen set lengkap dan balkon luas.",
-    price: 1200000000, // 1.2B IDR
+    price: "1200000000", // 1.2B IDR
     type: "apartemen" as const,
     listingType: "jual" as const,
     city: "Surabaya",
@@ -125,7 +127,7 @@ const propertyData = [
   {
     title: "Tanah Strategis di Surabaya Utara",
     description: "Tanah komersial seluas 500m² dengan potensi tinggi untuk pengembangan bisnis. Dekat pelabuhan dan jalan tol.",
-    price: 2500000000, // 2.5B IDR
+    price: "2500000000", // 2.5B IDR
     type: "tanah" as const,
     listingType: "jual" as const,
     city: "Surabaya",
@@ -139,7 +141,7 @@ const propertyData = [
   {
     title: "Rumah Tradisional Jawa di Yogyakarta",
     description: "Rumah joglo autentik dengan arsitektur Jawa klasik. 4 kamar tidur, taman bunga, dan kolam ikan. Cocok untuk homestay.",
-    price: 1500000000, // 1.5B IDR
+    price: "1500000000", // 1.5B IDR
     type: "rumah" as const,
     listingType: "jual" as const,
     city: "Yogyakarta",
@@ -152,7 +154,7 @@ const propertyData = [
   {
     title: "Apartemen Sewa Murah di Yogyakarta",
     description: "Apartemen sederhana namun nyaman untuk mahasiswa atau pekerja. 1BR dengan fasilitas bersama lengkap.",
-    price: 1500000, // 1.5M IDR/month
+    price: "1500000", // 1.5M IDR/month
     type: "apartemen" as const,
     listingType: "sewa" as const,
     city: "Yogyakarta",
@@ -166,7 +168,7 @@ const propertyData = [
   {
     title: "Ruko Modern di Semarang",
     description: "Ruko 3 lantai dengan desain modern. Cocok untuk kantor atau showroom. Parkir basement dan lift.",
-    price: 2800000000, // 2.8B IDR
+    price: "2800000000", // 2.8B IDR
     type: "ruko" as const,
     listingType: "jual" as const,
     city: "Semarang",
@@ -180,7 +182,7 @@ const propertyData = [
   {
     title: "Rumah Villa di Malang",
     description: "Villa mewah dengan pemandangan gunung. 5 kamar tidur, infinity pool, dan taman tropis. Lokasi premium di perbukitan.",
-    price: 3200000000, // 3.2B IDR
+    price: "3200000000", // 3.2B IDR
     type: "rumah" as const,
     listingType: "jual" as const,
     city: "Malang",
@@ -194,7 +196,7 @@ const propertyData = [
   {
     title: "Tanah Perkebunan di Bogor",
     description: "Tanah seluas 1000m² dengan potensi perkebunan atau villa. Udara sejuk, dekat dengan objek wisata.",
-    price: 1500000000, // 1.5B IDR
+    price: "1500000000", // 1.5B IDR
     type: "tanah" as const,
     listingType: "jual" as const,
     city: "Bogor",
@@ -208,7 +210,7 @@ const propertyData = [
   {
     title: "Apartemen Familly di Depok",
     description: "Apartemen keluarga dengan 3BR. Fasilitas lengkap termasuk playground dan security. Dekat universitas.",
-    price: 900000000, // 900M IDR
+    price: "900000000", // 900M IDR
     type: "apartemen" as const,
     listingType: "jual" as const,
     city: "Depok",
@@ -222,7 +224,7 @@ const propertyData = [
   {
     title: "Ruko Sewa di Tangerang",
     description: "Ruko strategis untuk bisnis retail. Lokasi ramai dengan lalu lintas tinggi. Cocok untuk franchise.",
-    price: 8000000, // 8M IDR/month
+    price: "8000000", // 8M IDR/month
     type: "ruko" as const,
     listingType: "sewa" as const,
     city: "Tangerang",
@@ -236,7 +238,7 @@ const propertyData = [
   {
     title: "Rumah Minimalis di Bekasi",
     description: "Rumah baru 2 lantai dengan desain minimalis. 3 kamar tidur, garasi 2 mobil. Komplek perumahan elite.",
-    price: 1200000000, // 1.2B IDR
+    price: "1200000000", // 1.2B IDR
     type: "rumah" as const,
     listingType: "jual" as const,
     city: "Bekasi",
@@ -265,7 +267,7 @@ async function seed() {
   // Assign agent IDs to properties (distribute evenly)
   const agentIds = insertedAgents.map(agent => agent.id)
   propertyData.forEach((property, index) => {
-    ;(property as any).agentId = agentIds[index % agentIds.length]
+    property.agentId = agentIds[index % agentIds.length]
   })
 
   // Add coordinates to properties based on city
@@ -275,8 +277,8 @@ async function seed() {
       // Add some random variation to coordinates
       const latVariation = (Math.random() - 0.5) * 0.01
       const lngVariation = (Math.random() - 0.5) * 0.01
-      ;(property as any).lat = cityData.lat + latVariation
-      ;(property as any).lng = cityData.lng + lngVariation
+      property.lat = (cityData.lat + latVariation).toString()
+      property.lng = (cityData.lng + lngVariation).toString()
     }
   })
 
