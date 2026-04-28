@@ -1,0 +1,80 @@
+"use client"
+
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
+import Link from "next/link"
+
+const icon = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+})
+
+interface PropertyPin {
+  id: string
+  title: string
+  price: string
+  listingType: string
+  city: string
+  lat: string | null
+  lng: string | null
+  images: { url: string }[]
+}
+
+function formatPrice(price: string, listingType: string) {
+  const num = parseInt(price)
+  const formatted =
+    num >= 1_000_000_000
+      ? `${(num / 1_000_000_000).toFixed(1)} M`
+      : `${(num / 1_000_000).toFixed(0)} Jt`
+  return `Rp ${formatted}${listingType === "sewa" ? "/bln" : ""}`
+}
+
+export default function LeafletMapView({ properties }: { properties: PropertyPin[] }) {
+  const center: [number, number] =
+    properties.length > 0
+      ? [parseFloat(properties[0].lat!), parseFloat(properties[0].lng!)]
+      : [-6.2088, 106.8456]
+
+  return (
+    <MapContainer
+      center={center}
+      zoom={11}
+      className="w-full h-full z-0"
+      scrollWheelZoom
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {properties.map((prop) =>
+        prop.lat && prop.lng ? (
+          <Marker
+            key={prop.id}
+            position={[parseFloat(prop.lat), parseFloat(prop.lng)]}
+            icon={icon}
+          >
+            <Popup>
+              <div className="space-y-1 min-w-36">
+                <p className="font-semibold text-sm leading-tight">{prop.title}</p>
+                <p className="text-primary font-medium text-sm">
+                  {formatPrice(prop.price, prop.listingType)}
+                </p>
+                <p className="text-xs text-gray-500">{prop.city}</p>
+                <a
+                  href={`/properti/${prop.id}`}
+                  className="text-xs text-blue-600 hover:underline block mt-1"
+                >
+                  Lihat Detail →
+                </a>
+              </div>
+            </Popup>
+          </Marker>
+        ) : null
+      )}
+    </MapContainer>
+  )
+}
