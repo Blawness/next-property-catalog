@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signUp } from "@/lib/auth-client"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,14 +30,23 @@ export default function DaftarPage() {
     setLoading(true)
     setError("")
 
-    const result = await signUp.email({
-      name,
-      email,
-      password,
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, role }),
     })
 
-    if (result.error) {
-      setError(result.error.message ?? "Terjadi kesalahan. Coba lagi.")
+    const data = await res.json()
+
+    if (!res.ok) {
+      setError(data.error ?? "Terjadi kesalahan. Coba lagi.")
+      setLoading(false)
+      return
+    }
+
+    const result = await signIn("credentials", { email, password, redirect: false })
+    if (result?.error) {
+      setError("Akun dibuat, tapi gagal masuk. Coba masuk manual.")
       setLoading(false)
     } else {
       router.push("/")

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signIn } from "@/lib/auth-client"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,9 +21,9 @@ export default function MasukPage() {
     setLoading(true)
     setError("")
 
-    const result = await signIn.email({ email, password })
+    const result = await signIn("credentials", { email, password, redirect: false })
 
-    if (result.error) {
+    if (result?.error) {
       setError("Email atau password salah.")
       setLoading(false)
     } else {

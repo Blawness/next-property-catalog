@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useSession } from "@/lib/auth-client"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -19,7 +19,8 @@ import type { OurFileRouter } from "@/lib/uploadthing"
 import Link from "next/link"
 
 export default function PasangIklanPage() {
-  const { data: session, isPending } = useSession()
+  const { data: session, status } = useSession()
+  const isPending = status === "loading"
   const router = useRouter()
 
   const [form, setForm] = useState({

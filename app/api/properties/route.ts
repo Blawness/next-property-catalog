@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { properties, propertyImages } from "@/db/schema"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() })
+  const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }

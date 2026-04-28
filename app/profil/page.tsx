@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession } from "@/lib/auth-client"
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,7 +12,8 @@ import type { PropertyWithImages } from "@/lib/types"
 import { redirect } from "next/navigation"
 
 export default function ProfilPage() {
-  const { data: session, isPending } = useSession()
+  const { data: session, status } = useSession()
+  const isPending = status === "loading"
   const [favorites, setFavorites] = useState<PropertyWithImages[]>([])
   const [loadingFavs, setLoadingFavs] = useState(true)
 

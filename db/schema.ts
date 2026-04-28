@@ -19,7 +19,9 @@ export const listingTypeEnum = pgEnum("listing_type", ["jual", "sewa"])
 export const statusEnum = pgEnum("status", ["active", "sold", "rented"])
 
 export const profiles = pgTable("profiles", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
   fullName: text("full_name").notNull(),
   phone: text("phone"),
   role: roleEnum("role").default("buyer"),

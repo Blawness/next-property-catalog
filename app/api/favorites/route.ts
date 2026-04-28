@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { favorites, properties, propertyImages } from "@/db/schema"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { eq, and } from "drizzle-orm"
 
 export async function GET() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ favorites: [] })
 
   const userFavorites = await db
@@ -35,7 +35,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() })
+  const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const { propertyId } = await req.json()
