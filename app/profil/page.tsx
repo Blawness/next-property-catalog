@@ -3,13 +3,12 @@
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import PropertyCard from "@/components/PropertyCard"
 import type { PropertyWithImages } from "@/lib/types"
-import { redirect } from "next/navigation"
 
 export default function ProfilPage() {
   const { data: session, status } = useSession()
