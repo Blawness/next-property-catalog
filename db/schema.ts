@@ -6,6 +6,7 @@ import {
   boolean,
   timestamp,
   pgEnum,
+  uniqueIndex,
 } from "drizzle-orm/pg-core"
 
 export const roleEnum = pgEnum("role", ["buyer", "agent"])
@@ -66,9 +67,13 @@ export const favorites = pgTable("favorites", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").references(() => profiles.id),
+  userId: text("user_id").references(() => profiles.id, {
+    onDelete: "cascade",
+  }),
   propertyId: text("property_id").references(() => properties.id, {
     onDelete: "cascade",
   }),
   createdAt: timestamp("created_at").defaultNow(),
-})
+}, (table) => ({
+  uniqueUserProperty: uniqueIndex("unique_user_property").on(table.userId, table.propertyId),
+}))

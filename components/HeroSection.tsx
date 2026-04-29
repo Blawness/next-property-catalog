@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Search, MapPin, ChevronDown, Sparkles, TrendingUp } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-const PROPERTY_TYPES = [
+const PROPERTY_TYPE_LINKS = [
   { label: "Rumah",     icon: "🏠", href: "/properti?type=rumah" },
   { label: "Apartemen", icon: "🏢", href: "/properti?type=apartemen" },
   { label: "Tanah",     icon: "🌿", href: "/properti?type=tanah" },
@@ -166,7 +166,7 @@ export default function HeroSection() {
 
         {/* ── Property type pills ───────────────────────────── */}
         <div className="hero-animate-pills flex gap-2 flex-wrap justify-center mb-9">
-          {PROPERTY_TYPES.map(t => (
+          {PROPERTY_TYPE_LINKS.map(t => (
             <Link
               key={t.label}
               href={t.href}

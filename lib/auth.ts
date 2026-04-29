@@ -31,7 +31,14 @@ export const authOptions: NextAuthOptions = {
           .from(profiles)
           .where(eq(profiles.email, credentials.email))
           .limit(1)
-        if (!user) return null
+
+        const dummyHash = await bcrypt.hash("dummy-timing-attack-prevention", 4)
+
+        if (!user) {
+          await bcrypt.compare(credentials.password, dummyHash)
+          return null
+        }
+
         const valid = await bcrypt.compare(credentials.password, user.passwordHash)
         if (!valid) return null
         return { id: user.id, name: user.fullName, email: user.email }

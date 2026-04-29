@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { MapPin, BedDouble, Bath, Maximize2, Phone, Calendar } from "lucide-react"
 import PropertyMap from "@/components/PropertyMap"
+import { formatPriceFull, PROPERTY_TYPE_LABELS } from "@/lib/constants"
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -50,13 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const { property, images } = data
   const primaryImage = images.find((img) => img.isPrimary) ?? images[0]
-  const price = parseInt(property.price)
-  const formattedPrice =
-    price >= 1_000_000_000
-      ? `Rp ${(price / 1_000_000_000).toFixed(2)} Miliar`
-      : price >= 1_000_000
-        ? `Rp ${(price / 1_000_000).toFixed(0)} Juta`
-        : `Rp ${price.toLocaleString("id-ID")}`
+  const formattedPrice = formatPriceFull(property.price, property.listingType)
 
   const description = property.description
     ? property.description.slice(0, 160)
@@ -85,20 +80,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const primaryImage = images.find((img) => img.isPrimary) ?? images[0]
   const otherImages = images.filter((img) => img.id !== primaryImage?.id)
 
-  const price = parseInt(property.price)
-  const formattedPrice =
-    price >= 1_000_000_000
-      ? `Rp ${(price / 1_000_000_000).toFixed(2)} Miliar`
-      : price >= 1_000_000
-        ? `Rp ${(price / 1_000_000).toFixed(0)} Juta`
-        : `Rp ${price.toLocaleString("id-ID")}`
-
-  const typeLabel: Record<string, string> = {
-    rumah: "Rumah",
-    apartemen: "Apartemen",
-    tanah: "Tanah",
-    ruko: "Ruko",
-  }
+  const formattedPrice = formatPriceFull(property.price, property.listingType)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -133,7 +115,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               <Badge variant={property.listingType === "jual" ? "default" : "secondary"}>
                 {property.listingType === "jual" ? "Dijual" : "Disewa"}
               </Badge>
-              <Badge variant="outline">{typeLabel[property.type]}</Badge>
+              <Badge variant="outline">{PROPERTY_TYPE_LABELS[property.type]}</Badge>
               {property.status !== "active" && (
                 <Badge variant="destructive">
                   {property.status === "sold" ? "Terjual" : "Tersewa"}

@@ -17,6 +17,7 @@ import {
 import { UploadButton } from "@uploadthing/react"
 import type { OurFileRouter } from "@/lib/uploadthing"
 import Link from "next/link"
+import { PROPERTY_TYPES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
 
 export default function PasangIklanPage() {
   const { data: session, status } = useSession()
@@ -91,8 +92,9 @@ export default function PasangIklanPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1 col-span-2">
-                <Label>Judul Iklan</Label>
+                <Label htmlFor="title">Judul Iklan</Label>
                 <Input
+                  id="title"
                   placeholder="Rumah 3KT di Kebayoran Baru"
                   value={form.title}
                   onChange={(e) => setField("title", e.target.value)}
@@ -101,32 +103,33 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Tipe Properti</Label>
+                <Label htmlFor="type">Tipe Properti</Label>
                 <Select value={form.type} onValueChange={(v) => setField("type", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="type"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="rumah">Rumah</SelectItem>
-                    <SelectItem value="apartemen">Apartemen</SelectItem>
-                    <SelectItem value="tanah">Tanah</SelectItem>
-                    <SelectItem value="ruko">Ruko</SelectItem>
+                    {PROPERTY_TYPES.map((t) => (
+                      <SelectItem key={t} value={t}>{PROPERTY_TYPE_LABELS[t]}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1">
-                <Label>Jual / Sewa</Label>
+                <Label htmlFor="listingType">Jual / Sewa</Label>
                 <Select value={form.listingType} onValueChange={(v) => setField("listingType", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger id="listingType"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="jual">Dijual</SelectItem>
-                    <SelectItem value="sewa">Disewa</SelectItem>
+                    {Object.entries(LISTING_TYPE_LABELS).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1 col-span-2">
-                <Label>Harga (Rp)</Label>
+                <Label htmlFor="price">Harga (Rp)</Label>
                 <Input
+                  id="price"
                   type="number"
                   placeholder="500000000"
                   value={form.price}
@@ -136,8 +139,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Kota</Label>
+                <Label htmlFor="city">Kota</Label>
                 <Input
+                  id="city"
                   placeholder="Jakarta"
                   value={form.city}
                   onChange={(e) => setField("city", e.target.value)}
@@ -146,8 +150,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Alamat</Label>
+                <Label htmlFor="address">Alamat</Label>
                 <Input
+                  id="address"
                   placeholder="Jl. Contoh No. 1"
                   value={form.address}
                   onChange={(e) => setField("address", e.target.value)}
@@ -155,8 +160,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Luas Tanah (m²)</Label>
+                <Label htmlFor="landArea">Luas Tanah (m²)</Label>
                 <Input
+                  id="landArea"
                   type="number"
                   value={form.landArea}
                   onChange={(e) => setField("landArea", e.target.value)}
@@ -164,8 +170,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Luas Bangunan (m²)</Label>
+                <Label htmlFor="buildingArea">Luas Bangunan (m²)</Label>
                 <Input
+                  id="buildingArea"
                   type="number"
                   value={form.buildingArea}
                   onChange={(e) => setField("buildingArea", e.target.value)}
@@ -175,16 +182,18 @@ export default function PasangIklanPage() {
               {form.type !== "tanah" && (
                 <>
                   <div className="space-y-1">
-                    <Label>Kamar Tidur</Label>
+                    <Label htmlFor="bedrooms">Kamar Tidur</Label>
                     <Input
+                      id="bedrooms"
                       type="number"
                       value={form.bedrooms}
                       onChange={(e) => setField("bedrooms", e.target.value)}
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label>Kamar Mandi</Label>
+                    <Label htmlFor="bathrooms">Kamar Mandi</Label>
                     <Input
+                      id="bathrooms"
                       type="number"
                       value={form.bathrooms}
                       onChange={(e) => setField("bathrooms", e.target.value)}
@@ -194,8 +203,9 @@ export default function PasangIklanPage() {
               )}
 
               <div className="space-y-1">
-                <Label>Latitude (opsional)</Label>
+                <Label htmlFor="lat">Latitude (opsional)</Label>
                 <Input
+                  id="lat"
                   type="number"
                   step="any"
                   placeholder="-6.2088"
@@ -205,8 +215,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1">
-                <Label>Longitude (opsional)</Label>
+                <Label htmlFor="lng">Longitude (opsional)</Label>
                 <Input
+                  id="lng"
                   type="number"
                   step="any"
                   placeholder="106.8456"
@@ -216,8 +227,9 @@ export default function PasangIklanPage() {
               </div>
 
               <div className="space-y-1 col-span-2">
-                <Label>Deskripsi</Label>
+                <Label htmlFor="description">Deskripsi</Label>
                 <textarea
+                  id="description"
                   className="w-full min-h-24 rounded-md border bg-background px-3 py-2 text-sm resize-y"
                   placeholder="Ceritakan detail properti..."
                   value={form.description}

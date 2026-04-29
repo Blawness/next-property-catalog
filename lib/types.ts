@@ -42,12 +42,3 @@ export interface Profile {
   role: UserRole | null
   createdAt: Date | null
 }
-
-export interface PropertyFilters {
-  type?: PropertyType
-  listingType?: ListingType
-  city?: string
-  minPrice?: number
-  maxPrice?: number
-  minBedrooms?: number
-}

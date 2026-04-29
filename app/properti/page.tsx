@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
+import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
 
 interface PageProps {
   searchParams: Promise<{
@@ -22,11 +23,11 @@ interface PageProps {
 async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promise<PropertyWithImages[]> {
   const conditions = [eq(properties.status, "active")]
 
-  if (filters.type && ["rumah", "apartemen", "tanah", "ruko"].includes(filters.type)) {
-    conditions.push(eq(properties.type, filters.type as "rumah" | "apartemen" | "tanah" | "ruko"))
+  if (filters.type && PROPERTY_TYPES.includes(filters.type as typeof PROPERTY_TYPES[number])) {
+    conditions.push(eq(properties.type, filters.type as typeof PROPERTY_TYPES[number]))
   }
-  if (filters.listingType && ["jual", "sewa"].includes(filters.listingType)) {
-    conditions.push(eq(properties.listingType, filters.listingType as "jual" | "sewa"))
+  if (filters.listingType && LISTING_TYPES.includes(filters.listingType as typeof LISTING_TYPES[number])) {
+    conditions.push(eq(properties.listingType, filters.listingType as typeof LISTING_TYPES[number]))
   }
   if (filters.city) {
     conditions.push(ilike(properties.city, `%${filters.city}%`))
@@ -48,10 +49,12 @@ async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promi
   )
 }
 
+const SKELETON_CARDS = Array.from({ length: 6 })
+
 function PropertyGridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      {Array.from({ length: 6 }).map((_, i) => (
+      {SKELETON_CARDS.map((_, i) => (
         <div key={i} className="space-y-2">
           <Skeleton className="h-48 w-full rounded-lg" />
           <Skeleton className="h-4 w-24" />

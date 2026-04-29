@@ -12,12 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SlidersHorizontal, X } from "lucide-react"
-
-const CITIES = [
-  "Jakarta", "Surabaya", "Bandung", "Medan", "Semarang",
-  "Makassar", "Palembang", "Tangerang", "Depok", "Bekasi",
-  "Bogor", "Bali", "Yogyakarta",
-]
+import { CITIES, PROPERTY_TYPES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
 
 export default function PropertyFilter() {
   const router = useRouter()
@@ -67,10 +62,9 @@ export default function PropertyFilter() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="semua">Semua Tipe</SelectItem>
-              <SelectItem value="rumah">Rumah</SelectItem>
-              <SelectItem value="apartemen">Apartemen</SelectItem>
-              <SelectItem value="tanah">Tanah</SelectItem>
-              <SelectItem value="ruko">Ruko</SelectItem>
+              {PROPERTY_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>{PROPERTY_TYPE_LABELS[t]}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -86,8 +80,9 @@ export default function PropertyFilter() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="semua">Semua</SelectItem>
-              <SelectItem value="jual">Dijual</SelectItem>
-              <SelectItem value="sewa">Disewa</SelectItem>
+              {Object.entries(LISTING_TYPE_LABELS).map(([k, v]) => (
+                <SelectItem key={k} value={k}>{v}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

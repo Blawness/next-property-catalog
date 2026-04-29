@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+import { formatPriceCompact } from "@/lib/constants"
 
 const icon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -21,15 +22,6 @@ interface PropertyPin {
   lat: string | null
   lng: string | null
   images: { url: string }[]
-}
-
-function formatPrice(price: string, listingType: string) {
-  const num = parseInt(price)
-  const formatted =
-    num >= 1_000_000_000
-      ? `${(num / 1_000_000_000).toFixed(1)} M`
-      : `${(num / 1_000_000).toFixed(0)} Jt`
-  return `Rp ${formatted}${listingType === "sewa" ? "/bln" : ""}`
 }
 
 export default function LeafletMapView({ properties }: { properties: PropertyPin[] }) {
@@ -60,7 +52,7 @@ export default function LeafletMapView({ properties }: { properties: PropertyPin
               <div className="space-y-1 min-w-36">
                 <p className="font-semibold text-sm leading-tight">{prop.title}</p>
                 <p className="text-primary font-medium text-sm">
-                  {formatPrice(prop.price, prop.listingType)}
+                  {formatPriceCompact(prop.price, prop.listingType)}
                 </p>
                 <p className="text-xs text-gray-500">{prop.city}</p>
                 <a
