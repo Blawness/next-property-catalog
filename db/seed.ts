@@ -1,5 +1,4 @@
-import { config } from "dotenv"
-config({ path: ".env.local" })
+import "dotenv/config"
 
 import { db } from "./index"
 import { profiles, properties, propertyImages, favorites } from "./schema"
@@ -305,7 +304,7 @@ async function seed() {
     "Rumah Villa di Malang":                    "1719887805632-de5be825f72b",
     "Tanah Perkebunan di Bogor":                "1475875518799-44f63f828ab8",
     "Apartemen Familly di Depok":               "1514895413746-feb3d266273d",
-    "Ruko Sewa di Tangerang":                   "1563605163823-8d92f41b9680",
+    "Ruko Sewa di Tangerang":                   "1486407611111-a8df5e5d1e7a",
     "Rumah Minimalis di Bekasi":                "1564013799919-ab600027ffc6",
   }
   const imageData = insertedProperties.map(property => ({
