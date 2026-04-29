@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 import Image from "next/image"
 import { db } from "@/db"
 import { properties, propertyImages, profiles } from "@/db/schema"
@@ -13,16 +14,14 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
-export default async function PropertyDetailPage({ params }: PageProps) {
-  const { id } = await params
-
+async function getProperty(id: string) {
   const [property] = await db
     .select()
     .from(properties)
     .where(eq(properties.id, id))
     .limit(1)
 
-  if (!property) notFound()
+  if (!property) return null
 
   const [images, agent] = await Promise.all([
     db
@@ -39,6 +38,49 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           .then((r) => r[0])
       : null,
   ])
+
+  return { property, images, agent }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params
+  const data = await getProperty(id)
+
+  if (!data) return { title: "Properti Tidak Ditemukan — PropIndo" }
+
+  const { property, images } = data
+  const primaryImage = images.find((img) => img.isPrimary) ?? images[0]
+  const price = parseInt(property.price)
+  const formattedPrice =
+    price >= 1_000_000_000
+      ? `Rp ${(price / 1_000_000_000).toFixed(2)} Miliar`
+      : price >= 1_000_000
+        ? `Rp ${(price / 1_000_000).toFixed(0)} Juta`
+        : `Rp ${price.toLocaleString("id-ID")}`
+
+  const description = property.description
+    ? property.description.slice(0, 160)
+    : `${property.title} di ${property.city} — ${formattedPrice}`
+
+  return {
+    title: `${property.title} — ${formattedPrice} | PropIndo`,
+    description,
+    openGraph: {
+      title: property.title,
+      description,
+      type: "article",
+      images: primaryImage ? [{ url: primaryImage.url, width: 1200, height: 630 }] : [],
+    },
+  }
+}
+
+export default async function PropertyDetailPage({ params }: PageProps) {
+  const { id } = await params
+  const data = await getProperty(id)
+
+  if (!data) notFound()
+
+  const { property, images, agent } = data
 
   const primaryImage = images.find((img) => img.isPrimary) ?? images[0]
   const otherImages = images.filter((img) => img.id !== primaryImage?.id)
@@ -64,7 +106,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-3 gap-2 h-72 sm:h-96 mb-6 rounded-xl overflow-hidden">
         <div className="col-span-2 relative bg-muted">
           {primaryImage ? (
-            <Image src={primaryImage.url} alt={property.title} fill className="object-cover" />
+            <Image src={primaryImage.url} alt={property.title} fill className="object-cover" priority />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               Tidak ada foto
@@ -74,7 +116,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         <div className="grid grid-rows-2 gap-2">
           {otherImages.slice(0, 2).map((img) => (
             <div key={img.id} className="relative bg-muted">
-              <Image src={img.url} alt={property.title} fill className="object-cover" />
+              <Image src={img.url} alt="" fill className="object-cover" />
             </div>
           ))}
           {otherImages.length < 2 && (
@@ -187,7 +229,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
                 </div>
                 {agent.phone && (
                   <Button className="w-full" asChild>
-                    <a href={`https://wa.me/${agent.phone.replace(/\D/g, "")}`} target="_blank">
+                    <a
+                      href={`https://wa.me/${agent.phone.replace(/\D/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Phone className="h-4 w-4 mr-2" />
                       WhatsApp
                     </a>

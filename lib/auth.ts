@@ -4,6 +4,7 @@ import { db } from "@/db"
 import { profiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs"
+import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -14,8 +15,17 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null
+
+        const ip = req.headers?.["x-forwarded-for"] ?? "unknown"
+        const key = getRateLimitKey(ip as string, "login")
+        const limit = rateLimit(key, { windowMs: 15 * 60 * 1000, max: 5 })
+
+        if (!limit.success) {
+          throw new Error("Terlalu banyak percobaan login. Coba lagi nanti.")
+        }
+
         const [user] = await db
           .select()
           .from(profiles)

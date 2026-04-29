@@ -19,8 +19,12 @@ export default function ProfilPage() {
   useEffect(() => {
     if (!session) return
     fetch("/api/favorites")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch favorites")
+        return r.json()
+      })
       .then((data) => setFavorites(data.favorites ?? []))
+      .catch(() => setFavorites([]))
       .finally(() => setLoadingFavs(false))
   }, [session])
 

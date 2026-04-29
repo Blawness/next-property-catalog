@@ -1,11 +1,12 @@
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
+import { properties } from "@/db/schema"
 import { eq, desc, and, gte, lte, ilike } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyFilter from "@/components/PropertyFilter"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
 import type { PropertyWithImages } from "@/lib/types"
+import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
 interface PageProps {
   searchParams: Promise<{
@@ -37,22 +38,13 @@ async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promi
     conditions.push(lte(properties.price, filters.maxPrice))
   }
 
-  const rows = await db
-    .select()
-    .from(properties)
-    .where(and(...conditions))
-    .orderBy(desc(properties.createdAt))
-    .limit(48)
-
-  return Promise.all(
-    rows.map(async (prop) => {
-      const images = await db
-        .select()
-        .from(propertyImages)
-        .where(eq(propertyImages.propertyId, prop.id))
-        .orderBy(propertyImages.order)
-      return { ...prop, images }
-    })
+  return getPropertiesWithImagesBatch(
+    db
+      .select()
+      .from(properties)
+      .where(and(...conditions))
+      .orderBy(desc(properties.createdAt))
+      .limit(48),
   )
 }
 

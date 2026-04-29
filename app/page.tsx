@@ -1,29 +1,21 @@
 import Link from "next/link"
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
+import { properties } from "@/db/schema"
 import { eq, desc } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import HeroSection from "@/components/HeroSection"
 import { Button } from "@/components/ui/button"
 import type { PropertyWithImages } from "@/lib/types"
+import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
 async function getFeaturedProperties(): Promise<PropertyWithImages[]> {
-  const rows = await db
-    .select()
-    .from(properties)
-    .where(eq(properties.status, "active"))
-    .orderBy(desc(properties.createdAt))
-    .limit(6)
-
-  return Promise.all(
-    rows.map(async (prop) => {
-      const images = await db
-        .select()
-        .from(propertyImages)
-        .where(eq(propertyImages.propertyId, prop.id))
-        .orderBy(propertyImages.order)
-      return { ...prop, images }
-    })
+  return getPropertiesWithImagesBatch(
+    db
+      .select()
+      .from(properties)
+      .where(eq(properties.status, "active"))
+      .orderBy(desc(properties.createdAt))
+      .limit(6),
   )
 }
 

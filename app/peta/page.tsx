@@ -1,7 +1,8 @@
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { properties } from "@/db/schema"
+import { eq, inArray } from "drizzle-orm"
 import MapView from "@/components/MapView"
+import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
 async function getPropertiesWithCoords() {
   const rows = await db
@@ -11,15 +12,10 @@ async function getPropertiesWithCoords() {
 
   const withCoords = rows.filter((p) => p.lat && p.lng)
 
-  return Promise.all(
-    withCoords.map(async (prop) => {
-      const images = await db
-        .select()
-        .from(propertyImages)
-        .where(eq(propertyImages.propertyId, prop.id))
-        .limit(1)
-      return { ...prop, images }
-    })
+  if (withCoords.length === 0) return []
+
+  return getPropertiesWithImagesBatch(
+    db.select().from(properties).where(inArray(properties.id, withCoords.map((p) => p.id))),
   )
 }
 
