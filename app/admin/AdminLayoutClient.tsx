@@ -88,8 +88,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   ]
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="hidden md:flex w-56 border-r bg-card shrink-0 flex-col sticky top-0 h-screen">
+    <div className="h-screen flex overflow-hidden">
+      <aside className="hidden md:flex w-56 border-r bg-card shrink-0 flex-col">
         <SidebarContent links={links} pathname={pathname} email={session.user.email ?? ""} />
       </aside>
 
@@ -118,7 +118,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         </div>
       )}
 
-      <main className="flex-1 min-w-0 bg-muted/30 pt-14 md:pt-0">
+      <main className="flex-1 min-w-0 bg-muted/30 overflow-y-auto pt-14 md:pt-0">
         <div className="p-4 md:p-6">{children}</div>
       </main>
     </div>
