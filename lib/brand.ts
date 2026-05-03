@@ -45,11 +45,11 @@ export const BRAND = {
     heading: "Kota Populer",
     cities: [
       { name: "Jakarta", image: "https://images.unsplash.com/photo-1555899434-94d1368aa7af?w=600&h=400&fit=crop&auto=format" },
-      { name: "Bandung", image: "https://images.unsplash.com/photo-1599678341198-1ebfa59e54da?w=600&h=400&fit=crop&auto=format" },
-      { name: "Surabaya", image: "https://images.unsplash.com/photo-1569286144118-f5b4c7c5c1c9?w=600&h=400&fit=crop&auto=format" },
-      { name: "Yogyakarta", image: "https://images.unsplash.com/photo-1599664728784-0997a0e0384b?w=600&h=400&fit=crop&auto=format" },
+      { name: "Bandung", image: "https://images.unsplash.com/photo-1707993467310-a5b2bb858d68?w=600&h=400&fit=crop&auto=format" },
+      { name: "Surabaya", image: "https://images.unsplash.com/photo-1698139603356-d8c63b9aacce?w=600&h=400&fit=crop&auto=format" },
+      { name: "Yogyakarta", image: "https://images.unsplash.com/photo-1722444924699-391078e83ad6?w=600&h=400&fit=crop&auto=format" },
       { name: "Bali", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&h=400&fit=crop&auto=format" },
-      { name: "Semarang", image: "https://images.unsplash.com/photo-1586776322113-3a03c4af0d1c?w=600&h=400&fit=crop&auto=format" },
+      { name: "Semarang", image: "https://images.unsplash.com/photo-1657594873796-4a121883192a?w=600&h=400&fit=crop&auto=format" },
     ],
   },
 

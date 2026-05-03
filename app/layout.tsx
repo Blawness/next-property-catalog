@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${geist.variable} ${cormorant.variable}`}>
+    <html lang="id" className={`${geist.variable} ${cormorant.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background antialiased">
         <Providers>
           <Navbar />
