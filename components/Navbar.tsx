@@ -10,10 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { PlusCircle, ChevronDown, MapPin, LayoutGrid } from "lucide-react"
+import { PlusCircle, ChevronDown, MapPin, LayoutGrid, Home } from "lucide-react"
 import ThemeToggle from "@/components/ThemeToggle"
 
 const NAV_LINKS = [
+  { href: "/",         label: "Home",      icon: Home },
   { href: "/properti", label: "Properti",  icon: LayoutGrid },
   { href: "/peta",     label: "Peta",      icon: MapPin },
 ]
