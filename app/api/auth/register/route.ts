@@ -10,7 +10,6 @@ const registerSchema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
   email: z.string().email("Format email tidak valid"),
   password: z.string().min(8, "Password minimal 8 karakter"),
-  role: z.enum(["buyer", "agent"]).optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { name, email, password, role } = parsed.data
+    const { name, email, password } = parsed.data
 
     const existing = await db
       .select()
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
       fullName: name,
       email,
       passwordHash,
-      role: role === "agent" ? "agent" : "buyer",
+      role: "buyer",
     })
 
     return NextResponse.json({ ok: true })

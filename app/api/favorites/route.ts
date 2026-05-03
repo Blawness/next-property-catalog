@@ -8,12 +8,14 @@ import { eq, and, inArray } from "drizzle-orm"
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ favorites: [] })
+    if (!session?.user?.id) return NextResponse.json({ favorites: [] })
+
+    const userId = session.user.id
 
     const userFavorites = await db
       .select()
       .from(favorites)
-      .where(eq(favorites.userId, session.user.id))
+      .where(eq(favorites.userId, userId))
 
     if (userFavorites.length === 0) return NextResponse.json({ favorites: [] })
 
@@ -54,7 +56,9 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const userId = session.user.id
 
     const { propertyId } = await req.json()
 
@@ -65,17 +69,17 @@ export async function POST(req: NextRequest) {
     const existing = await db
       .select()
       .from(favorites)
-      .where(and(eq(favorites.userId, session.user.id), eq(favorites.propertyId, propertyId)))
+      .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)))
       .limit(1)
 
     if (existing.length > 0) {
       await db
         .delete(favorites)
-        .where(and(eq(favorites.userId, session.user.id), eq(favorites.propertyId, propertyId)))
+        .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)))
       return NextResponse.json({ favorited: false })
     }
 
-    await db.insert(favorites).values({ userId: session.user.id, propertyId })
+    await db.insert(favorites).values({ userId, propertyId })
     return NextResponse.json({ favorited: true })
   } catch (error) {
     console.error("[POST /api/favorites]", error)

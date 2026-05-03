@@ -4,6 +4,7 @@ import { properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { z } from "zod"
+import { eq, and, like, asc, or, count } from "drizzle-orm"
 
 const propertySchema = z.object({
   title: z.string().min(1, "Judul wajib diisi"),
@@ -22,11 +23,67 @@ const propertySchema = z.object({
   imageUrls: z.array(z.string().url()).optional(),
 })
 
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const { searchParams } = new URL(req.url)
+    const page = parseInt(searchParams.get("page") ?? "1", 10)
+    const limit = parseInt(searchParams.get("limit") ?? "20", 10)
+    const status = searchParams.get("status")
+    const type = searchParams.get("type")
+    const city = searchParams.get("city")
+    const search = searchParams.get("search")
+
+    const conditions = []
+
+    if (status) conditions.push(eq(properties.status, status as "active" | "sold" | "rented"))
+    if (type) conditions.push(eq(properties.type, type as "rumah" | "apartemen" | "tanah" | "ruko"))
+    if (city) conditions.push(eq(properties.city, city))
+    if (search) {
+      conditions.push(
+        or(
+          like(properties.title, `%${search}%`),
+          like(properties.city, `%${search}%`),
+        )!
+      )
+    }
+
+    const where = conditions.length > 0 ? and(...conditions) : undefined
+
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(properties)
+      .where(where)
+
+    const total = countResult?.count ?? 0
+
+    const items = await db
+      .select()
+      .from(properties)
+      .where(where)
+      .orderBy(asc(properties.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit)
+
+    return NextResponse.json({ items, total, page, limit })
+  } catch (error) {
+    console.error("[GET /api/properties]", error)
+    return NextResponse.json({ error: "Terjadi kesalahan pada server" }, { status: 500 })
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    if (session.user.role !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
     const body = await req.json()

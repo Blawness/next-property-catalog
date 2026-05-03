@@ -73,14 +73,16 @@ export default function Navbar() {
         <div className="flex items-center gap-2 shrink-0">
           {session ? (
             <>
-              {/* Pasang Iklan — desktop */}
-              <Link
-                href="/pasang-iklan"
-                className="hidden sm:flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150 shadow-sm shadow-amber-500/30"
-              >
-                <PlusCircle size={13} />
-                Pasang Iklan
-              </Link>
+              {/* Dashboard / Pasang Iklan — desktop */}
+              {session.user.role === "admin" ? (
+                <Link
+                  href="/admin"
+                  className="hidden sm:flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150 shadow-sm shadow-amber-500/30"
+                >
+                  <PlusCircle size={13} />
+                  Dashboard
+                </Link>
+              ) : null}
 
               {/* Avatar dropdown */}
               <DropdownMenu>
@@ -110,10 +112,12 @@ export default function Navbar() {
                     <Link href="/profil">Profil &amp; Favorit</Link>
                   </DropdownMenuItem>
 
-                  {/* Mobile-only pasang iklan */}
-                  <DropdownMenuItem asChild className="sm:hidden cursor-pointer">
-                    <Link href="/pasang-iklan">Pasang Iklan</Link>
-                  </DropdownMenuItem>
+                  {/* Mobile-only dashboard */}
+                  {session.user.role === "admin" && (
+                    <DropdownMenuItem asChild className="sm:hidden cursor-pointer">
+                      <Link href="/admin">Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
 
                   <DropdownMenuSeparator />
 

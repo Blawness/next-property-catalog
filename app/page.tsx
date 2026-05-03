@@ -46,9 +46,6 @@ export default async function HomePage() {
         {featured.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <p>Belum ada listing properti.</p>
-            <Button className="mt-4" asChild>
-              <Link href="/pasang-iklan">Pasang Iklan Pertama</Link>
-            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

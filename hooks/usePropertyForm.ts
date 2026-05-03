@@ -73,8 +73,8 @@ export function usePropertyForm() {
       return
     }
 
-    const data = await res.json()
-    router.push(`/properti/${data.id}`)
+    void res.json()
+    router.push("/admin/properti")
   }
 
   return { fields, imageUrls, setField, setImageUrls, setError, handleSubmit, loading, error }

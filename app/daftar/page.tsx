@@ -8,20 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 export default function DaftarPage() {
   const router = useRouter()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [role, setRole] = useState("buyer")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -33,7 +25,7 @@ export default function DaftarPage() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role }),
+      body: JSON.stringify({ name, email, password }),
     })
 
     const data = await res.json()
@@ -95,18 +87,6 @@ export default function DaftarPage() {
                 minLength={8}
                 required
               />
-            </div>
-            <div className="space-y-1">
-              <Label>Saya adalah</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="buyer">Pencari Properti</SelectItem>
-                  <SelectItem value="agent">Agen / Pemilik</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" className="w-full" disabled={loading}>

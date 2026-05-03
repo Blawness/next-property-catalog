@@ -8,6 +8,13 @@
       "when": 1777363273408,
       "tag": "0000_outgoing_morg",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777799105988,
+      "tag": "0001_fancy_mandroid",
+      "breakpoints": true
     }
   ]
 }
