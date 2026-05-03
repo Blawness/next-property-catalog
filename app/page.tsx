@@ -4,6 +4,9 @@ import { properties } from "@/db/schema"
 import { eq, desc } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import HeroSection from "@/components/HeroSection"
+import ExploreTypes from "@/components/ExploreTypes"
+import PopularCities from "@/components/PopularCities"
+import TrustSection from "@/components/TrustSection"
 import { Button } from "@/components/ui/button"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
@@ -25,6 +28,8 @@ export default async function HomePage() {
   return (
     <div>
       <HeroSection />
+
+      <ExploreTypes />
 
       <section className="container mx-auto px-4 py-14">
         <div className="flex items-center justify-between mb-8">
@@ -55,6 +60,9 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      <PopularCities />
+      <TrustSection />
     </div>
   )
 }
