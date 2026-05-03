@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import PropertyFormFields from "@/components/PropertyFormFields"
-import ImageUploadSection from "@/components/ImageUploadSection"
+import ImageManager from "@/components/ImageManager"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -142,7 +142,7 @@ export default function EditPropertyPage() {
               </div>
             </div>
 
-            <ImageUploadSection imageUrls={imageUrls} setImageUrls={setImageUrls} onError={setError} />
+            <ImageManager imageUrls={imageUrls} setImageUrls={setImageUrls} onError={setError} />
 
             {error && <p className="text-sm text-destructive">{error}</p>}
 
