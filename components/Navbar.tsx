@@ -21,6 +21,8 @@ export default function Navbar() {
   const { data: session } = useSession()
   const pathname = usePathname()
 
+  if (pathname.startsWith("/admin")) return null
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/95 backdrop-blur-md">
       <nav className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
