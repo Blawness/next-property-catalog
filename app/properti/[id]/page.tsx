@@ -11,6 +11,7 @@ import PropertyGalleryClient from "@/components/PropertyGalleryClient"
 import PropertySpecs from "@/components/PropertySpecs"
 import AgentCard from "@/components/AgentCard"
 import { formatPriceFull, PROPERTY_TYPE_LABELS } from "@/lib/constants"
+import { BRAND } from "@/lib/brand"
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params
   const data = await getProperty(id)
 
-  if (!data) return { title: "Properti Tidak Ditemukan — PropIndo" }
+  if (!data) return { title: BRAND.pageTitle.propertyNotFound }
 
   const { property, images } = data
   const primaryImage = images.find((img) => img.isPrimary) ?? images[0]
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : `${property.title} di ${property.city} — ${formattedPrice}`
 
   return {
-    title: `${property.title} — ${formattedPrice} | PropIndo`,
+    title: `${property.title} — ${formattedPrice} | ${BRAND.name}`,
     description,
     openGraph: {
       title: property.title,

@@ -6,6 +6,7 @@ import { ChevronDown, Sparkles, TrendingUp } from "lucide-react"
 import HeroSearchForm from "@/components/HeroSearchForm"
 import HeroPropertyTypePills from "@/components/HeroPropertyTypePills"
 import HeroStats from "@/components/HeroStats"
+import { BRAND } from "@/lib/brand"
 
 export default function HeroSection() {
   const bgRef = useRef<HTMLDivElement>(null)
@@ -40,7 +41,7 @@ export default function HeroSection() {
       >
         <Image
           src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1200&fit=crop&auto=format&q=85"
-          alt="PropIndo — Properti Premium Indonesia"
+          alt={BRAND.heroImageAlt}
           fill
           className="object-cover"
           priority
@@ -66,7 +67,7 @@ export default function HeroSection() {
         <div className="hero-animate-badge mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 backdrop-blur-sm">
           <Sparkles size={10} className="text-amber-400" />
           <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.18em] uppercase text-amber-300">
-            Platform Properti #1 Indonesia
+            {BRAND.tagline}
           </span>
         </div>
 
@@ -75,14 +76,14 @@ export default function HeroSection() {
           className="hero-animate-h1 font-display text-center text-white leading-[0.92] tracking-tight mb-5 select-none"
           style={{ fontSize: "clamp(3rem, 9vw, 6.5rem)" }}
         >
-          <span className="block font-semibold">Temukan</span>
+          <span className="block font-semibold">{BRAND.headline[0]}</span>
           <span
             className="block text-amber-400"
             style={{ fontStyle: "italic", fontSize: "1.08em" }}
           >
-            Properti
+            {BRAND.headline[1]}
           </span>
-          <span className="block font-semibold">Impianmu</span>
+          <span className="block font-semibold">{BRAND.headline[2]}</span>
         </h1>
 
         {/* Decorative divider */}

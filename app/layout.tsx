@@ -5,6 +5,7 @@ import "./globals.css"
 import { Toaster } from "sonner"
 import Navbar from "@/components/Navbar"
 import Providers from "@/components/Providers"
+import { BRAND } from "@/lib/brand"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
 const cormorant = Cormorant_Garamond({
@@ -15,8 +16,8 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: "PropIndo – Katalog Properti Indonesia",
-  description: "Temukan rumah, apartemen, tanah, dan ruko terbaik di Indonesia",
+  title: BRAND.pageTitle.home,
+  description: BRAND.description,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

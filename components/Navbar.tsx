@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { PlusCircle, ChevronDown, MapPin, LayoutGrid, Home } from "lucide-react"
 import ThemeToggle from "@/components/ThemeToggle"
+import { BRAND } from "@/lib/brand"
 
 const NAV_LINKS = [
   { href: "/",         label: "Home",      icon: Home },
@@ -36,7 +37,7 @@ export default function Navbar() {
             className="font-display font-bold text-[1.35rem] text-foreground tracking-tight leading-none"
             style={{ fontStyle: "italic" }}
           >
-            PropIndo
+            {BRAND.name}
           </span>
         </Link>
 

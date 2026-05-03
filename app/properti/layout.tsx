@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
+import { BRAND } from "@/lib/brand"
 
 export const metadata: Metadata = {
-  title: "Katalog Properti — PropIndo",
-  description: "Temukan rumah, apartemen, tanah, dan ruko terbaik di Indonesia",
+  title: BRAND.pageTitle.catalog,
+  description: BRAND.pageDescription.catalog,
 }
 
 export default function PropertiLayout({ children }: { children: React.ReactNode }) {

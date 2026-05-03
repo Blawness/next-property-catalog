@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
+import { BRAND } from "@/lib/brand"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -39,7 +40,7 @@ export default function MasukPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle>Masuk</CardTitle>
-          <CardDescription>Masuk ke akun PropIndo kamu</CardDescription>
+          <CardDescription>{BRAND.loginDescription}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

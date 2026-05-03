@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
+import { BRAND } from "@/lib/brand"
 
 export const metadata: Metadata = {
-  title: "Peta Properti — PropIndo",
+  title: BRAND.pageTitle.map,
   description: "Lihat lokasi properti di peta interaktif",
 }
 

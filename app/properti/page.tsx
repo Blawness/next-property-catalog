@@ -8,6 +8,7 @@ import { Suspense } from "react"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
+import { BRAND } from "@/lib/brand"
 
 interface PageProps {
   searchParams: Promise<{
@@ -95,7 +96,7 @@ export default async function PropertiPage({ searchParams }: PageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Katalog Properti</h1>
+      <h1 className="text-2xl font-bold mb-6">{BRAND.pageTitle.catalogHeading}</h1>
       <div className="flex gap-8">
         <aside className="hidden lg:block w-56 shrink-0">
           <div className="sticky top-20 p-4 border rounded-lg bg-card">

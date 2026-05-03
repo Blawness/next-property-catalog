@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Building, Users, LogOut, Menu, X } from "lucide-react"
 import ThemeToggle from "@/components/ThemeToggle"
+import { BRAND } from "@/lib/brand"
 
 function SidebarContent({
   links,
@@ -27,7 +28,7 @@ function SidebarContent({
       <div className={`p-4 border-b flex items-center justify-between ${mobile ? "border-border/40" : ""}`}>
         <Link href="/admin" className="flex items-center gap-2" onClick={handleClose}>
           <span className="w-2 h-2 rounded-full bg-amber-500" />
-          <span className="font-display font-bold text-lg italic">PropIndo</span>
+          <span className="font-display font-bold text-lg italic">{BRAND.name}</span>
           <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold ml-auto">
             ADMIN
           </span>
@@ -103,7 +104,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         </button>
         <Link href="/admin" className="flex items-center gap-2 ml-3 flex-1">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-          <span className="font-display font-bold text-base italic">PropIndo</span>
+          <span className="font-display font-bold text-base italic">{BRAND.name}</span>
         </Link>
         <ThemeToggle />
       </div>
