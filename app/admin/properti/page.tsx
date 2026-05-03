@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +27,7 @@ interface PropertyItem {
   city: string
   price: string
   status: string | null
+  primaryImageUrl: string | null
 }
 
 export default function AdminPropertiesPage() {
@@ -159,6 +161,7 @@ export default function AdminPropertiesPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b">
+                      <th className="text-left p-3 font-medium w-14"></th>
                       <th className="text-left p-3 font-medium">Judul</th>
                       <th className="text-left p-3 font-medium">Tipe</th>
                       <th className="text-left p-3 font-medium">Kota</th>
@@ -170,7 +173,23 @@ export default function AdminPropertiesPage() {
                   <tbody>
                     {items.map((item) => (
                       <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                        <td className="p-3 font-medium truncate max-w-44">{item.title}</td>
+                        <td className="p-3">
+                          <div className="w-10 h-10 rounded-md overflow-hidden bg-muted shrink-0">
+                            {item.primaryImageUrl ? (
+                              <Image
+                                src={item.primaryImageUrl}
+                                alt=""
+                                width={40}
+                                height={40}
+                                className="object-cover w-full h-full"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground/30">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                              </div>
+                            )}
+                          </div>
+                        </td>
                         <td className="p-3 text-muted-foreground">
                           {PROPERTY_TYPE_LABELS[item.type] ?? item.type}
                         </td>
@@ -211,35 +230,46 @@ export default function AdminPropertiesPage() {
               {/* Mobile card list */}
               <div className="md:hidden divide-y">
                 {items.map((item) => (
-                  <div key={item.id} className="py-3 space-y-1.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="font-medium text-sm line-clamp-1 flex-1">{item.title}</p>
-                      <div className="flex gap-1 shrink-0">
-                        <Button size="icon" variant="ghost" className="h-7 w-7" asChild>
-                          <Link href={`/admin/properti/${item.id}/edit`}>
-                            <Pencil size={12} />
-                          </Link>
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-7 w-7 text-destructive hover:text-destructive"
-                          onClick={() => handleDelete(item.id, item.title)}
-                        >
-                          <Trash2 size={12} />
-                        </Button>
+                  <div key={item.id} className="py-3 flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
+                      {item.primaryImageUrl ? (
+                        <Image src={item.primaryImageUrl} alt="" width={48} height={48} className="object-cover w-full h-full" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground/30">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-medium text-sm line-clamp-1 flex-1">{item.title}</p>
+                        <div className="flex gap-1 shrink-0">
+                          <Button size="icon" variant="ghost" className="h-7 w-7" asChild>
+                            <Link href={`/admin/properti/${item.id}/edit`}>
+                              <Pencil size={12} />
+                            </Link>
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            onClick={() => handleDelete(item.id, item.title)}
+                          >
+                            <Trash2 size={12} />
+                          </Button>
+                        </div>
                       </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>{PROPERTY_TYPE_LABELS[item.type]}</span>
+                        <span>&middot;</span>
+                        <span>{item.city}</span>
+                        <span>&middot;</span>
+                        <span>Rp {parseInt(item.price, 10).toLocaleString("id-ID")}</span>
+                      </div>
+                      <Badge variant={item.status === "active" ? "default" : "secondary"} className="text-[10px]">
+                        {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : "Tersewa"}
+                      </Badge>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{PROPERTY_TYPE_LABELS[item.type]}</span>
-                      <span>&middot;</span>
-                      <span>{item.city}</span>
-                      <span>&middot;</span>
-                      <span>Rp {parseInt(item.price, 10).toLocaleString("id-ID")}</span>
-                    </div>
-                    <Badge variant={item.status === "active" ? "default" : "secondary"} className="text-[10px]">
-                      {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : "Tersewa"}
-                    </Badge>
                   </div>
                 ))}
               </div>

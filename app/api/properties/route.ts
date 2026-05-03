@@ -4,7 +4,7 @@ import { properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { z } from "zod"
-import { eq, and, like, asc, or, count } from "drizzle-orm"
+import { eq, and, like, asc, or, count, inArray } from "drizzle-orm"
 
 const propertySchema = z.object({
   title: z.string().min(1, "Judul wajib diisi"),
@@ -69,7 +69,27 @@ export async function GET(req: NextRequest) {
       .limit(limit)
       .offset((page - 1) * limit)
 
-    return NextResponse.json({ items, total, page, limit })
+    // Batch fetch primary images
+    const ids = items.map((p) => p.id)
+    const images =
+      ids.length > 0
+        ? await db
+            .select()
+            .from(propertyImages)
+            .where(and(inArray(propertyImages.propertyId, ids), eq(propertyImages.isPrimary, true)))
+        : []
+
+    const imageMap = new Map<string, string>()
+    for (const img of images) {
+      if (img.propertyId) imageMap.set(img.propertyId, img.url)
+    }
+
+    return NextResponse.json({
+      items: items.map((p) => ({ ...p, primaryImageUrl: imageMap.get(p.id) ?? null })),
+      total,
+      page,
+      limit,
+    })
   } catch (error) {
     console.error("[GET /api/properties]", error)
     return NextResponse.json({ error: "Terjadi kesalahan pada server" }, { status: 500 })
