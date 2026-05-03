@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react"
+import { toast } from "sonner"
 import { PROPERTY_TYPE_LABELS } from "@/lib/constants"
 
 interface PropertyItem {
@@ -70,6 +71,7 @@ export default function AdminPropertiesPage() {
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Hapus "${title}"?`)) return
     await fetch(`/api/properties/${id}`, { method: "DELETE" })
+    toast.success("Properti dihapus")
     fetchProperties()
   }
 
@@ -133,30 +135,47 @@ export default function AdminPropertiesPage() {
               ))}
             </div>
           ) : items.length === 0 ? (
-            <p className="text-center py-8 text-muted-foreground">Belum ada properti.</p>
+            <div className="text-center py-12">
+              <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground/40">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                  <polyline points="9,22 9,12 15,12 15,22" />
+                </svg>
+              </div>
+              <p className="text-muted-foreground font-medium">
+                {search || statusFilter || typeFilter
+                  ? "Tidak ada hasil filter"
+                  : "Belum ada properti"}
+              </p>
+              <p className="text-sm text-muted-foreground/70 mt-1 max-w-xs mx-auto">
+                {search || statusFilter || typeFilter
+                  ? "Coba ubah filter atau kata kunci pencarian"
+                  : "Klik tombol Tambah Properti untuk menambah listing pertama"}
+              </p>
+            </div>
           ) : (
             <>
-              <div className="border rounded-lg overflow-hidden">
+              <div className="hidden md:block border rounded-lg overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b">
                       <th className="text-left p-3 font-medium">Judul</th>
-                      <th className="text-left p-3 font-medium hidden sm:table-cell">Tipe</th>
-                      <th className="text-left p-3 font-medium hidden md:table-cell">Kota</th>
-                      <th className="text-left p-3 font-medium hidden lg:table-cell">Harga</th>
+                      <th className="text-left p-3 font-medium">Tipe</th>
+                      <th className="text-left p-3 font-medium">Kota</th>
+                      <th className="text-left p-3 font-medium">Harga</th>
                       <th className="text-left p-3 font-medium">Status</th>
                       <th className="text-right p-3 font-medium">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map((item) => (
-                      <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30">
-                        <td className="p-3 font-medium truncate max-w-40">{item.title}</td>
-                        <td className="p-3 hidden sm:table-cell text-muted-foreground">
+                      <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="p-3 font-medium truncate max-w-44">{item.title}</td>
+                        <td className="p-3 text-muted-foreground">
                           {PROPERTY_TYPE_LABELS[item.type] ?? item.type}
                         </td>
-                        <td className="p-3 hidden md:table-cell text-muted-foreground">{item.city}</td>
-                        <td className="p-3 hidden lg:table-cell text-muted-foreground">
+                        <td className="p-3 text-muted-foreground">{item.city}</td>
+                        <td className="p-3 text-muted-foreground">
                           Rp {parseInt(item.price, 10).toLocaleString("id-ID")}
                         </td>
                         <td className="p-3">
@@ -187,6 +206,42 @@ export default function AdminPropertiesPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile card list */}
+              <div className="md:hidden divide-y">
+                {items.map((item) => (
+                  <div key={item.id} className="py-3 space-y-1.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-medium text-sm line-clamp-1 flex-1">{item.title}</p>
+                      <div className="flex gap-1 shrink-0">
+                        <Button size="icon" variant="ghost" className="h-7 w-7" asChild>
+                          <Link href={`/admin/properti/${item.id}/edit`}>
+                            <Pencil size={12} />
+                          </Link>
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7 text-destructive hover:text-destructive"
+                          onClick={() => handleDelete(item.id, item.title)}
+                        >
+                          <Trash2 size={12} />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{PROPERTY_TYPE_LABELS[item.type]}</span>
+                      <span>&middot;</span>
+                      <span>{item.city}</span>
+                      <span>&middot;</span>
+                      <span>Rp {parseInt(item.price, 10).toLocaleString("id-ID")}</span>
+                    </div>
+                    <Badge variant={item.status === "active" ? "default" : "secondary"} className="text-[10px]">
+                      {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : "Tersewa"}
+                    </Badge>
+                  </div>
+                ))}
               </div>
 
               {totalPages > 1 && (

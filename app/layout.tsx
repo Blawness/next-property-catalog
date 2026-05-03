@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Geist } from "next/font/google"
 import { Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
+import { Toaster } from "sonner"
 import Navbar from "@/components/Navbar"
 import Providers from "@/components/Providers"
 
@@ -26,6 +27,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <main>{children}</main>
         </Providers>
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--card)",
+              color: "var(--foreground)",
+              border: "1px solid var(--border)",
+            },
+          }}
+        />
       </body>
     </html>
   )

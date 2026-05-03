@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -38,9 +39,10 @@ export default function DaftarPage() {
 
     const result = await signIn("credentials", { email, password, redirect: false })
     if (result?.error) {
-      setError("Akun dibuat, tapi gagal masuk. Coba masuk manual.")
+      toast.error("Akun dibuat, tapi gagal login otomatis. Silakan masuk manual.")
       setLoading(false)
     } else {
+      toast.success("Akun berhasil dibuat!")
       router.push("/")
       router.refresh()
     }

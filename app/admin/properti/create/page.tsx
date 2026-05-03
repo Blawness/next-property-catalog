@@ -7,13 +7,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { toast } from "sonner"
 
 export default function CreatePropertyPage() {
   const { fields, imageUrls, setField, setImageUrls, setError, handleSubmit, loading, error } =
     usePropertyForm()
 
+  const wrappedSubmit = async (e: React.FormEvent) => {
+    await handleSubmit(e)
+    if (!error) {
+      toast.success("Properti berhasil ditambahkan")
+    }
+  }
+
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-2xl animate-in fade-in duration-200">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/admin/properti">
@@ -28,7 +36,7 @@ export default function CreatePropertyPage() {
           <CardTitle>Properti Baru</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={wrappedSubmit} className="space-y-5">
             <PropertyFormFields fields={fields} setField={setField} />
             <ImageUploadSection imageUrls={imageUrls} setImageUrls={setImageUrls} onError={setError} />
 

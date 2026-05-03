@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { MapPin } from "lucide-react"
 import PropertyMap from "@/components/PropertyMap"
-import PropertyGallery from "@/components/PropertyGallery"
+import PropertyGalleryClient from "@/components/PropertyGalleryClient"
 import PropertySpecs from "@/components/PropertySpecs"
 import AgentCard from "@/components/AgentCard"
 import { formatPriceFull, PROPERTY_TYPE_LABELS } from "@/lib/constants"
@@ -80,8 +80,8 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const formattedPrice = formatPriceFull(property.price, property.listingType)
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <PropertyGallery images={images} title={property.title} />
+    <div className="container mx-auto px-4 py-8 max-w-5xl animate-in fade-in duration-300">
+      <PropertyGalleryClient images={images} title={property.title} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">

@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 interface Agent {
   id: string
@@ -86,6 +87,7 @@ export default function AdminAgentsPage() {
         setFormSaving(false)
         return
       }
+      toast.success("Agent diperbarui")
     } else {
       const res = await fetch("/api/admin/agents", {
         method: "POST",
@@ -100,6 +102,7 @@ export default function AdminAgentsPage() {
       }
       const data = await res.json()
       setCreatedPassword(data.tempPassword)
+      toast.success("Agent berhasil dibuat")
     }
 
     setFormSaving(false)
@@ -110,6 +113,7 @@ export default function AdminAgentsPage() {
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Hapus agent "${name}"? Properti mereka akan dialihkan ke admin.`)) return
     await fetch(`/api/admin/agents/${id}`, { method: "DELETE" })
+    toast.success("Agent dihapus")
     fetchAgents()
   }
 
@@ -132,7 +136,18 @@ export default function AdminAgentsPage() {
               ))}
             </div>
           ) : agents.length === 0 ? (
-            <p className="text-center py-12 text-muted-foreground">Belum ada agent.</p>
+            <div className="text-center py-12">
+              <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground/40">
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                  <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+              </div>
+              <p className="text-muted-foreground font-medium">Belum ada agent</p>
+              <p className="text-sm text-muted-foreground/70 mt-1">Klik Tambah Agent untuk membuat akun agent pertama</p>
+            </div>
           ) : (
             <div className="divide-y">
               {agents.map((agent) => (

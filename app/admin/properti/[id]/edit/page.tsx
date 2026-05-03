@@ -17,6 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { toast } from "sonner"
 
 export default function EditPropertyPage() {
   const { id } = useParams<{ id: string }>()
@@ -95,6 +96,7 @@ export default function EditPropertyPage() {
       return
     }
 
+    toast.success("Properti diperbarui")
     router.push("/admin/properti")
   }
 
@@ -108,7 +110,7 @@ export default function EditPropertyPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-2xl animate-in fade-in duration-200">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/admin/properti">

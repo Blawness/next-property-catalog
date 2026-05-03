@@ -15,7 +15,7 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
   return (
     <Link
       href={`/properti/${property.id}`}
-      className="group block rounded-2xl overflow-hidden border border-border/60 bg-card shadow-sm hover:shadow-lg hover:shadow-black/8 hover:-translate-y-0.5 transition-all duration-300"
+      className="group block rounded-2xl overflow-hidden border border-border/60 bg-card shadow-sm hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1 transition-all duration-300"
     >
       <div className="relative h-52 bg-muted overflow-hidden">
         {primaryImage ? (
@@ -24,7 +24,7 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
             alt={property.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground/40 text-sm">
@@ -32,11 +32,18 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent pointer-events-none" />
+        {/* Hover overlay with image count */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
+          <span className="text-white text-xs font-medium bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm">
+            {property.images.length} foto
+          </span>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 via-black/10 to-transparent pointer-events-none" />
 
         <div className="absolute top-3 left-3 flex gap-1.5">
           <span
-            className={`inline-flex items-center px-2.5 py-[3px] rounded-full text-[10px] font-bold tracking-wide shadow-sm ${
+            className={`inline-flex items-center px-2.5 py-[3px] rounded-full text-[10px] font-bold tracking-wide shadow-md ${
               isJual
                 ? "bg-amber-500 text-white shadow-amber-500/40"
                 : "bg-sky-500  text-white shadow-sky-500/40"
@@ -100,8 +107,9 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
         )}
       </div>
 
+      {/* Animated accent line */}
       <div
-        className="h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+        className="h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
         style={{ background: "linear-gradient(90deg, #F59E0B, #FBBF24)" }}
       />
     </Link>

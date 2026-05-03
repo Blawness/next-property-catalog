@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,9 +25,10 @@ export default function MasukPage() {
     const result = await signIn("credentials", { email, password, redirect: false })
 
     if (result?.error) {
-      setError("Email atau password salah.")
+      toast.error("Email atau password salah")
       setLoading(false)
     } else {
+      toast.success("Berhasil masuk")
       router.push("/")
       router.refresh()
     }
