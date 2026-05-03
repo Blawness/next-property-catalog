@@ -1,32 +1,18 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import PropertyCard from "@/components/PropertyCard"
-import type { PropertyWithImages } from "@/lib/types"
+import { useFavorites } from "@/hooks/useFavorites"
 
 export default function ProfilPage() {
   const { data: session, status } = useSession()
   const isPending = status === "loading"
-  const [favorites, setFavorites] = useState<PropertyWithImages[]>([])
-  const [loadingFavs, setLoadingFavs] = useState(true)
-
-  useEffect(() => {
-    if (!session) return
-    fetch("/api/favorites")
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to fetch favorites")
-        return r.json()
-      })
-      .then((data) => setFavorites(data.favorites ?? []))
-      .catch(() => setFavorites([]))
-      .finally(() => setLoadingFavs(false))
-  }, [session])
+  const { favorites, loadingFavs } = useFavorites()
 
   if (isPending) {
     return (
