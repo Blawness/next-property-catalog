@@ -49,7 +49,7 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 className={`
-                  group relative flex items-center gap-1.5
+                  group relative inline-flex items-center gap-2 leading-none
                   text-[11px] font-semibold tracking-[0.15em] uppercase
                   transition-colors duration-200
                   ${active ? "text-amber-600" : "text-foreground/50 hover:text-foreground/90"}
@@ -57,7 +57,8 @@ export default function Navbar() {
               >
                 <Icon
                   size={13}
-                  className={active ? "text-amber-500" : "text-foreground/40 group-hover:text-foreground/70 transition-colors"}
+                  strokeWidth={2.5}
+                  className={`shrink-0 ${active ? "text-amber-500" : "text-foreground/40 group-hover:text-foreground/70 transition-colors"}`}
                 />
                 {label}
                 {/* Underline indicator */}
