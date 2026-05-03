@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Building, Users, LogOut, Menu, X } from "lucide-react"
+import ThemeToggle from "@/components/ThemeToggle"
 
 function SidebarContent({
   links,
@@ -59,13 +60,16 @@ function SidebarContent({
       </nav>
       <div className="p-3 border-t">
         <div className="text-xs text-muted-foreground px-2 mb-2 truncate">{email}</div>
-        <Link
-          href="/"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted transition-colors"
-        >
-          <LogOut size={14} />
-          Kembali ke Site
-        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href="/"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted transition-colors"
+          >
+            <LogOut size={14} />
+            Kembali
+          </Link>
+        </div>
       </div>
     </div>
   )
@@ -97,10 +101,11 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
         <button onClick={() => setSidebarOpen(true)} className="p-1.5 hover:bg-muted rounded-md">
           <Menu size={20} />
         </button>
-        <Link href="/admin" className="flex items-center gap-2 ml-3">
+        <Link href="/admin" className="flex items-center gap-2 ml-3 flex-1">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
           <span className="font-display font-bold text-base italic">PropIndo</span>
         </Link>
+        <ThemeToggle />
       </div>
 
       {sidebarOpen && (

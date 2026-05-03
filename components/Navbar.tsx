@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { PlusCircle, ChevronDown, MapPin, LayoutGrid } from "lucide-react"
+import ThemeToggle from "@/components/ThemeToggle"
 
 const NAV_LINKS = [
   { href: "/properti", label: "Properti",  icon: LayoutGrid },
@@ -72,7 +73,9 @@ export default function Navbar() {
         </div>
 
         {/* ── Right side ────────────────────────────────────── */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          <ThemeToggle />
+
           {session ? (
             <>
               {/* Dashboard / Pasang Iklan — desktop */}
