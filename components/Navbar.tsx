@@ -27,7 +27,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/95 backdrop-blur-md">
-      <nav className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+      <nav className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative">
 
         {/* ── Logo ──────────────────────────────────────────── */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
@@ -41,7 +41,7 @@ export default function Navbar() {
         </Link>
 
         {/* ── Nav links ─────────────────────────────────────── */}
-        <div className="hidden sm:flex items-center gap-7">
+        <div className="hidden sm:flex items-center gap-7 absolute left-1/2 -translate-x-1/2">
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
             const active = pathname === href || pathname.startsWith(href + "/")
             return (
