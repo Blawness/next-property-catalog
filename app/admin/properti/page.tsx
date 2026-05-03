@@ -190,6 +190,7 @@ export default function AdminPropertiesPage() {
                             )}
                           </div>
                         </td>
+                        <td className="p-3 font-medium truncate max-w-44">{item.title}</td>
                         <td className="p-3 text-muted-foreground">
                           {PROPERTY_TYPE_LABELS[item.type] ?? item.type}
                         </td>
