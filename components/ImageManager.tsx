@@ -53,7 +53,7 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
         <UploadButton<OurFileRouter, "propertyImages">
           endpoint="propertyImages"
           onClientUploadComplete={(res) => {
-            setImageUrls((prev) => [...prev, ...res.map((r) => r.url)])
+            setImageUrls((prev) => [...prev, ...res.map((r) => r.ufsUrl)])
           }}
           onUploadError={(err) => onError(`Upload error: ${err.message}`)}
           className="uploadthing-button"

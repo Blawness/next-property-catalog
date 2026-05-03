@@ -17,7 +17,7 @@ export default function ImageUploadSection({ imageUrls, setImageUrls, onError }:
       <UploadButton<OurFileRouter, "propertyImages">
         endpoint="propertyImages"
         onClientUploadComplete={(res) => {
-          setImageUrls((prev) => [...prev, ...res.map((r) => r.url)])
+          setImageUrls((prev) => [...prev, ...res.map((r) => r.ufsUrl)])
         }}
         onUploadError={(err) => onError(`Upload error: ${err.message}`)}
       />
