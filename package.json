@@ -2,12 +2,21 @@
   "name": "next-property-catalog",
   "version": "0.1.0",
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "msgpackr-extract",
+      "msw",
+      "unrs-resolver"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "npx tsx db/seed.ts",
+    "seed": "tsx db/seed.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },

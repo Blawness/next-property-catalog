@@ -7,12 +7,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev      # start dev server on http://localhost:3000
-npm run build    # production build
-npm run lint     # ESLint check
+pnpm dev      # start dev server on http://localhost:3000
+pnpm build    # production build
+pnpm lint     # ESLint check
 ```
 
-No test suite is configured. There is no `npm test` command.
+pnpm test      # Jest (jsdom env, setup via jest.setup.js)
 
 ## Environment Variables
 
@@ -65,4 +65,4 @@ Properties store optional `lat`/`lng` decimals for map display.
 `@/` maps to the project root (configured in `tsconfig.json`).
 
 ### Drizzle Migrations
-Use `drizzle-kit` for schema migrations. No migration scripts are committed yet — run `npx drizzle-kit generate` then `npx drizzle-kit migrate` when schema changes.
+Use `drizzle-kit` for schema migrations. No migration scripts are committed yet — run `pnpm exec drizzle-kit generate` then `pnpm exec drizzle-kit migrate` when schema changes.

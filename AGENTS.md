@@ -3,12 +3,12 @@
 ## Commands
 
 ```bash
-npm run dev          # dev server (http://localhost:3000)
-npm run build        # production build
-npm run lint         # ESLint
-npm run test         # Jest (jsdom env, setup via jest.setup.js)
-npm run test:watch   # Jest watch mode
-npm run seed         # seed database via db/seed.ts (requires DATABASE_URL)
+pnpm dev          # dev server (http://localhost:3000)
+pnpm build        # production build
+pnpm lint         # ESLint
+pnpm test         # Jest (jsdom env, setup via jest.setup.js)
+pnpm test:watch   # Jest watch mode
+pnpm seed         # seed database via db/seed.ts (requires DATABASE_URL)
 ```
 
 Order for verification: `lint -> typecheck (tsc --noEmit) -> test -> build`.
@@ -30,7 +30,7 @@ Order for verification: `lint -> typecheck (tsc --noEmit) -> test -> build`.
 
 Enums: `role` (buyer|agent), `property_type` (rumah|apartemen|tanah|ruko), `listing_type` (jual|sewa), `status` (active|sold|rented).
 
-Migrations: `npx drizzle-kit generate` then `npx drizzle-kit migrate`. Config at `drizzle.config.ts` reads `.env.local`.
+Migrations: `pnpm exec drizzle-kit generate` then `pnpm exec drizzle-kit migrate`. Config at `drizzle.config.ts` reads `.env.local`.
 
 ### Routes
 | Path | Purpose |
@@ -57,6 +57,6 @@ Migrations: `npx drizzle-kit generate` then `npx drizzle-kit migrate`. Config at
 - **Rate limiter is in-memory** (`lib/rate-limit.ts`) — resets on process restart, not shared across instances. Used for login protection (5 attempts / 15 min).
 - **`PropertyWithImages`** (`lib/types.ts`) is the primary data shape — use `getPropertiesWithImagesBatch()` (`lib/db-helpers.ts`) to avoid N+1 queries.
 - **Decimal fields** (`price`, `lat`, `lng`) are stored as strings in TypeScript types — convert with `parseFloat()` or `Number()` before math.
-- **shadcn/ui** uses `radix-nova` style with CSS variables (see `components.json`). Add components via `npx shadcn add <component>`.
+- **shadcn/ui** uses `radix-nova` style with CSS variables (see `components.json`). Add components via `pnpm dlx shadcn add <component>`.
 - **`.env.local` is gitignored** — never commit secrets. Required vars: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `UPLOADTHING_TOKEN`.
 - **Image domains** allowed: `images.unsplash.com`, `*.ufsedge.com`, `*.uploadthing.com` (see `next.config.ts`).
