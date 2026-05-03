@@ -1,10 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import { UploadButton } from "@uploadthing/react"
 import type { OurFileRouter } from "@/lib/uploadthing"
 import { Label } from "@/components/ui/label"
-import { X } from "lucide-react"
+import { X, Loader2 } from "lucide-react"
 
 interface ImageManagerProps {
   imageUrls: string[]
@@ -13,6 +14,9 @@ interface ImageManagerProps {
 }
 
 export default function ImageManager({ imageUrls, setImageUrls, onError }: ImageManagerProps) {
+  const [uploading, setUploading] = useState(false)
+  const [uploadingCount, setUploadingCount] = useState(0)
+
   const removeImage = (index: number) => {
     setImageUrls((prev) => prev.filter((_, i) => i !== index))
   }
@@ -46,24 +50,56 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
               </button>
             </div>
           ))}
+          {/* Uploading placeholders */}
+          {uploading && Array.from({ length: uploadingCount }).map((_, i) => (
+            <div key={`loading-${i}`} className="relative aspect-square rounded-lg overflow-hidden bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
+              <Loader2 size={20} className="animate-spin text-amber-500" />
+            </div>
+          ))}
         </div>
       )}
 
-      <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-        <UploadButton<OurFileRouter, "propertyImages">
-          endpoint="propertyImages"
-          onClientUploadComplete={(res) => {
-            setImageUrls((prev) => [...prev, ...res.map((r) => r.ufsUrl)])
-          }}
-          onUploadError={(err) => onError(`Upload error: ${err.message}`)}
-          className="uploadthing-button"
-          appearance={{
-            button:
-              "bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-amber-500 ut-uploading:bg-amber-400 ut-uploading:cursor-not-allowed",
-            container: "",
-            allowedContent: "text-muted-foreground text-xs",
-          }}
-        />
+      <div className={`border-2 border-dashed rounded-lg text-center transition-colors ${
+        uploading
+          ? "border-amber-300 bg-amber-50/50"
+          : "border-border hover:border-amber-300 hover:bg-amber-50/30"
+      }`}>
+        {uploading ? (
+          <div className="p-6 flex flex-col items-center gap-2">
+            <Loader2 size={24} className="animate-spin text-amber-500" />
+            <p className="text-sm font-medium text-amber-700">Mengupload...</p>
+            <p className="text-xs text-amber-600/70">Jangan tutup halaman ini</p>
+          </div>
+        ) : (
+          <div className="p-6">
+            <UploadButton<OurFileRouter, "propertyImages">
+              endpoint="propertyImages"
+              onUploadBegin={() => {
+                setUploading(true)
+                setUploadingCount(0)
+              }}
+              onClientUploadComplete={(res) => {
+                setImageUrls((prev) => [...prev, ...res.map((r) => r.ufsUrl)])
+                setUploading(false)
+              }}
+              onUploadError={(err) => {
+                onError(`Upload error: ${err.message}`)
+                setUploading(false)
+              }}
+              onBeforeUploadBegin={(files) => {
+                setUploadingCount(files.length)
+                return files
+              }}
+              className="uploadthing-button"
+              appearance={{
+                button:
+                  "bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-amber-500 ut-uploading:bg-amber-400 ut-uploading:cursor-not-allowed",
+                container: "",
+                allowedContent: "text-muted-foreground text-xs",
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
