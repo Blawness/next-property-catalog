@@ -66,11 +66,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id
         token.role = user.role
         token.image = user.image as string | undefined
+      }
+      if (trigger === "update" && session?.image !== undefined) {
+        token.image = session.image as string
       }
       return token
     },
