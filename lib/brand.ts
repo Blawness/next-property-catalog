@@ -1,7 +1,7 @@
 export const BRAND = {
-  name: "PropIndo",
+  name: "Tiga Anak Propertindo",
 
-  fullName: "PropIndo — Properti Premium Indonesia",
+  fullName: "Tiga Anak Propertindo — Properti Premium Indonesia",
 
   tagline: "Platform Properti #1 Indonesia",
 
@@ -15,27 +15,27 @@ export const BRAND = {
     { n: "500+", label: "Agen Terpercaya" },
   ] as const,
 
-  heroImageAlt: "PropIndo — Properti Premium Indonesia",
+  heroImageAlt: "Tiga Anak Propertindo — Properti Premium Indonesia",
 
   pageTitle: {
-    home: "PropIndo – Katalog Properti Indonesia",
-    catalog: "Katalog Properti — PropIndo",
-    map: "Peta Properti — PropIndo",
-    login: "Masuk — PropIndo",
-    register: "Daftar — PropIndo",
-    propertyNotFound: "Properti Tidak Ditemukan — PropIndo",
+    home: "Tiga Anak Propertindo – Katalog Properti Indonesia",
+    catalog: "Katalog Properti — Tiga Anak Propertindo",
+    map: "Peta Properti — Tiga Anak Propertindo",
+    login: "Masuk — Tiga Anak Propertindo",
+    register: "Daftar — Tiga Anak Propertindo",
+    propertyNotFound: "Properti Tidak Ditemukan — Tiga Anak Propertindo",
     catalogHeading: "Katalog Properti",
   },
 
   pageDescription: {
     home: "Temukan rumah, apartemen, tanah, dan ruko terbaik di Indonesia",
     catalog: "Temukan rumah, apartemen, tanah, dan ruko terbaik di Indonesia",
-    register: "Buat akun PropIndo gratis",
-    login: "Masuk ke akun PropIndo kamu",
+    register: "Buat akun Tiga Anak Propertindo gratis",
+    login: "Masuk ke akun Tiga Anak Propertindo kamu",
   },
 
-  loginDescription: "Masuk ke akun PropIndo kamu",
-  registerDescription: "Buat akun PropIndo gratis",
+  loginDescription: "Masuk ke akun Tiga Anak Propertindo kamu",
+  registerDescription: "Buat akun Tiga Anak Propertindo gratis",
 
   exploreTypes: {
     heading: "Jelajahi Tipe Properti",
@@ -54,7 +54,7 @@ export const BRAND = {
   },
 
   trust: {
-    heading: "Mengapa PropIndo?",
+    heading: "Mengapa Tiga Anak Propertindo?",
     items: [
       { icon: "Building", title: "Ribuan Listing", description: "Properti terkurasi di seluruh Indonesia" },
       { icon: "Search", title: "Pencarian Mudah", description: "Filter lengkap untuk temukan properti ideal" },
