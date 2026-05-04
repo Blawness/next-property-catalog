@@ -71,7 +71,7 @@ export default function ProfilPage() {
                 </AvatarFallback>
               </Avatar>
               <div className={`absolute inset-0 rounded-full flex items-center justify-center transition-opacity ${
-                uploading ? "opacity-100 bg-black/50" : "opacity-0 group-hover:opacity-100 bg-black/40"
+                uploading ? "opacity-100 bg-amber-500/60" : "opacity-0 group-hover:opacity-100 bg-amber-400/40"
               }`}>
                 {uploading ? (
                   <Loader2 size={16} className="animate-spin text-white" />
