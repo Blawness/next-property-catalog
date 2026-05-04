@@ -9,6 +9,7 @@ import { z } from "zod"
 const updateAgentSchema = z.object({
   name: z.string().min(2).optional(),
   phone: z.string().optional(),
+  avatarUrl: z.string().url().optional().nullable(),
 })
 
 export async function PATCH(
@@ -35,6 +36,7 @@ export async function PATCH(
     const updateData: Record<string, string | null> = {}
     if (parsed.data.name !== undefined) updateData.fullName = parsed.data.name
     if (parsed.data.phone !== undefined) updateData.phone = parsed.data.phone || null
+    if (parsed.data.avatarUrl !== undefined) updateData.avatarUrl = parsed.data.avatarUrl
 
     if (Object.keys(updateData).length > 0) {
       await db.update(profiles).set(updateData).where(eq(profiles.id, id))
