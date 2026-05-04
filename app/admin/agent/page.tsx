@@ -12,14 +12,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Upload } from "lucide-react"
 import { toast } from "sonner"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { UploadButton } from "@uploadthing/react"
+import type { OurFileRouter } from "@/lib/uploadthing"
 
 interface Agent {
   id: string
   fullName: string
   email: string
   phone: string | null
+  avatarUrl: string | null
   propertyCount: number
 }
 
@@ -35,6 +39,7 @@ export default function AdminAgentsPage() {
   const [formError, setFormError] = useState("")
   const [formSaving, setFormSaving] = useState(false)
   const [createdPassword, setCreatedPassword] = useState("")
+  const [formAvatarUrl, setFormAvatarUrl] = useState("")
 
   const fetchAgents = useCallback(() => {
     setLoading(true)
@@ -57,6 +62,7 @@ export default function AdminAgentsPage() {
     setFormPhone("")
     setFormError("")
     setCreatedPassword("")
+    setFormAvatarUrl("")
     setDialogOpen(true)
   }
 
@@ -67,6 +73,7 @@ export default function AdminAgentsPage() {
     setFormPhone(agent.phone ?? "")
     setFormError("")
     setCreatedPassword("")
+    setFormAvatarUrl(agent.avatarUrl ?? "")
     setDialogOpen(true)
   }
 
@@ -79,7 +86,7 @@ export default function AdminAgentsPage() {
       const res = await fetch(`/api/admin/agents/${editId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: formName, phone: formPhone }),
+        body: JSON.stringify({ name: formName, phone: formPhone, avatarUrl: formAvatarUrl || null }),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -92,7 +99,7 @@ export default function AdminAgentsPage() {
       const res = await fetch("/api/admin/agents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: formName, email: formEmail, phone: formPhone }),
+        body: JSON.stringify({ name: formName, email: formEmail, phone: formPhone, avatarUrl: formAvatarUrl || null }),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -152,12 +159,22 @@ export default function AdminAgentsPage() {
             <div className="divide-y">
               {agents.map((agent) => (
                 <div key={agent.id} className="flex items-center justify-between p-4">
-                  <div>
-                    <p className="font-medium">{agent.fullName}</p>
-                    <p className="text-sm text-muted-foreground">{agent.email}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {agent.phone ?? "No phone"} &middot; {agent.propertyCount} properti
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <Avatar size="sm">
+                      {agent.avatarUrl ? (
+                        <AvatarImage src={agent.avatarUrl} alt={agent.fullName} />
+                      ) : null}
+                      <AvatarFallback className="text-xs">
+                        {agent.fullName[0]?.toUpperCase() ?? "A"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{agent.fullName}</p>
+                      <p className="text-sm text-muted-foreground">{agent.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {agent.phone ?? "No phone"} &middot; {agent.propertyCount} properti
+                      </p>
+                    </div>
                   </div>
                   <div className="flex gap-1">
                     <Button size="icon" variant="ghost" onClick={() => openEdit(agent)}>
@@ -214,6 +231,56 @@ export default function AdminAgentsPage() {
                 onChange={(e) => setFormPhone(e.target.value)}
                 placeholder="+6281234567890"
               />
+            </div>
+
+            <div className="space-y-1">
+              <Label>Foto Profil (opsional)</Label>
+              <div className="flex items-center gap-3">
+                {formAvatarUrl ? (
+                  <div className="relative">
+                    <Avatar size="lg">
+                      <AvatarImage src={formAvatarUrl} alt="Preview" />
+                      <AvatarFallback>
+                        {formName[0]?.toUpperCase() ?? "A"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <button
+                      type="button"
+                      onClick={() => setFormAvatarUrl("")}
+                      className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-0.5"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed rounded-lg text-center transition-colors hover:border-amber-300 hover:bg-amber-50/30">
+                    <div className="p-2">
+                      <UploadButton<OurFileRouter, "profileImage">
+                        endpoint="profileImage"
+                        onClientUploadComplete={(res) => {
+                          const url = res?.[0]?.ufsUrl
+                          if (url) setFormAvatarUrl(url)
+                        }}
+                        onUploadError={(err) => {
+                          toast.error(`Upload gagal: ${err.message}`)
+                        }}
+                        appearance={{
+                          button: "text-xs font-medium px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors",
+                          container: "",
+                          allowedContent: "hidden",
+                        }}
+                        content={{
+                          button: (
+                            <span className="flex items-center gap-1">
+                              <Upload size={12} /> Upload
+                            </span>
+                          ),
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {createdPassword && (
