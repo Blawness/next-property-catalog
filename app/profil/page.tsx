@@ -1,18 +1,38 @@
 "use client"
 
+import { useState } from "react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { UploadButton } from "@uploadthing/react"
+import type { OurFileRouter } from "@/lib/uploadthing"
 import PropertyCard from "@/components/PropertyCard"
 import { useFavorites } from "@/hooks/useFavorites"
+import { Camera, Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export default function ProfilPage() {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const isPending = status === "loading"
   const { favorites, loadingFavs } = useFavorites()
+  const [uploading, setUploading] = useState(false)
+
+  const saveAvatar = async (url: string) => {
+    const res = await fetch("/api/profil", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatarUrl: url }),
+    })
+    if (!res.ok) {
+      toast.error("Gagal menyimpan foto profil")
+      return
+    }
+    await update()
+    toast.success("Foto profil diperbarui")
+  }
 
   if (isPending) {
     return (
@@ -34,16 +54,52 @@ export default function ProfilPage() {
     )
   }
 
+  const userImage = session.user.image
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl space-y-8">
       <Card>
         <CardHeader>
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14">
-              <AvatarFallback className="text-lg">
-                {session.user.name?.[0]?.toUpperCase() ?? "U"}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative group">
+              <Avatar className="h-14 w-14" size="lg">
+                {userImage ? (
+                  <AvatarImage src={userImage} alt={session.user.name ?? ""} />
+                ) : null}
+                <AvatarFallback className="text-lg">
+                  {session.user.name?.[0]?.toUpperCase() ?? "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className={`absolute inset-0 rounded-full flex items-center justify-center transition-opacity ${
+                uploading ? "opacity-100 bg-black/50" : "opacity-0 group-hover:opacity-100 bg-black/40"
+              }`}>
+                {uploading ? (
+                  <Loader2 size={16} className="animate-spin text-white" />
+                ) : (
+                  <UploadButton<OurFileRouter, "profileImage">
+                    endpoint="profileImage"
+                    onUploadBegin={() => setUploading(true)}
+                    onClientUploadComplete={(res) => {
+                      setUploading(false)
+                      const url = res?.[0]?.ufsUrl
+                      if (url) saveAvatar(url)
+                    }}
+                    onUploadError={(err) => {
+                      setUploading(false)
+                      toast.error(`Upload gagal: ${err.message}`)
+                    }}
+                    appearance={{
+                      button: "h-14 w-14 rounded-full flex items-center justify-center bg-transparent hover:bg-transparent ut-ready:bg-transparent ut-uploading:bg-transparent",
+                      container: "",
+                      allowedContent: "hidden",
+                    }}
+                    content={{
+                      button: <Camera size={16} className="text-white" />,
+                    }}
+                  />
+                )}
+              </div>
+            </div>
             <div>
               <CardTitle>{session.user.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{session.user.email}</p>
