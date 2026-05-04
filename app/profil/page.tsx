@@ -30,7 +30,7 @@ export default function ProfilPage() {
       toast.error("Gagal menyimpan foto profil")
       return
     }
-    await update()
+    await update({ image: url })
     toast.success("Foto profil diperbarui")
   }
 
