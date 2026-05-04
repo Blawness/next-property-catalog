@@ -96,10 +96,18 @@ export default function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50">
-                    <div className="h-7 w-7 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center shrink-0">
-                      <span className="text-[11px] font-bold text-amber-700">
-                        {session.user.name?.[0]?.toUpperCase() ?? "U"}
-                      </span>
+                    <div className="h-7 w-7 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center shrink-0 overflow-hidden">
+                      {session.user.image ? (
+                        <img
+                          src={session.user.image}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[11px] font-bold text-amber-700">
+                          {session.user.name?.[0]?.toUpperCase() ?? "U"}
+                        </span>
+                      )}
                     </div>
                     <ChevronDown size={12} className="text-foreground/40 hidden sm:block" />
                   </button>
