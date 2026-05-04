@@ -9,12 +9,14 @@ declare module "next-auth" {
   }
   interface User {
     role?: string
+    image?: string
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     role?: string
+    image?: string
   }
 }
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -59,7 +61,7 @@ export const authOptions: NextAuthOptions = {
 
         const valid = await bcrypt.compare(credentials.password, user.passwordHash)
         if (!valid) return null
-        return { id: user.id, name: user.fullName, email: user.email, role: user.role ?? "buyer" }
+        return { id: user.id, name: user.fullName, email: user.email, role: user.role ?? "buyer", image: user.avatarUrl ?? undefined }
       },
     }),
   ],
@@ -68,12 +70,14 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.role = user.role
+        token.image = user.image as string | undefined
       }
       return token
     },
     session({ session, token }) {
       if (token.id) session.user.id = token.id as string
       if (token.role) session.user.role = token.role as string
+      if (token.image) session.user.image = token.image as string
       return session
     },
   },
