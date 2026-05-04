@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useSession, signOut } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import {
@@ -98,9 +99,11 @@ export default function Navbar() {
                   <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50">
                     <div className="h-7 w-7 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center shrink-0 overflow-hidden">
                       {session.user.image ? (
-                        <img
+                        <Image
                           src={session.user.image}
                           alt=""
+                          width={28}
+                          height={28}
                           className="h-full w-full object-cover"
                         />
                       ) : (
