@@ -15,6 +15,13 @@
       "when": 1777799105988,
       "tag": "0001_fancy_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777874116873,
+      "tag": "0002_parched_wild_pack",
+      "breakpoints": true
     }
   ]
 }
