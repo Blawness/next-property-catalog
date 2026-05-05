@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -35,11 +36,31 @@ export default function AdminPropertiesPage() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const [page, setPage] = useState(1)
-  const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-  const [typeFilter, setTypeFilter] = useState("")
+  const searchParamsHook = useSearchParams()
+  const router = useRouter()
+
+  const page = parseInt(searchParamsHook.get("page") ?? "1", 10)
+  const search = searchParamsHook.get("search") ?? ""
+  const statusFilter = searchParamsHook.get("status") ?? ""
+  const typeFilter = searchParamsHook.get("type") ?? ""
   const limit = 20
+
+  const [searchInput, setSearchInput] = useState(search)
+
+  const updateFilters = (updates: Record<string, string>) => {
+    const params = new URLSearchParams(searchParamsHook.toString())
+    for (const [k, v] of Object.entries(updates)) {
+      if (v) params.set(k, v)
+      else params.delete(k)
+    }
+    router.push(`/admin/properti?${params.toString()}`)
+  }
+
+  const goToPage = (newPage: number) => {
+    const params = new URLSearchParams(searchParamsHook.toString())
+    params.set("page", String(newPage))
+    router.push(`/admin/properti?${params.toString()}`)
+  }
 
   const fetchProperties = useCallback(() => {
     setLoading(true)
@@ -67,8 +88,7 @@ export default function AdminPropertiesPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    setPage(1)
-    fetchProperties()
+    updateFilters({ search: searchInput, page: "1" })
   }
 
   const handleDelete = async (id: string, title: string) => {
@@ -114,12 +134,12 @@ export default function AdminPropertiesPage() {
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari judul atau kota..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-9"
               />
             </div>
-            <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
+            <Select value={statusFilter || "all"} onValueChange={(v) => updateFilters({ status: v === "all" ? "" : v, page: "1" })}>
               <SelectTrigger className="w-36">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -130,7 +150,7 @@ export default function AdminPropertiesPage() {
                 <SelectItem value="rented">Tersewa</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={typeFilter} onValueChange={(v) => { setTypeFilter(v); setPage(1) }}>
+            <Select value={typeFilter || "all"} onValueChange={(v) => updateFilters({ type: v === "all" ? "" : v, page: "1" })}>
               <SelectTrigger className="w-36">
                 <SelectValue placeholder="Tipe" />
               </SelectTrigger>
@@ -301,7 +321,7 @@ export default function AdminPropertiesPage() {
                       size="sm"
                       variant="outline"
                       disabled={page <= 1}
-                      onClick={() => setPage((p) => p - 1)}
+                      onClick={() => goToPage(page - 1)}
                     >
                       <ChevronLeft size={14} />
                     </Button>
@@ -309,7 +329,7 @@ export default function AdminPropertiesPage() {
                       size="sm"
                       variant="outline"
                       disabled={page >= totalPages}
-                      onClick={() => setPage((p) => p + 1)}
+                      onClick={() => goToPage(page + 1)}
                     >
                       <ChevronRight size={14} />
                     </Button>
