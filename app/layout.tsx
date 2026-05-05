@@ -4,7 +4,7 @@ import { Cormorant_Garamond } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
 import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import ConditionalFooter from "@/components/ConditionalFooter"
 import Providers from "@/components/Providers"
 import { BRAND } from "@/lib/brand"
 
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Navbar />
           <main className="min-h-[60vh]">{children}</main>
-          <Footer />
+          <ConditionalFooter />
         </Providers>
         <Toaster
           position="bottom-right"
