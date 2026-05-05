@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import type { PropertyImage } from "@/lib/types"
@@ -12,11 +12,31 @@ interface PropertyGalleryClientProps {
 
 export default function PropertyGalleryClient({ images, title }: PropertyGalleryClientProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const lightboxRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  const openLightbox = (index: number) => setLightboxIndex(index)
-  const closeLightbox = () => setLightboxIndex(null)
+  const openLightbox = (index: number) => {
+    previousFocusRef.current = document.activeElement as HTMLElement
+    setLightboxIndex(index)
+  }
+  const closeLightbox = () => {
+    setLightboxIndex(null)
+    previousFocusRef.current?.focus()
+  }
   const prev = () => setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i))
   const next = () => setLightboxIndex((i) => (i !== null && i < images.length - 1 ? i + 1 : i))
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox()
+      if (e.key === "ArrowLeft") prev()
+      if (e.key === "ArrowRight") next()
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    requestAnimationFrame(() => lightboxRef.current?.focus())
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [lightboxIndex])
 
   if (images.length === 0) {
     return (
@@ -43,6 +63,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
       <div className="grid grid-cols-3 gap-2 h-72 sm:h-96 mb-6 rounded-xl overflow-hidden">
         <button
           onClick={() => openLightbox(0)}
+          aria-label={`Lihat foto 1 dari ${images.length}`}
           className="col-span-2 relative bg-muted cursor-zoom-in group"
         >
           <Image
@@ -60,6 +81,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
             <button
               key={img.id}
               onClick={() => openLightbox(i + 1)}
+              aria-label={`Lihat foto ${i + 2} dari ${images.length}`}
               className="relative bg-muted cursor-zoom-in group"
             >
               <Image
@@ -90,6 +112,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
             <button
               key={img.id}
               onClick={() => openLightbox(i)}
+              aria-label={`Lihat foto ${i + 1} dari ${images.length}`}
               className="relative w-20 h-16 rounded-lg overflow-hidden shrink-0 border-2 border-transparent hover:border-amber-400 transition-colors"
             >
               <Image
@@ -107,6 +130,11 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
       {/* Lightbox */}
       {lightboxIndex !== null && (
         <div
+          ref={lightboxRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Galeri foto: ${title}`}
+          tabIndex={-1}
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={closeLightbox}
         >
