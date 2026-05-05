@@ -4,11 +4,14 @@ import { eq, desc, and, gte, lte, ilike } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyFilter from "@/components/PropertyFilter"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Suspense } from "react"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
 import { BRAND } from "@/lib/brand"
+import { SlidersHorizontal } from "lucide-react"
 
 export const revalidate = 60
 
@@ -99,6 +102,28 @@ export default async function PropertiPage({ searchParams }: PageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">{BRAND.pageTitle.catalogHeading}</h1>
+
+      {/* Mobile filter drawer */}
+      <div className="lg:hidden mb-4">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm">
+              <SlidersHorizontal size={14} className="mr-1" /> Filter
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <SheetHeader>
+              <SheetTitle>Filter Properti</SheetTitle>
+            </SheetHeader>
+            <div className="py-4">
+              <Suspense>
+                <PropertyFilter />
+              </Suspense>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
       <div className="flex gap-8">
         <aside className="hidden lg:block w-56 shrink-0">
           <div className="sticky top-20 p-4 border rounded-lg bg-card">
