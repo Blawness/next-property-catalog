@@ -36,6 +36,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
     document.addEventListener("keydown", handleKeyDown)
     requestAnimationFrame(() => lightboxRef.current?.focus())
     return () => document.removeEventListener("keydown", handleKeyDown)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightboxIndex])
 
   if (images.length === 0) {
