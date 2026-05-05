@@ -4,6 +4,8 @@ import { eq, inArray } from "drizzle-orm"
 import MapView from "@/components/MapView"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
+export const revalidate = 120
+
 async function getPropertiesWithCoords() {
   const rows = await db
     .select()

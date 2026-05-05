@@ -13,6 +13,8 @@ import AgentCard from "@/components/AgentCard"
 import { formatPriceFull, PROPERTY_TYPE_LABELS } from "@/lib/constants"
 import { BRAND } from "@/lib/brand"
 
+export const revalidate = 30
+
 interface PageProps {
   params: Promise<{ id: string }>
 }

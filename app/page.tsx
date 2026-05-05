@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
+export const revalidate = 60
+
 async function getFeaturedProperties(): Promise<PropertyWithImages[]> {
   return getPropertiesWithImagesBatch(
     db

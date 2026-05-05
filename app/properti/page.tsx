@@ -10,6 +10,8 @@ import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
 import { BRAND } from "@/lib/brand"
 
+export const revalidate = 60
+
 interface PageProps {
   searchParams: Promise<{
     type?: string
