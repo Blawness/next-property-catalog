@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Building, Users, LogOut, Menu, X } from "lucide-react"
+import { LayoutDashboard, Building, Users, LogOut, Menu, X, Loader2 } from "lucide-react"
 import ThemeToggle from "@/components/ThemeToggle"
 import { BRAND } from "@/lib/brand"
 
@@ -81,7 +81,11 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  if (status === "loading") return null
+  if (status === "loading") return (
+    <div className="h-screen flex items-center justify-center bg-muted/30">
+      <Loader2 className="animate-spin text-muted-foreground" size={24} />
+    </div>
+  )
   if (!session || session.user.role !== "admin") {
     redirect("/masuk")
   }

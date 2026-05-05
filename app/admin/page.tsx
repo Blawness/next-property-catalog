@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Building, CheckCircle, Users, Calendar } from "lucide-react"
 
@@ -15,18 +16,34 @@ interface Stats {
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
   const fetchStats = useCallback(() => {
     fetch("/api/admin/stats")
       .then((r) => r.json())
       .then((data) => setStats(data))
-      .catch(() => {})
+      .catch((err) => { setError(err.message); setLoading(false) })
       .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
     fetchStats()
   }, [fetchStats])
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <div className="text-center py-12 border rounded-xl">
+          <p className="text-destructive font-medium">Gagal memuat data</p>
+          <p className="text-sm text-muted-foreground mt-1">{error}</p>
+          <Button variant="outline" className="mt-4" onClick={() => { setError(""); setLoading(true); fetchStats() }}>
+            Coba Lagi
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   if (loading) {
     return (

@@ -8,6 +8,7 @@ export function useFavorites() {
   const { data: session } = useSession()
   const [favorites, setFavorites] = useState<PropertyWithImages[]>([])
   const [loadingFavs, setLoadingFavs] = useState(true)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     if (!session) return
@@ -17,9 +18,9 @@ export function useFavorites() {
         return r.json()
       })
       .then((data) => setFavorites(data.favorites ?? []))
-      .catch(() => setFavorites([]))
+      .catch((err) => { setError(err.message); setFavorites([]) })
       .finally(() => setLoadingFavs(false))
   }, [session])
 
-  return { favorites, loadingFavs }
+  return { favorites, loadingFavs, error }
 }

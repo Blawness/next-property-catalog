@@ -30,6 +30,7 @@ interface Agent {
 export default function AdminAgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
@@ -46,7 +47,7 @@ export default function AdminAgentsPage() {
     fetch("/api/admin/agents")
       .then((r) => r.json())
       .then((data) => setAgents(data.agents ?? []))
-      .catch(() => {})
+      .catch((err) => { setError(err.message); setLoading(false) })
       .finally(() => setLoading(false))
   }, [])
 
@@ -122,6 +123,21 @@ export default function AdminAgentsPage() {
     await fetch(`/api/admin/agents/${id}`, { method: "DELETE" })
     toast.success("Agent dihapus")
     fetchAgents()
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">Agent</h1>
+        <div className="text-center py-12 border rounded-xl">
+          <p className="text-destructive font-medium">Gagal memuat data</p>
+          <p className="text-sm text-muted-foreground mt-1">{error}</p>
+          <Button variant="outline" className="mt-4" onClick={() => { setError(""); setLoading(true); fetchAgents() }}>
+            Coba Lagi
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   return (

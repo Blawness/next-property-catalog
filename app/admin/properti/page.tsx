@@ -34,6 +34,7 @@ export default function AdminPropertiesPage() {
   const [items, setItems] = useState<PropertyItem[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("")
@@ -55,7 +56,7 @@ export default function AdminPropertiesPage() {
         setItems(data.items ?? [])
         setTotal(data.total ?? 0)
       })
-      .catch(() => {})
+      .catch((err) => { setError(err.message); setLoading(false) })
       .finally(() => setLoading(false))
   }, [page, search, statusFilter, typeFilter])
 
@@ -78,6 +79,21 @@ export default function AdminPropertiesPage() {
   }
 
   const totalPages = Math.ceil(total / limit)
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">Properti</h1>
+        <div className="text-center py-12 border rounded-xl">
+          <p className="text-destructive font-medium">Gagal memuat data</p>
+          <p className="text-sm text-muted-foreground mt-1">{error}</p>
+          <Button variant="outline" className="mt-4" onClick={() => { setError(""); setLoading(true); fetchProperties() }}>
+            Coba Lagi
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
