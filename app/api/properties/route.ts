@@ -16,10 +16,10 @@ const propertySchema = z.object({
   address: z.string().optional(),
   lat: z.string().optional(),
   lng: z.string().optional(),
-  landArea: z.string().optional(),
-  buildingArea: z.string().optional(),
-  bedrooms: z.string().optional(),
-  bathrooms: z.string().optional(),
+  landArea: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
+  buildingArea: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
+  bedrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
+  bathrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
   imageUrls: z.array(z.string().url()).optional(),
 })
 
