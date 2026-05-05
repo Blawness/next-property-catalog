@@ -3,7 +3,7 @@ import { db } from "@/db"
 import { properties, profiles } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { eq, count } from "drizzle-orm"
+import { eq, count, gte, and } from "drizzle-orm"
 
 export async function GET() {
   try {
@@ -26,10 +26,11 @@ export async function GET() {
       .from(profiles)
       .where(eq(profiles.role, "agent"))
 
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
     const [monthResult] = await db
       .select({ count: count() })
       .from(properties)
-      .where(eq(properties.status, "active"))
+      .where(and(eq(properties.status, "active"), gte(properties.createdAt, startOfMonth)))
 
     return NextResponse.json({
       totalProperties: totalResult?.count ?? 0,
