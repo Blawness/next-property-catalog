@@ -4,6 +4,7 @@ import { favorites, properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { eq, and, inArray } from "drizzle-orm"
+import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 
 export async function GET() {
   try {
@@ -57,6 +58,12 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown"
+    const limit = rateLimit(getRateLimitKey(ip, "favorite-toggle"), { windowMs: 60_000, max: 30 })
+    if (!limit.success) {
+      return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
+    }
 
     const userId = session.user.id
 
