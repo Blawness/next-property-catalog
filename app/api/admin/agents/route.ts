@@ -4,6 +4,7 @@ import { profiles, properties } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { eq, count, inArray } from "drizzle-orm"
+import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
@@ -65,6 +66,12 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const ip = req.headers.get("x-forwarded-for") ?? "unknown"
+    const limit = rateLimit(getRateLimitKey(ip, "agent-create"), { windowMs: 60_000, max: 30 })
+    if (!limit.success) {
+      return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
 
     const body = await req.json()
