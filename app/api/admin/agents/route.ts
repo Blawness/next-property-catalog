@@ -3,7 +3,7 @@ import { db } from "@/db"
 import { profiles, properties } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { eq, count } from "drizzle-orm"
+import { eq, count, inArray } from "drizzle-orm"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
@@ -34,15 +34,24 @@ export async function GET() {
       .where(eq(profiles.role, "agent"))
       .orderBy(profiles.createdAt)
 
-    const agentsWithCounts = await Promise.all(
-      agents.map(async (agent) => {
-        const [cnt] = await db
-          .select({ count: count() })
+    const agentIds = agents.map((a) => a.id)
+    const countRows = agentIds.length > 0
+      ? await db
+          .select({ agentId: properties.agentId, count: count() })
           .from(properties)
-          .where(eq(properties.agentId, agent.id))
-        return { ...agent, propertyCount: cnt?.count ?? 0 }
-      })
-    )
+          .where(inArray(properties.agentId, agentIds))
+          .groupBy(properties.agentId)
+      : []
+
+    const countMap = new Map<string, number>()
+    for (const row of countRows) {
+      if (row.agentId) countMap.set(row.agentId, row.count)
+    }
+
+    const agentsWithCounts = agents.map((agent) => ({
+      ...agent,
+      propertyCount: countMap.get(agent.id) ?? 0,
+    }))
 
     return NextResponse.json({ agents: agentsWithCounts })
   } catch (error) {
