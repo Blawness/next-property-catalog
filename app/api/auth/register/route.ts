@@ -15,14 +15,9 @@ const registerSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get("x-forwarded-for") ?? "unknown"
-    const key = getRateLimitKey(ip, "register")
-    const limit = rateLimit(key, { windowMs: 15 * 60 * 1000, max: 3 })
-
+    const limit = rateLimit(getRateLimitKey(ip, "register"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
-      return NextResponse.json(
-        { error: "Terlalu banyak percobaan registrasi. Coba lagi nanti." },
-        { status: 429 },
-      )
+      return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
 
     const body = await req.json()
