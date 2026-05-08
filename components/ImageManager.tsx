@@ -37,7 +37,7 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
                 className="object-cover"
               />
               {i === 0 && (
-                <span className="absolute top-1.5 left-1.5 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                <span className="absolute top-1.5 left-1.5 bg-brown-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
                   Utama
                 </span>
               )}
@@ -52,8 +52,8 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
           ))}
           {/* Uploading placeholders */}
           {uploading && Array.from({ length: uploadingCount }).map((_, i) => (
-            <div key={`loading-${i}`} className="relative aspect-square rounded-lg overflow-hidden bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
-              <Loader2 size={20} className="animate-spin text-amber-500" />
+            <div key={`loading-${i}`} className="relative aspect-square rounded-lg overflow-hidden bg-brown-50 border-2 border-brown-200 flex items-center justify-center">
+              <Loader2 size={20} className="animate-spin text-brown-500" />
             </div>
           ))}
         </div>
@@ -61,14 +61,14 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
 
       <div className={`border-2 border-dashed rounded-lg text-center transition-colors ${
         uploading
-          ? "border-amber-300 bg-amber-50/50"
-          : "border-border hover:border-amber-300 hover:bg-amber-50/30"
+          ? "border-brown-300 bg-brown-50/50"
+          : "border-border hover:border-brown-300 hover:bg-brown-50/30"
       }`}>
         {uploading ? (
           <div className="p-6 flex flex-col items-center gap-2">
-            <Loader2 size={24} className="animate-spin text-amber-500" />
-            <p className="text-sm font-medium text-amber-700">Mengupload...</p>
-            <p className="text-xs text-amber-600/70">Jangan tutup halaman ini</p>
+            <Loader2 size={24} className="animate-spin text-brown-500" />
+            <p className="text-sm font-medium text-brown-700">Mengupload...</p>
+            <p className="text-xs text-brown-600/70">Jangan tutup halaman ini</p>
           </div>
         ) : (
           <div className="p-6">
@@ -93,7 +93,7 @@ export default function ImageManager({ imageUrls, setImageUrls, onError }: Image
               className="uploadthing-button"
               appearance={{
                 button:
-                  "bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-amber-500 ut-uploading:bg-amber-400 ut-uploading:cursor-not-allowed",
+                  "bg-brown-500 hover:bg-brown-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-brown-500 ut-uploading:bg-brown-400 ut-uploading:cursor-not-allowed",
                 container: "",
                 allowedContent: "text-muted-foreground text-xs",
               }}

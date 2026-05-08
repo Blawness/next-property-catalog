@@ -114,7 +114,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
               key={img.id}
               onClick={() => openLightbox(i)}
               aria-label={`Lihat foto ${i + 1} dari ${images.length}`}
-              className="relative w-20 h-16 rounded-lg overflow-hidden shrink-0 border-2 border-transparent hover:border-amber-400 transition-colors"
+              className="relative w-20 h-16 rounded-lg overflow-hidden shrink-0 border-2 border-transparent hover:border-brown-400 transition-colors"
             >
               <Image
                 src={img.url}

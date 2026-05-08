@@ -48,12 +48,12 @@ export default function ImageUploadSection({ imageUrls, setImageUrls, onError }:
       )}
 
       <div className={`border-2 border-dashed rounded-lg text-center transition-colors ${
-        uploading ? "border-amber-300 bg-amber-50/50" : "border-border hover:border-amber-300 hover:bg-amber-50/30"
+        uploading ? "border-brown-300 bg-brown-50/50" : "border-border hover:border-brown-300 hover:bg-brown-50/30"
       }`}>
         {uploading ? (
           <div className="p-4 flex items-center justify-center gap-2">
-            <Loader2 size={18} className="animate-spin text-amber-500" />
-            <span className="text-sm font-medium text-amber-700">Mengupload...</span>
+            <Loader2 size={18} className="animate-spin text-brown-500" />
+            <span className="text-sm font-medium text-brown-700">Mengupload...</span>
           </div>
         ) : (
           <div className="p-3">
@@ -69,7 +69,7 @@ export default function ImageUploadSection({ imageUrls, setImageUrls, onError }:
                 setUploading(false)
               }}
               appearance={{
-                button: "bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-amber-500 ut-uploading:bg-amber-400",
+                button: "bg-brown-500 hover:bg-brown-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors ut-ready:bg-brown-500 ut-uploading:bg-brown-400",
                 container: "",
                 allowedContent: "text-muted-foreground text-xs",
               }}

@@ -44,7 +44,7 @@ export default async function HomePage() {
             </p>
           </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/properti" className="text-amber-600 hover:text-amber-700 font-medium">
+            <Link href="/properti" className="text-brown-600 hover:text-brown-700 font-medium">
               Lihat Semua →
             </Link>
           </Button>

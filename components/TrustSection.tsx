@@ -18,8 +18,8 @@ export default function TrustSection() {
           const Icon = ICON_MAP[item.icon]
           return (
             <div key={item.title} className="text-center p-6 rounded-2xl border border-border/60 bg-card">
-              <div className="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-                <Icon size={22} className="text-amber-600" />
+              <div className="w-12 h-12 rounded-full bg-brown-50 flex items-center justify-center mx-auto mb-4">
+                <Icon size={22} className="text-brown-600" />
               </div>
               <h3 className="font-semibold text-foreground mb-1.5">{item.title}</h3>
               <p className="text-sm text-muted-foreground">{item.description}</p>

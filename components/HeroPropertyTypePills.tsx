@@ -15,7 +15,7 @@ export default function HeroPropertyTypePills() {
         <Link
           key={t}
           href={`/properti?type=${t}`}
-          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-white/75 text-xs font-medium hover:bg-white/20 hover:border-amber-400/50 hover:text-amber-300 transition-all duration-200 backdrop-blur-sm"
+          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-white/75 text-xs font-medium hover:bg-white/20 hover:border-brown-400/50 hover:text-brown-300 transition-all duration-200 backdrop-blur-sm"
         >
           <span>{PROPERTY_TYPE_ICONS[t]}</span>
           <span>{PROPERTY_TYPE_LABELS[t]}</span>

@@ -49,24 +49,36 @@ export default function HeroSection() {
       </div>
 
       {/* ── Gradient overlays ───────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black/88" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-black/25" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--hero-overlay-dark), var(--hero-overlay-medium), var(--hero-overlay-dark))",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to right, var(--hero-overlay-light), transparent, var(--hero-overlay-light))",
+        }}
+      />
 
       {/* ── Decorative gold line (top) ──────────────────────── */}
       <div
         className="absolute top-0 inset-x-0 h-px hero-animate-line"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(251,191,36,0.7) 40%, rgba(251,191,36,0.7) 60%, transparent)",
+            "linear-gradient(90deg, transparent, rgba(139,75,22,0.7) 40%, rgba(139,75,22,0.7) 60%, transparent)",
         }}
       />
 
       {/* ── Main content ────────────────────────────────────── */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
         {/* Badge */}
-        <div className="hero-animate-badge mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 backdrop-blur-sm">
-          <Sparkles size={10} className="text-amber-400" />
-          <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.18em] uppercase text-amber-300">
+        <div className="hero-animate-badge mb-5 inline-flex items-center gap-2 rounded-full border border-brown-400/30 bg-brown-400/10 px-4 py-1.5 backdrop-blur-sm">
+          <Sparkles size={10} className="text-brown-400" />
+          <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.18em] uppercase text-brown-300">
             {BRAND.tagline}
           </span>
         </div>
@@ -78,7 +90,7 @@ export default function HeroSection() {
         >
           <span className="block font-semibold">{BRAND.headline[0]}</span>
           <span
-            className="block text-amber-400"
+            className="block text-brown-400"
             style={{ fontStyle: "italic", fontSize: "1.08em" }}
           >
             {BRAND.headline[1]}
@@ -88,9 +100,9 @@ export default function HeroSection() {
 
         {/* Decorative divider */}
         <div className="hero-animate-sub flex items-center gap-3 mb-4">
-          <div className="h-px w-12 bg-amber-400/40" />
-          <TrendingUp size={13} className="text-amber-400/60" />
-          <div className="h-px w-12 bg-amber-400/40" />
+          <div className="h-px w-12 bg-brown-400/40" />
+          <TrendingUp size={13} className="text-brown-400/60" />
+          <div className="h-px w-12 bg-brown-400/40" />
         </div>
 
         {/* Subtitle */}

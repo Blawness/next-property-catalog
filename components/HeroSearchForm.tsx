@@ -24,7 +24,7 @@ export default function HeroSearchForm() {
         style={{ outline: "1px solid rgba(255,255,255,0.12)" }}
       >
         <div className="flex flex-1 items-center gap-2.5 bg-white/97 px-4 min-w-0">
-          <MapPin size={15} className="text-amber-600 shrink-0" />
+          <MapPin size={15} className="text-brown-600 shrink-0" />
           <input
             type="text"
             value={city}
@@ -48,7 +48,7 @@ export default function HeroSearchForm() {
 
         <button
           type="submit"
-          className="flex items-center gap-2 px-5 sm:px-6 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white text-[13px] font-bold tracking-wide transition-colors duration-150 shrink-0"
+          className="flex items-center gap-2 px-5 sm:px-6 bg-brown-500 hover:bg-brown-600 active:bg-brown-700 text-white text-[13px] font-bold tracking-wide transition-colors duration-150 shrink-0"
         >
           <Search size={15} />
           <span className="hidden sm:block">Cari</span>

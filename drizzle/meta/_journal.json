@@ -22,6 +22,13 @@
       "when": 1777874116873,
       "tag": "0002_parched_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778226412511,
+      "tag": "0003_stale_gressill",
+      "breakpoints": true
     }
   ]
 }

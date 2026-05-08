@@ -269,7 +269,7 @@ export default function AdminAgentsPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed rounded-lg text-center transition-colors hover:border-amber-300 hover:bg-amber-50/30">
+                  <div className="border-2 border-dashed rounded-lg text-center transition-colors hover:border-brown-300 hover:bg-brown-50/30">
                     <div className="p-2">
                       <UploadButton<OurFileRouter, "profileImage">
                         endpoint="profileImage"
@@ -300,12 +300,12 @@ export default function AdminAgentsPage() {
             </div>
 
             {createdPassword && (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
-                <p className="font-semibold text-amber-800">Agent berhasil dibuat!</p>
-                <p className="text-amber-700 mt-1">
-                  Password sementara: <code className="bg-amber-100 px-1 rounded">{createdPassword}</code>
+              <div className="bg-brown-50 border border-brown-200 rounded-lg p-3 text-sm">
+                <p className="font-semibold text-brown-800">Agent berhasil dibuat!</p>
+                <p className="text-brown-700 mt-1">
+                  Password sementara: <code className="bg-brown-100 px-1 rounded">{createdPassword}</code>
                 </p>
-                <p className="text-amber-600 text-xs mt-1">Simpan password ini. Tidak akan ditampilkan lagi.</p>
+                <p className="text-brown-600 text-xs mt-1">Simpan password ini. Tidak akan ditampilkan lagi.</p>
               </div>
             )}
 

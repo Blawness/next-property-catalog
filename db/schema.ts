@@ -17,7 +17,7 @@ export const propertyTypeEnum = pgEnum("property_type", [
   "ruko",
 ])
 export const listingTypeEnum = pgEnum("listing_type", ["jual", "sewa"])
-export const statusEnum = pgEnum("status", ["active", "sold", "rented"])
+export const statusEnum = pgEnum("status", ["active", "sold", "rented", "archived"])
 
 export const profiles = pgTable("profiles", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),

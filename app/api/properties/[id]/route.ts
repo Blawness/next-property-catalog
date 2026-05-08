@@ -47,7 +47,7 @@ const propertyUpdateSchema = z.object({
   price: z.string().optional(),
   type: z.enum(["rumah", "apartemen", "tanah", "ruko"]).optional(),
   listingType: z.enum(["jual", "sewa"]).optional(),
-  status: z.enum(["active", "sold", "rented"]).optional(),
+  status: z.enum(["active", "sold", "rented", "archived"]).optional(),
   city: z.string().optional(),
   address: z.string().optional(),
   lat: z.string().optional(),

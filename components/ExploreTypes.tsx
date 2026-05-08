@@ -20,12 +20,12 @@ export default function ExploreTypes() {
           <Link
             key={type}
             href={`/properti?type=${type}`}
-            className="group flex flex-col items-center gap-3 p-6 rounded-2xl border border-border/60 bg-card hover:border-amber-400/50 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+            className="group flex flex-col items-center gap-3 p-6 rounded-2xl border border-border/60 bg-card hover:border-brown-400/50 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
           >
             <span className="text-4xl group-hover:scale-110 transition-transform duration-300">
               {ICONS[type]}
             </span>
-            <span className="font-semibold text-sm text-foreground group-hover:text-amber-600 transition-colors">
+            <span className="font-semibold text-sm text-foreground group-hover:text-brown-600 transition-colors">
               {PROPERTY_TYPE_LABELS[type]}
             </span>
           </Link>

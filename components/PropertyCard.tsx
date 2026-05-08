@@ -45,7 +45,7 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
           <span
             className={`inline-flex items-center px-2.5 py-[3px] rounded-full text-[10px] font-bold tracking-wide shadow-md ${
               isJual
-                ? "bg-amber-500 text-white shadow-amber-500/40"
+                ? "bg-brown-500 text-white shadow-brown-500/40"
                 : "bg-sky-500  text-white shadow-sky-500/40"
             }`}
           >
@@ -59,18 +59,18 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
 
       <div className="p-4">
         <p
-          className="font-display font-bold text-amber-600 leading-tight mb-1.5"
+          className="font-display font-bold text-brown-600 leading-tight mb-1.5"
           style={{ fontSize: "1.3rem" }}
         >
           {formatPriceCompact(property.price, property.listingType)}
         </p>
 
-        <h3 className="text-[13.5px] font-semibold leading-snug text-foreground line-clamp-1 group-hover:text-amber-600 transition-colors duration-200 mb-2">
+        <h3 className="text-[13.5px] font-semibold leading-snug text-foreground line-clamp-1 group-hover:text-brown-600 transition-colors duration-200 mb-2">
           {property.title}
         </h3>
 
         <div className="flex items-center gap-1 text-[12px] text-muted-foreground mb-3">
-          <MapPin size={11} className="text-amber-500 shrink-0" />
+          <MapPin size={11} className="text-brown-500 shrink-0" />
           <span className="line-clamp-1">{property.address ?? property.city}</span>
         </div>
 
@@ -78,26 +78,26 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
           <div className="flex items-center gap-3.5 pt-2.5 border-t border-border/50 text-[12px] text-muted-foreground">
             {property.type === "tanah" ? (
               <span className="flex items-center gap-1">
-                <Maximize2 size={11} className="text-amber-500/60" />
+                <Maximize2 size={11} className="text-brown-500/60" />
                 {property.landArea} m²
               </span>
             ) : (
               <>
                 {property.bedrooms != null && (
                   <span className="flex items-center gap-1">
-                    <BedDouble size={11} className="text-amber-500/60" />
+                    <BedDouble size={11} className="text-brown-500/60" />
                     {property.bedrooms} KT
                   </span>
                 )}
                 {property.bathrooms != null && (
                   <span className="flex items-center gap-1">
-                    <Bath size={11} className="text-amber-500/60" />
+                    <Bath size={11} className="text-brown-500/60" />
                     {property.bathrooms} KM
                   </span>
                 )}
                 {property.buildingArea != null && (
                   <span className="flex items-center gap-1">
-                    <Maximize2 size={11} className="text-amber-500/60" />
+                    <Maximize2 size={11} className="text-brown-500/60" />
                     {property.buildingArea} m²
                   </span>
                 )}
@@ -110,7 +110,7 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
       {/* Animated accent line */}
       <div
         className="h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-        style={{ background: "linear-gradient(90deg, #F59E0B, #FBBF24)" }}
+        style={{ background: "linear-gradient(90deg, #8b4b16, #a5621a)" }}
       />
     </Link>
   )

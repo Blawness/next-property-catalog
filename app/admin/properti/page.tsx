@@ -148,6 +148,7 @@ export default function AdminPropertiesPage() {
                 <SelectItem value="active">Aktif</SelectItem>
                 <SelectItem value="sold">Terjual</SelectItem>
                 <SelectItem value="rented">Tersewa</SelectItem>
+                <SelectItem value="archived">Diarsipkan</SelectItem>
               </SelectContent>
             </Select>
             <Select value={typeFilter || "all"} onValueChange={(v) => updateFilters({ type: v === "all" ? "" : v, page: "1" })}>
@@ -236,9 +237,9 @@ export default function AdminPropertiesPage() {
                         </td>
                         <td className="p-3">
                           <Badge variant={
-                            item.status === "active" ? "default" : "secondary"
+                            item.status === "active" ? "default" : item.status === "archived" ? "outline" : "secondary"
                           }>
-                            {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : "Tersewa"}
+                            {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : item.status === "rented" ? "Tersewa" : "Diarsipkan"}
                           </Badge>
                         </td>
                         <td className="p-3 text-right">
@@ -303,8 +304,8 @@ export default function AdminPropertiesPage() {
                         <span>&middot;</span>
                         <span>Rp {parseInt(item.price, 10).toLocaleString("id-ID")}</span>
                       </div>
-                      <Badge variant={item.status === "active" ? "default" : "secondary"} className="text-[10px]">
-                        {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : "Tersewa"}
+                      <Badge variant={item.status === "active" ? "default" : item.status === "archived" ? "outline" : "secondary"} className="text-[10px]">
+                        {item.status === "active" ? "Aktif" : item.status === "sold" ? "Terjual" : item.status === "rented" ? "Tersewa" : "Diarsipkan"}
                       </Badge>
                     </div>
                   </div>

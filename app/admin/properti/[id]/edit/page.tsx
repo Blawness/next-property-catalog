@@ -80,13 +80,11 @@ export default function EditPropertyPage() {
     setError("")
 
     const body: Record<string, string | string[] | null> = { ...fields, imageUrls }
-    const { status: _s, ...patchBody } = body
-    void _s
 
     const res = await fetch(`/api/properties/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(patchBody),
+      body: JSON.stringify(body),
     })
 
     if (!res.ok) {
@@ -137,6 +135,7 @@ export default function EditPropertyPage() {
                     <SelectItem value="active">Aktif</SelectItem>
                     <SelectItem value="sold">Terjual</SelectItem>
                     <SelectItem value="rented">Tersewa</SelectItem>
+                    <SelectItem value="archived">Diarsipkan</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

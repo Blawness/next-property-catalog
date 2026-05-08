@@ -33,7 +33,13 @@ export default function Navbar() {
 
         {/* ── Logo ──────────────────────────────────────────── */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <span className="w-2 h-2 rounded-full bg-amber-500 group-hover:scale-110 transition-transform duration-200" />
+          <Image
+            src="/android-chrome-512x512.png"
+            alt={BRAND.name}
+            width={28}
+            height={28}
+            className="shrink-0 group-hover:scale-110 transition-transform duration-200"
+          />
           <span
             className="font-display font-bold text-[1.35rem] text-foreground tracking-tight leading-none"
             style={{ fontStyle: "italic" }}
@@ -54,19 +60,19 @@ export default function Navbar() {
                   group relative inline-flex items-center gap-2 leading-none
                   text-[11px] font-semibold tracking-[0.15em] uppercase
                   transition-colors duration-200
-                  ${active ? "text-amber-600" : "text-foreground/50 hover:text-foreground/90"}
+                  ${active ? "text-brown-600" : "text-foreground/50 hover:text-foreground/90"}
                 `}
               >
                 <Icon
                   size={13}
                   strokeWidth={2.5}
-                  className={`shrink-0 ${active ? "text-amber-500" : "text-foreground/40 group-hover:text-foreground/70 transition-colors"}`}
+                  className={`shrink-0 ${active ? "text-brown-500" : "text-foreground/40 group-hover:text-foreground/70 transition-colors"}`}
                 />
                 {label}
                 {/* Underline indicator */}
                 <span
                   className={`
-                    absolute -bottom-[1.15rem] left-0 right-0 h-px bg-amber-500
+                    absolute -bottom-[1.15rem] left-0 right-0 h-px bg-brown-500
                     transition-transform duration-300 origin-left
                     ${active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}
                   `}
@@ -86,7 +92,7 @@ export default function Navbar() {
               {session.user.role === "admin" ? (
                 <Link
                   href="/admin"
-                  className="hidden sm:flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150 shadow-sm shadow-amber-500/30"
+                  className="hidden sm:flex items-center gap-1.5 rounded-lg bg-brown-500 hover:bg-brown-600 active:bg-brown-700 text-white text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150 shadow-sm shadow-brown-500/30"
                 >
                   <PlusCircle size={13} />
                   Dashboard
@@ -96,8 +102,8 @@ export default function Navbar() {
               {/* Avatar dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50">
-                    <div className="h-7 w-7 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center shrink-0 overflow-hidden">
+                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-brown-400/50">
+                    <div className="h-7 w-7 rounded-full bg-brown-100 border-2 border-brown-300 flex items-center justify-center shrink-0 overflow-hidden">
                       {session.user.image ? (
                         <Image
                           src={session.user.image}
@@ -107,7 +113,7 @@ export default function Navbar() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <span className="text-[11px] font-bold text-amber-700">
+                        <span className="text-[11px] font-bold text-brown-700">
                           {session.user.name?.[0]?.toUpperCase() ?? "U"}
                         </span>
                       )}
@@ -152,7 +158,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/masuk"
-              className="flex items-center gap-1.5 rounded-lg border border-amber-400/60 bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-700 text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150"
+              className="flex items-center gap-1.5 rounded-lg border border-brown-400/60 bg-brown-50 hover:bg-brown-100 active:bg-brown-200 text-brown-700 text-[12px] font-bold tracking-wide px-3.5 py-2 transition-colors duration-150"
             >
               Masuk
             </Link>

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { BRAND } from "@/lib/brand"
 
 export default function Footer() {
@@ -10,7 +11,13 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
             <Link href="/" className="flex items-center gap-2 justify-center md:justify-start mb-2">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <Image
+                src="/android-chrome-512x512.png"
+                alt={BRAND.name}
+                width={28}
+                height={28}
+                className="shrink-0"
+              />
               <span
                 className="font-display font-bold text-xl italic text-foreground"
               >

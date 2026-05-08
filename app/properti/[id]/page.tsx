@@ -77,7 +77,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   const { id } = await params
   const data = await getProperty(id)
 
-  if (!data) notFound()
+  if (!data || data.property.status === "archived") notFound()
 
   const { property, images, agent } = data
   const formattedPrice = formatPriceFull(property.price, property.listingType)
