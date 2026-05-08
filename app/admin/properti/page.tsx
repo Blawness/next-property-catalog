@@ -16,7 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react"
 import { toast } from "sonner"
 import { PROPERTY_TYPE_LABELS } from "@/lib/constants"
 
@@ -31,11 +37,20 @@ interface PropertyItem {
   primaryImageUrl: string | null
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  active: "Aktif",
+  sold: "Terjual",
+  rented: "Tersewa",
+  archived: "Diarsipkan",
+}
+
 export default function AdminPropertiesPage() {
   const [items, setItems] = useState<PropertyItem[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [busy, setBusy] = useState(false)
   const searchParamsHook = useSearchParams()
   const router = useRouter()
 
@@ -76,6 +91,7 @@ export default function AdminPropertiesPage() {
       .then((data) => {
         setItems(data.items ?? [])
         setTotal(data.total ?? 0)
+        setSelectedIds(new Set())
       })
       .catch((err) => { setError(err.message); setLoading(false) })
       .finally(() => setLoading(false))
@@ -96,6 +112,63 @@ export default function AdminPropertiesPage() {
     await fetch(`/api/properties/${id}`, { method: "DELETE" })
     toast.success("Properti dihapus")
     fetchProperties()
+  }
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === items.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(items.map((i) => i.id)))
+    }
+  }
+
+  const handleBulkStatus = async (status: string) => {
+    if (!confirm(`Ubah ${selectedIds.size} properti ke "${STATUS_LABELS[status] ?? status}"?`)) return
+    setBusy(true)
+    try {
+      await Promise.all(
+        [...selectedIds].map((id) =>
+          fetch(`/api/properties/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status }),
+          })
+        )
+      )
+      toast.success(`${selectedIds.size} properti diubah ke ${STATUS_LABELS[status] ?? status}`)
+      fetchProperties()
+    } catch {
+      toast.error("Gagal mengubah status")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (!confirm(`Hapus ${selectedIds.size} properti? Tindakan ini tidak bisa dibatalkan.`)) return
+    setBusy(true)
+    try {
+      await Promise.all(
+        [...selectedIds].map((id) =>
+          fetch(`/api/properties/${id}`, { method: "DELETE" })
+        )
+      )
+      toast.success(`${selectedIds.size} properti dihapus`)
+      fetchProperties()
+    } catch {
+      toast.error("Gagal menghapus properti")
+    } finally {
+      setBusy(false)
+    }
   }
 
   const totalPages = Math.ceil(total / limit)
@@ -198,6 +271,14 @@ export default function AdminPropertiesPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b">
+                      <th className="text-left p-3 w-10">
+                        <input
+                          type="checkbox"
+                          checked={items.length > 0 && selectedIds.size === items.length}
+                          onChange={toggleSelectAll}
+                          className="size-4 rounded border-border accent-brown-500 cursor-pointer"
+                        />
+                      </th>
                       <th className="text-left p-3 font-medium w-14"></th>
                       <th className="text-left p-3 font-medium">Judul</th>
                       <th className="text-left p-3 font-medium">Tipe</th>
@@ -210,6 +291,14 @@ export default function AdminPropertiesPage() {
                   <tbody>
                     {items.map((item) => (
                       <tr key={item.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="p-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(item.id)}
+                            onChange={() => toggleSelect(item.id)}
+                            className="size-4 rounded border-border accent-brown-500 cursor-pointer"
+                          />
+                        </td>
                         <td className="p-3">
                           <div className="w-10 h-10 rounded-md overflow-hidden bg-muted shrink-0">
                             {item.primaryImageUrl ? (
@@ -269,6 +358,12 @@ export default function AdminPropertiesPage() {
               <div className="md:hidden divide-y">
                 {items.map((item) => (
                   <div key={item.id} className="py-3 flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(item.id)}
+                      onChange={() => toggleSelect(item.id)}
+                      className="size-4 mt-1 rounded border-border accent-brown-500 cursor-pointer shrink-0"
+                    />
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
                       {item.primaryImageUrl ? (
                         <Image src={item.primaryImageUrl} alt="" width={48} height={48} className="object-cover w-full h-full" />
@@ -341,6 +436,56 @@ export default function AdminPropertiesPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* ── Bulk action bar ──────────────────────────────────── */}
+      {selectedIds.size > 0 && (
+        <div className="fixed bottom-0 inset-x-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-3 bg-card border shadow-lg rounded-xl px-4 py-3 animate-in fade-in-up duration-200">
+            <span className="text-sm font-semibold whitespace-nowrap">
+              {selectedIds.size} terpilih
+            </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" disabled={busy}>
+                  Ubah Status
+                  <ChevronDown size={12} className="ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => handleBulkStatus("active")} disabled={busy}>
+                  Aktif
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleBulkStatus("sold")} disabled={busy}>
+                  Terjual
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleBulkStatus("rented")} disabled={busy}>
+                  Tersewa
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleBulkStatus("archived")} disabled={busy}>
+                  Diarsipkan
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              disabled={busy}
+            >
+              <Trash2 size={13} className="mr-1" />
+              Hapus
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedIds(new Set())}
+              disabled={busy}
+            >
+              Batal
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
