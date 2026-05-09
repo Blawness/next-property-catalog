@@ -3,9 +3,10 @@ import { Metadata } from "next"
 import { db } from "@/db"
 import { properties, propertyImages, profiles } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { MapPin } from "lucide-react"
+import { MapPin, ExternalLink } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import PropertyMap from "@/components/PropertyMap"
 import PropertyGalleryClient from "@/components/PropertyGalleryClient"
 import PropertySpecs from "@/components/PropertySpecs"
@@ -142,11 +143,26 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               <Separator />
               <div>
                 <h2 className="font-semibold mb-3">Lokasi</h2>
-                <PropertyMap
-                  lat={parseFloat(property.lat)}
-                  lng={parseFloat(property.lng)}
-                  title={property.title}
-                />
+                  <PropertyMap
+                    lat={parseFloat(property.lat)}
+                    lng={parseFloat(property.lng)}
+                    title={property.title}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 w-full"
+                    asChild
+                  >
+                    <a
+                      href={`https://www.google.com/maps?q=${property.lat},${property.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink size={14} className="mr-1.5" />
+                      Buka di Google Maps
+                    </a>
+                  </Button>
               </div>
             </>
           )}

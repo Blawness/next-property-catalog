@@ -62,8 +62,11 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
   return (
     <>
       <div className="grid grid-cols-3 gap-2 h-72 sm:h-96 mb-6 rounded-xl overflow-hidden">
-        <button
+        <div
           onClick={() => openLightbox(0)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && openLightbox(0)}
           aria-label={`Lihat foto 1 dari ${images.length}`}
           className="col-span-2 relative bg-muted cursor-zoom-in group"
         >
@@ -76,12 +79,15 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
             priority
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-        </button>
+        </div>
         <div className="grid grid-rows-2 gap-2">
           {otherImages.slice(0, 2).map((img, i) => (
-            <button
+            <div
               key={img.id}
               onClick={() => openLightbox(i + 1)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && openLightbox(i + 1)}
               aria-label={`Lihat foto ${i + 2} dari ${images.length}`}
               className="relative bg-muted cursor-zoom-in group"
             >
@@ -98,7 +104,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
                   <span className="text-white text-sm font-semibold">+{images.length - 3}</span>
                 </div>
               )}
-            </button>
+            </div>
           ))}
           {otherImages.length < 2 && (
             <div className="bg-muted rounded" />
@@ -136,7 +142,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
           aria-modal="true"
           aria-label={`Galeri foto: ${title}`}
           tabIndex={-1}
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center outline-none"
           onClick={closeLightbox}
         >
           <button
@@ -165,12 +171,12 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
             </>
           )}
 
-          <div className="relative w-full max-w-4xl max-h-[85vh] mx-4" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-w-4xl h-[80vh] mx-4" onClick={(e) => e.stopPropagation()}>
             <Image
               src={images[lightboxIndex].url}
               alt={title}
               fill
-              sizes="100vw"
+              sizes="90vw"
               className="object-contain"
               priority
             />
