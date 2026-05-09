@@ -134,41 +134,51 @@ export default function AdminPropertiesPage() {
   const handleBulkStatus = async (status: string) => {
     if (!confirm(`Ubah ${selectedIds.size} properti ke "${STATUS_LABELS[status] ?? status}"?`)) return
     setBusy(true)
-    try {
-      await Promise.all(
-        [...selectedIds].map((id) =>
-          fetch(`/api/properties/${id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status }),
-          })
-        )
-      )
-      toast.success(`${selectedIds.size} properti diubah ke ${STATUS_LABELS[status] ?? status}`)
-      fetchProperties()
-    } catch {
-      toast.error("Gagal mengubah status")
-    } finally {
-      setBusy(false)
+    const ids = [...selectedIds]
+    let failed = 0
+    for (const id of ids) {
+      try {
+        const res = await fetch(`/api/properties/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        })
+        if (!res.ok) failed++
+      } catch {
+        failed++
+      }
     }
+    const ok = ids.length - failed
+    if (failed > 0) {
+      toast.error(`${failed} gagal, ${ok} berhasil diubah ke ${STATUS_LABELS[status] ?? status}`)
+    } else {
+      toast.success(`${ids.length} properti diubah ke ${STATUS_LABELS[status] ?? status}`)
+    }
+    fetchProperties()
+    setBusy(false)
   }
 
   const handleBulkDelete = async () => {
     if (!confirm(`Hapus ${selectedIds.size} properti? Tindakan ini tidak bisa dibatalkan.`)) return
     setBusy(true)
-    try {
-      await Promise.all(
-        [...selectedIds].map((id) =>
-          fetch(`/api/properties/${id}`, { method: "DELETE" })
-        )
-      )
-      toast.success(`${selectedIds.size} properti dihapus`)
-      fetchProperties()
-    } catch {
-      toast.error("Gagal menghapus properti")
-    } finally {
-      setBusy(false)
+    const ids = [...selectedIds]
+    let failed = 0
+    for (const id of ids) {
+      try {
+        const res = await fetch(`/api/properties/${id}`, { method: "DELETE" })
+        if (!res.ok) failed++
+      } catch {
+        failed++
+      }
     }
+    const ok = ids.length - failed
+    if (failed > 0) {
+      toast.error(`${failed} gagal, ${ok} berhasil dihapus`)
+    } else {
+      toast.success(`${ids.length} properti dihapus`)
+    }
+    fetchProperties()
+    setBusy(false)
   }
 
   const totalPages = Math.ceil(total / limit)
