@@ -134,51 +134,41 @@ export default function AdminPropertiesPage() {
   const handleBulkStatus = async (status: string) => {
     if (!confirm(`Ubah ${selectedIds.size} properti ke "${STATUS_LABELS[status] ?? status}"?`)) return
     setBusy(true)
-    const ids = [...selectedIds]
-    let failed = 0
-    for (const id of ids) {
-      try {
-        const res = await fetch(`/api/properties/${id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status }),
-        })
-        if (!res.ok) failed++
-      } catch {
-        failed++
-      }
+    try {
+      const res = await fetch(`/api/properties/bulk`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [...selectedIds], status }),
+      })
+      if (!res.ok) throw new Error("Gagal")
+      const data = await res.json()
+      toast.success(`${data.updated} properti diubah ke ${STATUS_LABELS[status] ?? status}`)
+    } catch {
+      toast.error("Gagal mengubah status")
+    } finally {
+      fetchProperties()
+      setBusy(false)
     }
-    const ok = ids.length - failed
-    if (failed > 0) {
-      toast.error(`${failed} gagal, ${ok} berhasil diubah ke ${STATUS_LABELS[status] ?? status}`)
-    } else {
-      toast.success(`${ids.length} properti diubah ke ${STATUS_LABELS[status] ?? status}`)
-    }
-    fetchProperties()
-    setBusy(false)
   }
 
   const handleBulkDelete = async () => {
     if (!confirm(`Hapus ${selectedIds.size} properti? Tindakan ini tidak bisa dibatalkan.`)) return
     setBusy(true)
-    const ids = [...selectedIds]
-    let failed = 0
-    for (const id of ids) {
-      try {
-        const res = await fetch(`/api/properties/${id}`, { method: "DELETE" })
-        if (!res.ok) failed++
-      } catch {
-        failed++
-      }
+    try {
+      const res = await fetch(`/api/properties/bulk`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [...selectedIds] }),
+      })
+      if (!res.ok) throw new Error("Gagal")
+      const data = await res.json()
+      toast.success(`${data.updated} properti dipindahkan ke arsip`)
+    } catch {
+      toast.error("Gagal menghapus properti")
+    } finally {
+      fetchProperties()
+      setBusy(false)
     }
-    const ok = ids.length - failed
-    if (failed > 0) {
-      toast.error(`${failed} gagal, ${ok} berhasil dihapus`)
-    } else {
-      toast.success(`${ids.length} properti dihapus`)
-    }
-    fetchProperties()
-    setBusy(false)
   }
 
   const totalPages = Math.ceil(total / limit)
