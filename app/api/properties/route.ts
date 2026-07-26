@@ -4,18 +4,18 @@ import { properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { PropertyStatus, PropertyType } from "@/lib/types"
+import { PROPERTY_TYPES } from "@/lib/constants"
 import { z } from "zod"
 import { eq, and, like, asc, or, count, inArray } from "drizzle-orm"
 import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 
-const STATUSES = ["active", "sold", "rented", "archived"] as const
-const PROPERTY_TYPES = ["rumah", "apartemen", "tanah", "ruko"] as const
+const PROPERTY_STATUSES = ["active", "sold", "rented", "archived"] as const
 
 function isPropertyStatus(s: string): s is PropertyStatus {
-  return (STATUSES as readonly string[]).includes(s)
+  return (PROPERTY_STATUSES as readonly string[]).includes(s)
 }
 
-function isPropertyType(s: string): s is PropertyType {
+function isPropertyType(s: string): s is (typeof PROPERTY_TYPES)[number] {
   return (PROPERTY_TYPES as readonly string[]).includes(s)
 }
 
