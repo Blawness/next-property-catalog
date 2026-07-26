@@ -51,6 +51,7 @@ export const properties = pgTable("properties", {
   agentId: text("agent_id").references(() => profiles.id),
   status: statusEnum("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"),
 })
 
 export const propertyImages = pgTable("property_images", {
@@ -91,3 +92,13 @@ export const rateLimits = pgTable(
     resetAtIdx: index("rate_limits_reset_at_idx").on(table.resetAt),
   }),
 )
+
+export const adminActions = pgTable("admin_actions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  adminId: text("admin_id").references(() => profiles.id, { onDelete: "set null" }),
+  action: text("action").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id"),
+  metadata: text("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+})
