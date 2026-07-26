@@ -3,9 +3,21 @@ import { db } from "@/db"
 import { properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { PropertyStatus, PropertyType } from "@/lib/types"
 import { z } from "zod"
 import { eq, and, like, asc, or, count, inArray } from "drizzle-orm"
 import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
+
+const STATUSES = ["active", "sold", "rented", "archived"] as const
+const PROPERTY_TYPES = ["rumah", "apartemen", "tanah", "ruko"] as const
+
+function isPropertyStatus(s: string): s is PropertyStatus {
+  return (STATUSES as readonly string[]).includes(s)
+}
+
+function isPropertyType(s: string): s is PropertyType {
+  return (PROPERTY_TYPES as readonly string[]).includes(s)
+}
 
 const propertySchema = z.object({
   title: z.string().min(1, "Judul wajib diisi"),
@@ -39,10 +51,17 @@ export async function GET(req: NextRequest) {
     const city = searchParams.get("city")
     const search = searchParams.get("search")
 
+    if (status && !isPropertyStatus(status)) {
+      return NextResponse.json({ error: "Status tidak valid" }, { status: 400 })
+    }
+    if (type && !isPropertyType(type)) {
+      return NextResponse.json({ error: "Tipe properti tidak valid" }, { status: 400 })
+    }
+
     const conditions = []
 
-    if (status) conditions.push(eq(properties.status, status as "active" | "sold" | "rented"))
-    if (type) conditions.push(eq(properties.type, type as "rumah" | "apartemen" | "tanah" | "ruko"))
+    if (status) conditions.push(eq(properties.status, status as PropertyStatus))
+    if (type) conditions.push(eq(properties.type, type as PropertyType))
     if (city) conditions.push(eq(properties.city, city))
     if (search) {
       conditions.push(

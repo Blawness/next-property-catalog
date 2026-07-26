@@ -1,7 +1,7 @@
 export type PropertyType = "rumah" | "apartemen" | "tanah" | "ruko"
 export type ListingType = "jual" | "sewa"
 export type PropertyStatus = "active" | "sold" | "rented" | "archived"
-export type UserRole = "buyer" | "agent"
+export type UserRole = "buyer" | "agent" | "admin"
 
 export interface Property {
   id: string
