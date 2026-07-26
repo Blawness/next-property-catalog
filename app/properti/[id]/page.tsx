@@ -94,14 +94,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? property.description.slice(0, 160)
     : `${property.title} di ${property.city} — ${formattedPrice}`
 
+  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
   return {
     title: `${property.title} — ${formattedPrice} | ${BRAND.name}`,
     description,
+    alternates: { canonical: `${baseUrl}/properti/${property.id}` },
     openGraph: {
       title: property.title,
       description,
       type: "article",
-      images: primaryImage ? [{ url: primaryImage.url, width: 1200, height: 630 }] : [],
+      url: `${baseUrl}/properti/${property.id}`,
+      siteName: BRAND.name,
+      locale: "id_ID",
+      images: primaryImage ? [{ url: primaryImage.url, width: 1200, height: 630, alt: property.title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: property.title,
+      description,
+      images: primaryImage ? [primaryImage.url] : [],
     },
   }
 }
