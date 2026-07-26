@@ -10,6 +10,7 @@ const config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   // Add more setup options before each test is run
+  setupFiles: ['<rootDir>/jest.env.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverageFrom: [
     'lib/**/*.{ts,tsx}',

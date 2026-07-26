@@ -6,7 +6,6 @@ jest.mock('../../../../lib/rate-limit', () => ({
   getRateLimitKey: jest.fn((id: string, action: string) => `${action}:${id}`),
 }))
 jest.mock('../../../../db', () => {
-  const inserted: any[] = []
   return {
     db: {
       select: jest.fn().mockReturnThis(),

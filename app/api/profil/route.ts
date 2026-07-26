@@ -19,7 +19,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     const ip = req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "profile-update"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "profile-update"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }

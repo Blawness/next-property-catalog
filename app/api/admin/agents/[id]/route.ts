@@ -24,7 +24,7 @@ export async function PATCH(
     }
 
     const ip = req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "agent-update"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "agent-update"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
@@ -67,7 +67,7 @@ export async function DELETE(
     }
 
     const ip = _req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "agent-delete"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "agent-delete"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
