@@ -3,7 +3,7 @@ import { db } from "@/db"
 import { favorites, properties, propertyImages } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { eq, and, inArray } from "drizzle-orm"
+import { eq, and, inArray, isNull } from "drizzle-orm"
 import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 
 export async function GET() {
@@ -25,7 +25,7 @@ export async function GET() {
     const props = await db
       .select()
       .from(properties)
-      .where(inArray(properties.id, propertyIds))
+      .where(and(inArray(properties.id, propertyIds), isNull(properties.deletedAt)))
 
     const images = await db
       .select()
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const ip = req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "favorite-toggle"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "favorite-toggle"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }

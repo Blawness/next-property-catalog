@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, desc } from "drizzle-orm"
+import { eq, desc, and, isNull } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import HeroSection from "@/components/HeroSection"
 import ExploreTypes from "@/components/ExploreTypes"
@@ -18,7 +18,7 @@ async function getFeaturedProperties(): Promise<PropertyWithImages[]> {
     db
       .select()
       .from(properties)
-      .where(eq(properties.status, "active"))
+      .where(and(eq(properties.status, "active"), isNull(properties.deletedAt)))
       .orderBy(desc(properties.createdAt))
       .limit(6),
   )

@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
 
         const ip = req.headers?.["x-forwarded-for"] ?? "unknown"
         const key = getRateLimitKey(ip as string, "login")
-        const limit = rateLimit(key, { windowMs: 15 * 60 * 1000, max: 5 })
+        const limit = await rateLimit(key, { windowMs: 15 * 60 * 1000, max: 5 })
 
         if (!limit.success) {
           throw new Error("Terlalu banyak percobaan login. Coba lagi nanti.")

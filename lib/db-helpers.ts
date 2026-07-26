@@ -7,6 +7,9 @@ import type { InferSelectModel } from "drizzle-orm"
 type PropertyRow = InferSelectModel<typeof properties>
 type PropertyImageRow = InferSelectModel<typeof propertyImages>
 
+// NOTE: callers must filter `isNull(properties.deletedAt)` for public reads.
+// Admin routes may omit the filter to inspect soft-deleted rows.
+
 export async function getPropertiesWithImagesBatch(
   query: Promise<PropertyRow[]>,
 ): Promise<PropertyWithImages[]> {

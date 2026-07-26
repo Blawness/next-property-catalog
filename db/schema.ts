@@ -7,6 +7,7 @@ import {
   timestamp,
   pgEnum,
   uniqueIndex,
+  index,
 } from "drizzle-orm/pg-core"
 
 export const roleEnum = pgEnum("role", ["buyer", "agent", "admin"])
@@ -50,6 +51,7 @@ export const properties = pgTable("properties", {
   agentId: text("agent_id").references(() => profiles.id),
   status: statusEnum("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"),
 })
 
 export const propertyImages = pgTable("property_images", {
@@ -78,3 +80,25 @@ export const favorites = pgTable("favorites", {
 }, (table) => ({
   uniqueUserProperty: uniqueIndex("unique_user_property").on(table.userId, table.propertyId),
 }))
+
+export const rateLimits = pgTable(
+  "rate_limits",
+  {
+    key: text("key").primaryKey(),
+    count: integer("count").notNull().default(0),
+    resetAt: timestamp("reset_at").notNull(),
+  },
+  (table) => ({
+    resetAtIdx: index("rate_limits_reset_at_idx").on(table.resetAt),
+  }),
+)
+
+export const adminActions = pgTable("admin_actions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  adminId: text("admin_id").references(() => profiles.id, { onDelete: "set null" }),
+  action: text("action").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id"),
+  metadata: text("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+})

@@ -16,8 +16,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "seed": "tsx db/seed.ts",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -62,6 +63,7 @@
     "jest-environment-jsdom": "^30.3.0",
     "tailwindcss": "^4",
     "tsx": "^4.7.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "undici": "^8.9.0"
   }
 }

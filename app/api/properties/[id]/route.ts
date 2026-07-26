@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
+import { properties, propertyImages, adminActions } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { eq } from "drizzle-orm"
@@ -70,7 +70,7 @@ export async function PATCH(
     }
 
     const ip = req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "property-update"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "property-update"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
@@ -140,13 +140,29 @@ export async function DELETE(
     }
 
     const ip = _req.headers.get("x-forwarded-for") ?? "unknown"
-    const limit = rateLimit(getRateLimitKey(ip, "property-delete"), { windowMs: 60_000, max: 30 })
+    const limit = await rateLimit(getRateLimitKey(ip, "property-delete"), { windowMs: 60_000, max: 30 })
     if (!limit.success) {
       return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 })
     }
 
     const { id } = await params
-    await db.delete(properties).where(eq(properties.id, id))
+    const now = new Date()
+    const [updated] = await db
+      .update(properties)
+      .set({ deletedAt: now, status: "archived" })
+      .where(eq(properties.id, id))
+      .returning({ id: properties.id })
+
+    if (!updated) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
+    }
+
+    await db.insert(adminActions).values({
+      adminId: session.user.id ?? null,
+      action: "property.soft_delete",
+      entityType: "property",
+      entityId: id,
+    })
 
     return NextResponse.json({ ok: true })
   } catch (error) {
