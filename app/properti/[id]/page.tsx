@@ -48,6 +48,38 @@ async function getProperty(id: string) {
   return { property, images, agent }
 }
 
+function buildJsonLd(property: typeof properties.$inferSelect, images: Array<typeof propertyImages.$inferSelect>) {
+  const primary = images.find((i) => i.isPrimary) ?? images[0]
+  return {
+    "@context": "https://schema.org",
+    "@type": "Residence" as const,
+    name: property.title,
+    description: property.description ?? undefined,
+    url: `/properti/${property.id}`,
+    image: primary ? [primary.url] : undefined,
+    address: {
+      "@type": "PostalAddress" as const,
+      addressLocality: property.city,
+      streetAddress: property.address ?? undefined,
+      addressCountry: "ID",
+    },
+    geo: property.lat && property.lng ? {
+      "@type": "GeoCoordinates" as const,
+      latitude: Number(property.lat),
+      longitude: Number(property.lng),
+    } : undefined,
+    numberOfRooms: property.bedrooms ?? undefined,
+    offers: {
+      "@type": "Offer" as const,
+      price: property.price,
+      priceCurrency: "IDR",
+      availability: property.status === "active"
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params
   const data = await getProperty(id)
@@ -86,6 +118,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl animate-in fade-in duration-300">
       <PropertyGalleryClient images={images} title={property.title} />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(property, images)) }}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
