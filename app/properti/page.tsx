@@ -1,6 +1,6 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, desc, and, gte, lte, ilike } from "drizzle-orm"
+import { eq, desc, and, gte, lte, ilike, isNull } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyFilter from "@/components/PropertyFilter"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -27,7 +27,7 @@ interface PageProps {
 }
 
 async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promise<PropertyWithImages[]> {
-  const conditions = [eq(properties.status, "active")]
+  const conditions = [eq(properties.status, "active"), isNull(properties.deletedAt)]
 
   if (filters.type && PROPERTY_TYPES.includes(filters.type as typeof PROPERTY_TYPES[number])) {
     conditions.push(eq(properties.type, filters.type as typeof PROPERTY_TYPES[number]))

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { db } from "@/db"
 import { properties, propertyImages, profiles } from "@/db/schema"
-import { eq } from "drizzle-orm"
+import { eq, and, isNull } from "drizzle-orm"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { MapPin, ExternalLink } from "lucide-react"
@@ -24,7 +24,7 @@ async function getProperty(id: string) {
   const [property] = await db
     .select()
     .from(properties)
-    .where(eq(properties.id, id))
+    .where(and(eq(properties.id, id), isNull(properties.deletedAt)))
     .limit(1)
 
   if (!property) return null

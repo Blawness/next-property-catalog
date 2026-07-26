@@ -1,6 +1,6 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, inArray } from "drizzle-orm"
+import { eq, inArray, and, isNull } from "drizzle-orm"
 import MapView from "@/components/MapView"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
@@ -10,7 +10,7 @@ async function getPropertiesWithCoords() {
   const rows = await db
     .select()
     .from(properties)
-    .where(eq(properties.status, "active"))
+    .where(and(eq(properties.status, "active"), isNull(properties.deletedAt)))
 
   const withCoords = rows.filter((p) => p.lat && p.lng)
 
