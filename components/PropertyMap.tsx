@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 const LeafletMap = dynamic(() => import("./LeafletMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-64 rounded-lg bg-muted animate-pulse flex items-center justify-center text-muted-foreground text-sm">
+    <div className="h-64 rounded-2xl bg-muted animate-pulse flex items-center justify-center text-muted-foreground text-sm">
       Memuat peta...
     </div>
   ),

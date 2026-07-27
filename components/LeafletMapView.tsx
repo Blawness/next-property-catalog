@@ -49,15 +49,15 @@ export default function LeafletMapView({ properties }: { properties: PropertyPin
             icon={icon}
           >
             <Popup>
-              <div className="space-y-1 min-w-36">
-                <p className="font-semibold text-sm leading-tight">{prop.title}</p>
-                <p className="text-primary font-medium text-sm">
+              <div className="space-y-1 min-w-36 font-sans">
+                <p className="font-semibold text-sm leading-tight text-foreground">{prop.title}</p>
+                <p className="text-primary font-bold text-sm">
                   {formatPriceCompact(prop.price, prop.listingType)}
                 </p>
-                <p className="text-xs text-gray-500">{prop.city}</p>
+                <p className="text-xs text-muted-foreground">{prop.city}</p>
                 <a
                   href={`/properti/${prop.id}`}
-                  className="text-xs text-blue-600 hover:underline block mt-1"
+                  className="mt-2 inline-block rounded-xl bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   Lihat Detail →
                 </a>

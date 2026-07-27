@@ -24,7 +24,7 @@ export default function LeafletMap({ lat, lng, title }: Props) {
     <MapContainer
       center={[lat, lng]}
       zoom={15}
-      className="h-64 rounded-lg z-0"
+      className="h-64 rounded-2xl z-0"
       scrollWheelZoom={false}
     >
       <TileLayer
