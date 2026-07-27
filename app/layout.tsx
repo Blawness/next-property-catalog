@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Poppins, Manrope } from "next/font/google"
+import { Mulish } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
 import Navbar from "@/components/Navbar"
@@ -7,14 +7,11 @@ import ConditionalFooter from "@/components/ConditionalFooter"
 import Providers from "@/components/Providers"
 import { BRAND } from "@/lib/brand"
 
-const poppins = Poppins({
+const mulish = Mulish({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
-})
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
+  variable: "--font-mulish",
 })
 
 export const metadata: Metadata = {
@@ -24,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${poppins.variable} ${manrope.variable}`}>
+    <html lang="id" className={mulish.variable}>
       <body className="min-h-screen bg-background antialiased">
         <Providers>
           <Navbar />

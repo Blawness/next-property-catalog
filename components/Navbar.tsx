@@ -11,14 +11,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { PlusCircle, ChevronDown, MapPin, LayoutGrid, Home } from "lucide-react"
-import BrandMark from "@/components/BrandMark"
+import { PlusCircle, ChevronDown } from "lucide-react"
+import { BRAND } from "@/lib/brand"
 import { cn } from "@/lib/utils"
 
 const NAV_LINKS = [
-  { href: "/",         label: "Home",     icon: Home },
-  { href: "/properti", label: "Properti", icon: LayoutGrid },
-  { href: "/peta",     label: "Peta",     icon: MapPin },
+  { href: "/#home",    label: "Home",       id: "home" },
+  { href: "/#about",   label: "About us",   id: "about" },
+  { href: "/#how",     label: "How we work", id: "how" },
+  { href: "/properti", label: "Listings",   id: "listings" },
+  { href: "/#contact", label: "Contacts",   id: "contact" },
 ]
 
 export default function Navbar() {
@@ -31,42 +33,38 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border bg-background">
       <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <Link href="/" className="shrink-0">
-          <BrandMark size="md" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/mockup-assets/logo web tap catalog.png"
+            alt={BRAND.name}
+            style={{ display: "block", width: 154, height: 48 }}
+          />
         </Link>
 
-        <div className="hidden sm:flex items-center gap-7">
-          {NAV_LINKS.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + "/")
+        <nav
+          aria-label="Primary"
+          className="hidden md:flex items-center"
+          style={{ gap: "58px", fontSize: "21px", fontWeight: 500 }}
+        >
+          {NAV_LINKS.map(({ href, label, id }) => {
+            const active = id === "home" ? pathname === "/" : pathname === href || pathname.startsWith(href.replace(/#.*$/, ""))
             return (
-              <Link
-                key={href}
+              <a
+                key={id}
                 href={href}
+                data-nav={id}
                 className={cn(
-                  "group relative inline-flex items-center gap-2 leading-none",
-                  "font-sans text-[14px] font-medium",
-                  "transition-colors duration-200",
-                  active ? "text-primary font-semibold" : "text-foreground/70 hover:text-foreground",
+                  "transition-colors",
+                  active
+                    ? "text-primary font-bold"
+                    : "text-primary/45 hover:text-primary",
                 )}
               >
-                <Icon
-                  size={14}
-                  strokeWidth={2.25}
-                  className={cn(
-                    "shrink-0 transition-colors",
-                    active ? "text-primary" : "text-foreground/40 group-hover:text-foreground/70",
-                  )}
-                />
                 {label}
-                <span
-                  className={cn(
-                    "absolute -bottom-[1.15rem] left-0 right-0 h-[2px] origin-left transition-transform duration-200",
-                    active ? "bg-primary scale-x-100" : "bg-primary scale-x-0 group-hover:scale-x-100",
-                  )}
-                />
-              </Link>
+              </a>
             )
           })}
-        </div>
+        </nav>
 
         <div className="flex items-center gap-1 shrink-0">
           {session ? (

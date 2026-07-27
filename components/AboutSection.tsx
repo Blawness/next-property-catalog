@@ -1,46 +1,56 @@
 import Image from "next/image"
-import SectionHeading from "@/components/SectionHeading"
-import Reveal from "@/components/Reveal"
-import { BRAND } from "@/lib/brand"
+
+const STATS = [
+  { n: "20+", label: "served clients" },
+  { n: "30", label: "our database" },
+  { n: "99%", label: "quality property" },
+] as const
 
 export default function AboutSection() {
   return (
-    <section id="tentang" className="container mx-auto px-4 py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="Tentang Kami"
-        title={BRAND.about.heading}
-        subtitle={BRAND.about.subtitle}
-      />
-
-      <div className="grid gap-10 md:grid-cols-2 md:items-center">
-        <Reveal>
-          <p className="font-sans text-[15px] leading-relaxed text-muted-foreground">
-            {BRAND.about.body}
-          </p>
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="relative h-[420px] overflow-hidden rounded-3xl">
-            <Image
-              src={BRAND.about.image}
-              alt="Gedung pencakar langit"
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
-        </Reveal>
+    <section
+      id="about"
+      className="relative min-h-[768px] px-[clamp(1.5rem,5vw,4.5rem)] pt-[clamp(6rem,13vw,11rem)] pb-0 grid grid-cols-1 md:[grid-template-columns:690px_1fr] md:gap-x-[60px] md:items-start"
+    >
+      <div>
+        <h2 className="m-0 font-sans text-[clamp(2.5rem,5vw,3.9rem)] leading-none font-bold tracking-[-0.02em] text-foreground">
+          About Us
+        </h2>
+        <p className="mt-[82px] max-w-[690px] font-sans text-[20px] leading-[34px] text-pretty text-foreground">
+          TAP Catalog is a federal network of commercial real estate agencies.
+          We help companies from startups to coorporations – to find rent, buy, and
+          property showcase. Our team takes care of the search, negotiations, legal
+          verification, and transaction support until the contract is signed.
+        </p>
       </div>
 
-      <div className="mt-14 grid grid-cols-1 divide-y divide-border sm:mt-16 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-        {BRAND.stats.map((s, i) => (
-          <Reveal key={s.label} delay={i * 100}>
-            <div className="px-6 py-8 text-center sm:py-2">
-              <p className="font-sans text-5xl font-bold text-primary sm:text-6xl">{s.n}</p>
-              <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                {s.label}
-              </p>
-            </div>
-          </Reveal>
+      <div className="hidden md:block" aria-hidden />
+
+      <div
+        role="img"
+        aria-label="Commercial tower"
+        className="relative w-[260px] sm:w-[320px] md:w-[400px] h-[320px] sm:h-[400px] md:h-[500px] mt-12 md:mt-0 md:absolute md:right-[-80px] md:top-[180px] overflow-hidden rounded-2xl"
+      >
+        <Image
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&h=1100&q=80"
+          alt="Commercial tower"
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          className="object-cover"
+          style={{ objectPosition: "center 30%" }}
+        />
+      </div>
+
+      <div className="col-span-full mt-[clamp(2rem,4vw,4rem)] flex flex-col sm:flex-row items-center justify-center gap-[clamp(2.5rem,7vw,7.5rem)] py-8">
+        {STATS.map((s) => (
+          <div key={s.label} className="flex flex-col items-center gap-[22px]">
+            <span className="font-sans text-[clamp(3.5rem,7.5vw,7.5rem)] leading-[0.8] font-light tracking-[-0.03em] text-foreground">
+              {s.n}
+            </span>
+            <span className="font-sans text-[20px] whitespace-nowrap text-foreground">
+              {s.label}
+            </span>
+          </div>
         ))}
       </div>
     </section>

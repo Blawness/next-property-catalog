@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react'
 import HowWeWork from '@/components/HowWeWork'
 
 describe('HowWeWork', () => {
-  it('renders heading and 4 step titles', () => {
+  it('renders heading and 4 mockup-literal step titles', () => {
     render(<HowWeWork />)
-    expect(screen.getByText('Bagaimana Kami Bekerja')).toBeInTheDocument()
-    expect(screen.getByText('Konsultasi Gratis')).toBeInTheDocument()
-    expect(screen.getByText('Cari & Pilih')).toBeInTheDocument()
-    expect(screen.getByText('Verifikasi Data')).toBeInTheDocument()
-    expect(screen.getByText('Hubungi Agen')).toBeInTheDocument()
+    expect(screen.getByText('How We Work')).toBeInTheDocument()
+    expect(screen.getByText('Free Consultation')).toBeInTheDocument()
+    expect(screen.getByText('Search & Selection')).toBeInTheDocument()
+    expect(screen.getByText('Data Verification')).toBeInTheDocument()
+    expect(screen.getByText('Finishing')).toBeInTheDocument()
   })
 
   it('renders 4 svg icons', () => {
