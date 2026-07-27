@@ -218,7 +218,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           )}
         </div>
 
-        <AgentCard agent={agent} createdAt={property.createdAt} />
+        <AgentCard
+          agent={agent ? { fullName: agent.fullName, phone: agent.phone, avatarUrl: agent.avatarUrl } : null}
+          createdAt={property.createdAt}
+          propertyId={property.id}
+        />
       </div>
     </div>
   )
