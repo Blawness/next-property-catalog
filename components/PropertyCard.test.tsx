@@ -31,6 +31,7 @@ describe('PropertyCard', () => {
 
   it('formats price correctly', () => {
     render(<PropertyCard property={mockProperty} />)
-    expect(screen.getByText('Rp 1.0 M')).toBeInTheDocument()
+    expect(screen.getByText(/1\.0 M/)).toBeInTheDocument()
+    expect(screen.getByText('Rp')).toBeInTheDocument()
   })
 })

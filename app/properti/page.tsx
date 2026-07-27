@@ -7,11 +7,13 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Suspense } from "react"
+import Link from "next/link"
 import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
-import { BRAND } from "@/lib/brand"
-import { SlidersHorizontal } from "lucide-react"
+import { SlidersHorizontal, SearchX } from "lucide-react"
+import SectionHeading from "@/components/SectionHeading"
+import Reveal from "@/components/Reveal"
 
 export const revalidate = 60
 
@@ -77,19 +79,33 @@ async function PropertyGrid({ filters }: { filters: Awaited<PageProps["searchPar
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-16 text-muted-foreground">
-        <p className="text-lg">Tidak ada properti yang sesuai filter.</p>
-        <p className="text-sm mt-1">Coba ubah atau hapus beberapa filter.</p>
+      <div className="text-center py-20">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary text-primary">
+          <SearchX size={28} strokeWidth={1.5} />
+        </div>
+        <p className="mt-4 font-sans text-lg font-semibold text-foreground">
+          Tidak ada properti ditemukan
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Coba ubah atau hapus beberapa filter.
+        </p>
+        <Button variant="outline" size="sm" className="mt-5 rounded-xl" asChild>
+          <Link href="/properti">Reset Filter</Link>
+        </Button>
       </div>
     )
   }
 
   return (
     <div>
-      <p className="text-sm text-muted-foreground mb-4">{items.length} properti ditemukan</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {items.map((property) => (
-          <PropertyCard key={property.id} property={property} />
+      <p className="mb-5 text-sm text-muted-foreground">
+        Menampilkan <span className="font-semibold italic text-primary">{items.length}</span> properti
+      </p>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((property, i) => (
+          <Reveal key={property.id} delay={(i % 3) * 90}>
+            <PropertyCard property={property} />
+          </Reveal>
         ))}
       </div>
     </div>
@@ -101,13 +117,13 @@ export default async function PropertiPage({ searchParams }: PageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">{BRAND.pageTitle.catalogHeading}</h1>
+      <SectionHeading eyebrow="Katalog" title="Katalog Properti" />
 
       {/* Mobile filter drawer */}
       <div className="lg:hidden mb-4">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <SlidersHorizontal size={14} className="mr-1" /> Filter
             </Button>
           </SheetTrigger>
@@ -126,7 +142,7 @@ export default async function PropertiPage({ searchParams }: PageProps) {
 
       <div className="flex gap-8">
         <aside className="hidden lg:block w-56 shrink-0">
-          <div className="sticky top-20 p-4 border rounded-lg bg-card">
+          <div className="sticky top-20 rounded-3xl bg-secondary/60 p-6">
             <Suspense>
               <PropertyFilter />
             </Suspense>

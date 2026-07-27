@@ -1,6 +1,7 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
 import { eq, inArray, and, isNull } from "drizzle-orm"
+import SectionHeading from "@/components/SectionHeading"
 import MapView from "@/components/MapView"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
@@ -25,8 +26,13 @@ export default async function PetaPage() {
   const items = await getPropertiesWithCoords()
 
   return (
-    <div className="h-[calc(100vh-56px)]">
-      <MapView properties={items} />
+    <div className="container mx-auto px-4 py-10">
+      <SectionHeading eyebrow="Peta" title="Peta Properti" subtitle="Jelajahi listing berdasarkan lokasi geografis" />
+      <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="h-[calc(100vh-280px)] min-h-[480px]">
+          <MapView properties={items} />
+        </div>
+      </div>
     </div>
   )
 }

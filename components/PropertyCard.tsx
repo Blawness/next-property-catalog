@@ -2,102 +2,98 @@ import Link from "next/link"
 import Image from "next/image"
 import { MapPin, BedDouble, Bath, Maximize2 } from "lucide-react"
 import type { PropertyWithImages } from "@/lib/types"
-import { formatPriceCompact, PROPERTY_TYPE_LABELS } from "@/lib/constants"
+import { formatPriceCompact } from "@/lib/constants"
+import PropertyPills from "@/components/PropertyPills"
 
 export default function PropertyCard({ property }: { property: PropertyWithImages }) {
-  const primaryImage = property.images.find(i => i.isPrimary) ?? property.images[0]
-  const isJual       = property.listingType === "jual"
+  const primaryImage = property.images.find((i) => i.isPrimary) ?? property.images[0]
 
-  const hasSpecs = property.type === "tanah"
-    ? property.landArea != null
-    : property.bedrooms != null || property.bathrooms != null || property.buildingArea != null
+  const hasSpecs =
+    property.type === "tanah"
+      ? property.landArea != null
+      : property.bedrooms != null || property.bathrooms != null || property.buildingArea != null
+
+  const priceText = formatPriceCompact(property.price, property.listingType)
+  const priceMain = priceText.replace(/^Rp\s*/, "")
 
   return (
     <Link
       href={`/properti/${property.id}`}
-      className="group block rounded-2xl overflow-hidden border border-border/60 bg-card shadow-sm hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1 transition-all duration-300"
+      className="group relative block overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
     >
-      <div className="relative h-52 bg-muted overflow-hidden">
+      {/* Gold hairline on hover */}
+      <div
+        aria-hidden
+        className="absolute inset-x-6 top-0 z-10 h-px origin-center scale-x-0 bg-gradient-to-r from-transparent via-gold to-transparent transition-transform duration-500 group-hover:scale-x-100"
+      />
+
+      <div className="relative h-56 overflow-hidden bg-muted">
         {primaryImage ? (
           <Image
             src={primaryImage.url}
             alt={property.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground/40 text-sm">
+          <div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground/40">
             Tidak ada foto
           </div>
         )}
 
-        {/* Hover overlay with image count */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-          <span className="text-white text-xs font-medium bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm">
-            {property.images.length} foto
-          </span>
-        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
 
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 via-black/10 to-transparent pointer-events-none" />
-
-        <div className="absolute top-3 left-3 flex gap-1.5">
-          <span
-            className={`inline-flex items-center px-2.5 py-[3px] rounded-full text-[10px] font-bold tracking-wide shadow-md ${
-              isJual
-                ? "bg-brown-500 text-white shadow-brown-500/40"
-                : "bg-sky-500  text-white shadow-sky-500/40"
-            }`}
-          >
-            {isJual ? "Dijual" : "Disewa"}
-          </span>
-          <span className="inline-flex items-center px-2.5 py-[3px] rounded-full text-[10px] font-semibold bg-black/40 text-white backdrop-blur-sm">
-            {PROPERTY_TYPE_LABELS[property.type]}
-          </span>
+        <div className="absolute left-3 top-3">
+          <PropertyPills listingType={property.listingType} type={property.type} />
         </div>
       </div>
 
-      <div className="p-4">
-        <p
-          className="font-display font-bold text-brown-600 leading-tight mb-1.5"
-          style={{ fontSize: "1.3rem" }}
-        >
-          {formatPriceCompact(property.price, property.listingType)}
+      <div className="p-5">
+        <p className="mb-1.5 font-sans text-[22px] font-semibold leading-tight text-primary">
+          <span className="mr-0.5 align-top text-[0.55em] font-medium text-primary/80">Rp</span>
+          {priceMain}
         </p>
 
-        <h3 className="text-[13.5px] font-semibold leading-snug text-foreground line-clamp-1 group-hover:text-brown-600 transition-colors duration-200 mb-2">
+        <h3 className="mb-2 line-clamp-1 font-sans text-[16px] font-medium leading-snug text-foreground transition-colors duration-200 group-hover:text-primary">
           {property.title}
         </h3>
 
-        <div className="flex items-center gap-1 text-[12px] text-muted-foreground mb-3">
-          <MapPin size={11} className="text-brown-500 shrink-0" />
+        <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+          <MapPin size={11} className="shrink-0 text-primary" />
           <span className="line-clamp-1">{property.address ?? property.city}</span>
         </div>
 
         {hasSpecs && (
-          <div className="flex items-center gap-3.5 pt-2.5 border-t border-border/50 text-[12px] text-muted-foreground">
+          <div className="mt-3.5 flex items-center gap-3 border-t border-border/60 pt-3 text-[12px] text-muted-foreground">
             {property.type === "tanah" ? (
-              <span className="flex items-center gap-1">
-                <Maximize2 size={11} className="text-brown-500/60" />
+              <span className="flex items-center gap-1.5">
+                <Maximize2 size={11} className="text-primary/70" />
                 {property.landArea} m²
               </span>
             ) : (
               <>
                 {property.bedrooms != null && (
-                  <span className="flex items-center gap-1">
-                    <BedDouble size={11} className="text-brown-500/60" />
+                  <span className="flex items-center gap-1.5">
+                    <BedDouble size={11} className="text-primary/70" />
                     {property.bedrooms} KT
                   </span>
                 )}
+                {property.bedrooms != null && property.bathrooms != null && (
+                  <span aria-hidden className="h-3 w-px bg-border" />
+                )}
                 {property.bathrooms != null && (
-                  <span className="flex items-center gap-1">
-                    <Bath size={11} className="text-brown-500/60" />
+                  <span className="flex items-center gap-1.5">
+                    <Bath size={11} className="text-primary/70" />
                     {property.bathrooms} KM
                   </span>
                 )}
+                {property.buildingArea != null && property.bathrooms != null && (
+                  <span aria-hidden className="h-3 w-px bg-border" />
+                )}
                 {property.buildingArea != null && (
-                  <span className="flex items-center gap-1">
-                    <Maximize2 size={11} className="text-brown-500/60" />
+                  <span className="flex items-center gap-1.5">
+                    <Maximize2 size={11} className="text-primary/70" />
                     {property.buildingArea} m²
                   </span>
                 )}
@@ -106,12 +102,6 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
           </div>
         )}
       </div>
-
-      {/* Animated accent line */}
-      <div
-        className="h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-        style={{ background: "linear-gradient(90deg, #8b4b16, #a5621a)" }}
-      />
     </Link>
   )
 }

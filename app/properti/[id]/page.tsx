@@ -137,27 +137,27 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Badge variant={property.listingType === "jual" ? "default" : "secondary"}>
+          <div className="space-y-3">
+            <p className="font-sans text-3xl font-bold text-primary sm:text-4xl">
+              {formattedPrice}
+              {property.listingType === "sewa" && (
+                <span className="ml-1 text-base font-normal text-muted-foreground">/bulan</span>
+              )}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant={property.listingType === "jual" ? "default" : "secondary"} className="rounded-full">
                 {property.listingType === "jual" ? "Dijual" : "Disewa"}
               </Badge>
-              <Badge variant="outline">{PROPERTY_TYPE_LABELS[property.type]}</Badge>
+              <Badge variant="outline" className="rounded-full">{PROPERTY_TYPE_LABELS[property.type]}</Badge>
               {property.status !== "active" && (
-                <Badge variant="destructive">
+                <Badge variant="destructive" className="rounded-full">
                   {property.status === "sold" ? "Terjual" : "Tersewa"}
                 </Badge>
               )}
             </div>
-            <h1 className="text-2xl font-bold">{property.title}</h1>
-            <p className="text-3xl font-bold text-primary">
-              {formattedPrice}
-              {property.listingType === "sewa" && (
-                <span className="text-base font-normal text-muted-foreground">/bulan</span>
-              )}
-            </p>
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <MapPin className="h-4 w-4" />
+            <h1 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">{property.title}</h1>
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 text-primary" />
               <span>
                 {property.address ? `${property.address}, ` : ""}
                 {property.city}
@@ -178,8 +178,10 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <>
               <Separator />
               <div>
-                <h2 className="font-semibold mb-2">Deskripsi</h2>
-                <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
+                <h2 className="font-sans text-xl font-semibold text-foreground mb-3">
+                  Tentang Properti Ini
+                </h2>
+                <p className="whitespace-pre-line leading-relaxed text-foreground/85">
                   {property.description}
                 </p>
               </div>
@@ -190,7 +192,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
             <>
               <Separator />
               <div>
-                <h2 className="font-semibold mb-3">Lokasi</h2>
+                <h2 className="font-sans text-xl font-semibold text-foreground mb-3">Lokasi</h2>
                   <PropertyMap
                     lat={parseFloat(property.lat)}
                     lng={parseFloat(property.lng)}
@@ -216,7 +218,11 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           )}
         </div>
 
-        <AgentCard agent={agent} createdAt={property.createdAt} />
+        <AgentCard
+          agent={agent ? { fullName: agent.fullName, phone: agent.phone, avatarUrl: agent.avatarUrl } : null}
+          createdAt={property.createdAt}
+          propertyId={property.id}
+        />
       </div>
     </div>
   )

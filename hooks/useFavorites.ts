@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSession } from "next-auth/react"
+import { toast } from "sonner"
 import type { PropertyWithImages } from "@/lib/types"
 
 export function useFavorites() {
@@ -22,5 +23,28 @@ export function useFavorites() {
       .finally(() => setLoadingFavs(false))
   }, [session])
 
-  return { favorites, loadingFavs, error }
+  const toggleFavorite = useCallback(async (propertyId: string) => {
+    if (!session) {
+      toast.error("Login untuk menyimpan favorit")
+      return
+    }
+
+    const previous = favorites
+    const isCurrentlyFavorited = favorites.some((f) => f.id === propertyId)
+    setFavorites(isCurrentlyFavorited ? favorites.filter((f) => f.id !== propertyId) : favorites)
+
+    try {
+      const res = await fetch("/api/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId }),
+      })
+      if (!res.ok) throw new Error("Toggle failed")
+    } catch {
+      setFavorites(previous)
+      toast.error("Gagal memperbarui favorit")
+    }
+  }, [session, favorites])
+
+  return { favorites, loadingFavs, error, toggleFavorite }
 }
