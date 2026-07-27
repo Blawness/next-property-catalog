@@ -15,18 +15,18 @@ interface AgentCardProps {
 export default function AgentCard({ agent, createdAt }: AgentCardProps) {
   return (
     <div className="lg:col-span-1">
-      <div className="sticky top-20 border rounded-xl p-5 space-y-4 bg-card">
-        <h3 className="font-semibold">Hubungi Agen</h3>
+      <div className="sticky top-20 rounded-3xl bg-secondary/60 p-6 space-y-4 border border-border/40">
+        <h3 className="font-sans text-lg font-semibold text-foreground">Hubungi Agen</h3>
         {agent ? (
           <>
             <div>
-              <p className="font-medium">{agent.fullName}</p>
+              <p className="font-sans text-base font-semibold text-foreground">{agent.fullName}</p>
               {agent.phone && (
                 <p className="text-sm text-muted-foreground">{agent.phone}</p>
               )}
             </div>
             {agent.phone && (
-              <Button className="w-full" asChild>
+              <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90" asChild>
                 <a
                   href={`https://wa.me/${agent.phone.replace(/\D/g, "")}`}
                   target="_blank"
