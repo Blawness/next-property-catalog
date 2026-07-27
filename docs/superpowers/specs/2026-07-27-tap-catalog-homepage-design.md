@@ -18,7 +18,7 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 - `BRAND.name`: **"TAP CATALOG"** (replaces "Tiga Anak Propertindo"). All page titles, metadata, footer copyright, OpenGraph, sitemap updated.
 - `BRAND.fullName`: "TAP CATALOG — Katalog Properti Indonesia"
 - `BRAND.tagline`: "Katalog Properti #1 Indonesia"
-- `BRAND.headline`: kept as `["Temukan", "Properti", "Impianmu"]` — used as hero accent line.
+- `BRAND.headline`: kept as `["Temukan", "Properti", "Impianmu"]` — used in marketing copy / page description / 404 fallback. The Hero section uses the **English reference text** ("Discover Your Mission / Build Our Passion") as a faithful homage to the wireframe, so `BRAND.headline` is NOT rendered on the homepage.
 - Logo: inline SVG **building icon** (3 angled lines inside a rounded square, lifted from reference) + **"TAP"** wordmark (Poppins 700) + small **"CATALOG"** caption (Poppins 500, uppercase, tracked). Light mode only.
 
 ---
@@ -44,10 +44,10 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 | `--ring` | `oklch(0.45 0.12 40)` | focus ring |
 | `--destructive` | `oklch(0.55 0.20 25)` | error states |
 | `--radius` | `0.875rem` | cards → rounded-2xl/3xl |
-| `--gold` (kept) | `oklch(0.72 0.09 78)` | hairline accent only (footer divider, card top) |
-| `--espresso` (kept) | `oklch(0.225 0.014 50)` | reserved — only if needed for footers/espresso; not primary anymore |
+| `--gold` (kept) | `oklch(0.72 0.09 78)` | hairline accent only (footer divider, card top). Not a primary brand color. |
+| `--espresso` (removed) | — | no longer used anywhere. Footer uses `--primary` (saddle brown) instead. |
 
-**Removed tokens:** `--hero-overlay-dark/medium/light`, `brown-*` scale, `gold-light`, `shadow-luxe`, `shadow-luxe-sm`.
+**Removed tokens:** `--hero-overlay-dark/medium/light`, `brown-*` scale, `gold-light`, `shadow-luxe`, `shadow-luxe-sm`, `--espresso`.
 
 **Removed entirely:** `.dark { }` block, all `--color-*` references to brown/gold/espresso. shadcn tokens stay (sidebar, chart) but re-valued to neutral warm grays.
 
@@ -212,7 +212,7 @@ Structure: `Hero → About → How We Work → Properti → Kota Populer → Con
       - Pesan (textarea 4 rows)
     - Input style: `rounded-xl bg-primary-foreground/95 text-foreground border-0 focus:ring-2 focus:ring-gold` — labels Poppins 500 11px uppercase tracked `text-primary-foreground/80` above each field.
     - Submit: Poppins 600 13px tracked, `bg-primary-foreground text-primary` rounded-xl px-6 py-3, hover `bg-gold text-primary-foreground`.
-    - **Non-functional in v1** — no onSubmit handler, no API. Note in code: `// TODO: wire to /api/contact` or just leave the form inert with a success toast on submit (using sonner).
+    - **Inert in v1** — no onSubmit handler, no API. `onSubmit` calls `e.preventDefault()` and shows a sonner success toast "Pesan terkirim! Kami akan menghubungi Anda segera." (placeholder copy; no network). Clearly NOT a real submission.
   - **Right (info)**:
     - Poppins 600 18px "Informasi Kontak"
     - Vertical list with icons: `MapPin`+address, `Mail`+email, `Phone`+phone, `Clock`+jam operasional.
@@ -291,4 +291,4 @@ Structure: `Hero → About → How We Work → Properti → Kota Populer → Con
 - Stripping `dark:` variants may surface hard-to-spot contrast bugs — manual light-mode-only pass at end of Stage 1.
 - Removing `next-themes` could break if any other component imports it — verify with grep before deletion.
 - Form inert in v1 — clearly label TODO and ensure sonner success toast on submit to avoid user confusion.
-- Brand rename "Tiga Anak Propertindo" → "TAP CATALOG" — must update sitemap, robots, JSON-LD schema on detail page, og:site_name, favicon, OG image, README.
+- Brand rename "Tiga Anak Propertindo" → "TAP CATALOG" — must update sitemap, robots, JSON-LD schema on detail page, og:site_name, favicon, OG image, README, page title patterns in `lib/brand.ts` (`pageTitle.*`), `package.json` `name` (optional), CI badge labels.
