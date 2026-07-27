@@ -1,9 +1,21 @@
 # TAP CATALOG — Homepage Redesign (Reference-Driven)
 
-**Date:** 2026-07-27
-**Status:** Approved (all 5 sections approved by user during brainstorm)
-**Reference:** `references/web tap catalog.svg` (1024×2304 wireframe — "Discover Your Mission / Build Our Passion", About stats, How We Work 4-card grid, Contact outlined word)
+**Date:** 2026-07-27 (initial), revised 2026-07-27 (mockup HTML alignment)
+**Status:** Approved (initial spec). Homepage section revised after user provided authoritative HTML mockup.
+**Reference:** `references/web tap catalog.svg` (wireframe) + `references/SVG ke HTML mockup Next.js.zip` (HTML mockup — **authoritative**)
 **Supersedes:** `2026-07-26-premium-ui-redesign-design.md` (the "Warm Luxury / Resort" direction is abandoned)
+
+**Revision notes (2026-07-27):** User provided an HTML mockup of the SVG that exposes specific design tokens the SVG alone couldn't reveal:
+- **Font is `Mulish`** (not Poppins) — confirmed by `@import` in the mockup HTML
+- **Accent brown is `#723511`** (not oklch saddle brown) — the actual hex
+- **Hero overlay is WHITE-to-transparent** (not dark) — headline sits on white, photo shows in lower 2/3
+- **"Contact" word uses `paint-order: stroke fill`** — critical trick for the white-fill-on-brown-panel effect
+- **Fixed dimensions in mockup** (1366px width, 114px header, 654px hero, etc.) — we mirror proportions but stay responsive
+- **Outline-only cards** with very specific padding (73px top, 28px sides) — no fill, no shadow
+- **Stats are font-weight 300 LIGHT** (not bold) at 120px
+- **Nav is plain text, no icons**, 21px font, 58px gap
+
+This revision captures those corrections. Other sections (tokens, primitives, auth, profile) are unchanged — they were already on the right path.
 
 ## Problem
 
@@ -19,7 +31,7 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 - `BRAND.fullName`: "TAP CATALOG — Katalog Properti Indonesia"
 - `BRAND.tagline`: "Katalog Properti #1 Indonesia"
 - `BRAND.headline`: kept as `["Temukan", "Properti", "Impianmu"]` — used in marketing copy / page description / 404 fallback. The Hero section uses the **English reference text** ("Discover Your Mission / Build Our Passion") as a faithful homage to the wireframe, so `BRAND.headline` is NOT rendered on the homepage.
-- Logo: inline SVG **building icon** (3 angled lines inside a rounded square, lifted from reference) + **"TAP"** wordmark (Poppins 700) + small **"CATALOG"** caption (Poppins 500, uppercase, tracked). Light mode only.
+- Logo: per HTML mockup — **raster logo image** `uploads/logo web tap catalog.png` (154×48px) at the header. SVG version at `uploads/tap catalog logo.svg` also available. Keep current `BrandMark` component as an alternative for places that need React (e.g. email) but the public site header/footer should use the actual logo asset.
 
 ---
 
@@ -31,7 +43,7 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 |---|---|---|
 | `--background` | `oklch(0.99 0.005 80)` | warm off-white page bg |
 | `--foreground` | `oklch(0.18 0.005 60)` | near-black body text |
-| `--primary` | `oklch(0.45 0.12 40)` | **saddle brown** — CTAs, borders, outlined type |
+| `--primary` | `#723511` (hex) | **saddle/sienna brown** — CTAs, borders, outlined type. Matches mockup HTML's `--accent: #723511` |
 | `--primary-foreground` | `oklch(0.99 0.005 80)` | white text on brown |
 | `--secondary` | `oklch(0.95 0.008 70)` | warm panels (filter sidebar, agent card) |
 | `--secondary-foreground` | `oklch(0.18 0.005 60)` | |
@@ -51,12 +63,12 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 
 **Removed entirely:** `.dark { }` block, all `--color-*` references to brown/gold/espresso. shadcn tokens stay (sidebar, chart) but re-valued to neutral warm grays.
 
-### Typography (next/font/google)
+### Typography (next/font/google) — REVISED per HTML mockup
 
-- **Display + body:** `Poppins` (variable, weights 300/400/500/600/700) → `--font-poppins`
-- **Navbar:** `Manrope` (variable, weights 400/500/600/700) → `--font-manrope`
-- All `.font-display` references resolve to Poppins (no serif).
-- Replace Fraunces + Jost from prior plan.
+- **All text (display + body + nav):** `Mulish` (variable, weights 300/400/500/600/700/800 + italic 300/700) → `--font-mulish`
+- **Removed:** Poppins + Manrope from initial spec
+- Mulish is what the mockup HTML imports via Google Fonts: `Mulish:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,700&display=swap`
+- All `.font-display` references resolve to Mulish.
 
 ### Drop dark mode (no toggling)
 
@@ -134,90 +146,92 @@ The existing premium UI plan (bronze/gold, Fraunces serif, dark mode, editorial 
 
 Structure: `Hero → About → How We Work → Properti → Kota Populer → Contact → Footer`.
 
-### 1. Hero
-- Section: `relative h-[78vh] min-h-[560px] max-h-[820px] overflow-hidden`.
-- Background: parallax disabled (clean static) or subtle (5-10% translateY on scroll). `next/image` of `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop` (modern house + pool, same as plan's CTA image).
-- Overlay: `linear-gradient(to bottom, black/30 0%, black/10 50%, black/55 100%)` for text readability.
-- Top hairline: gold gradient (40-60%), 1px.
-- Centered content (z-10):
-  - Headline 2 lines, Poppins:
-    - Line 1: `font-light italic text-3xl sm:text-4xl md:text-5xl` — "Discover Your Mission" (kept as English reference-style accent)
-    - Line 2: `font-bold text-4xl sm:text-5xl md:text-6xl` — "Build Our Passion"
-  - Subtitle: Poppins 400, 14-16px, `text-white/70`, max-w-md, 1-2 baris.
-  - 2 buttons in a flex row, gap-3:
-    - "BOOK NOW →" — `bg-primary text-primary-foreground` rounded-xl px-6 py-3 Poppins 600 13px tracked, hover `bg-primary/90`, `btn-press`.
-    - "FOR SELLER" — `border border-white/40 text-white` rounded-xl, hover `bg-white/10`.
-  - Optional: scroll cue (ChevronDown) bottom-center, `text-white/30`, pointer-events-none.
+### 1. Hero — REVISED per HTML mockup
 
-### 2. About
-- Section: `container mx-auto px-4 py-16 sm:py-20`.
-- `SectionHeading` (center): eyebrow "Tentang Kami", title "Tentang TAP CATALOG", subtitle "Katalog properti terlengkap untuk menemukan rumah, apartemen, tanah, dan ruko di seluruh Indonesia."
-- 2-column on `md:grid-cols-2 gap-10 items-center`:
-  - Left: paragraph Poppins 400 15px `text-muted-foreground` leading-relaxed, ~3-4 baris tentang misi.
-  - Right: photo of skyscraper (`https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=1100&fit=crop` or similar) rounded-3xl object-cover h-[420px].
-- Below: 3 stats in `grid-cols-3 gap-8` with vertical hairline dividers (`divide-x`):
-  - "15.000+" / "Properti Aktif" — from `BRAND.stats[0]`
-  - "34" / "Provinsi" — from `BRAND.stats[1]`
-  - "500+" / "Agen Terpercaya" — from `BRAND.stats[2]`
-- Stats: Poppins 700 56-64px `text-primary` + Poppins 500 11px uppercase tracked 0.18em `text-muted-foreground`.
+- **Container**: section `relative overflow-hidden` (proportional height — target ~78vh like before, but mirror the mockup's vertical rhythm)
+- **Photo**: skyscraper `https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80` (matches mockup). `next/image` fill, `object-position: center 42%`.
+- **Overlay**: **WHITE-to-transparent gradient** (mockup line 44): `linear-gradient(180deg, #fff 0%, rgba(255,255,255,.92) 26%, rgba(255,255,255,.35) 48%, rgba(255,255,255,0) 66%)`. Headline sits on the white portion (visible), photo shows in lower 2/3.
+- **Headline** (Mulish, centered, ~63px desktop / 32-48px mobile):
+  - Line 1: `font-light italic` (300) — "Discover Your Mission"
+  - Line 2: `font-bold` (700) — "Build Our Passion"
+  - `letter-spacing: -0.015em; line-height: 1.05; text-wrap: balance`
+- **2 CTAs** — positioned at `margin-top: auto; margin-bottom: 76px` (bottom-center of hero, overlaid on photo):
+  - "BOOK NOW" — `bg-primary color-white`, `border-radius: 22px`, `height: 44px; padding: 0 26px`, Mulish 700, 19px, `letter-spacing: 0.05em; text-transform: uppercase`, with chevron-right icon
+  - "FOR SELLER" — `bg-#111 color-white`, same shape, no icon
+  - Both at the bottom of the hero, on the photo portion (not in the white area)
 
-### 3. How We Work
-- Section: `container mx-auto px-4 py-16 sm:py-20`.
-- `SectionHeading` (center): eyebrow "Layanan", title "Bagaimana Kami Bekerja", subtitle "Proses mudah menemukan properti yang tepat untuk Anda."
-- 4 cards in `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5`:
-  - Card: `rounded-2xl border-2 border-primary p-7 flex flex-col items-center text-center bg-background`.
-  - Icon: lucide inside 56px circle `bg-accent text-accent-foreground` (black bg + off-white icon), icon size 24, strokeWidth 1.75.
-  - Title: Poppins 600 17px `text-foreground` mt-5.
-  - Description: Poppins 400 13px `text-muted-foreground` leading-relaxed mt-2.
-  - Steps (4):
-    1. **Konsultasi Gratis** — "Konsultasi kebutuhanmu, kami bantu tentukan tipe properti yang sesuai." (MessageCircle)
-    2. **Cari & Pilih** — "Telusuri katalog terverifikasi, filter sesuai budget dan lokasi." (Search)
-    3. **Verifikasi Data** — "Setiap listing melalui proses verifikasi dokumen dan legalitas." (FileCheck)
-    4. **Hubungi Agen** — "Terhubung langsung dengan agen terpercaya untuk kunjungan & negosiasi." (Handshake)
+### 2. About — REVISED per HTML mockup
 
-### 4. Properti (Explore + Properti Terbaru digabung)
-- Section: `container mx-auto px-4 py-16 sm:py-20`.
-- `SectionHeading` (center): eyebrow "Listing", title "Properti Pilihan", subtitle "Listing terbaru dari agen terpercaya di seluruh Indonesia."
-- **Sub-section A — ExploreTypes**: 4 kartu dalam `grid grid-cols-2 lg:grid-cols-4 gap-4`:
-  - Card: `rounded-2xl border-2 border-primary p-5 flex items-center gap-4 hover:bg-primary hover:text-primary-foreground transition-colors group`.
-  - Icon: lucide dalam 44px circle `bg-primary/10 text-primary` (group hover: `bg-primary-foreground/15 text-primary-foreground`).
-  - Label: Poppins 600 16px.
-  - Count: Poppins 500 10px uppercase tracked `text-muted-foreground` (group hover: `text-primary-foreground/70`).
-  - `Reveal` stagger 80ms.
-  - Queries: same as plan, group by `properties.type` for counts.
-- **Sub-section B — Properti Terbaru**: 3-kolom grid PropertyCard (Reveal stagger 90ms), 6 listing.
-- Mobile: stack vertically.
+- **Layout**: `position: relative; min-height: 768px; padding: 170px 72px 0; display: grid; grid-template-columns: 690px 1fr; column-gap: 60px; align-content: start`
+- **Left column** (690px):
+  - Title: "About Us" — Mulish 700, 62px, `letter-spacing: -0.02em`
+  - Body paragraph: Mulish 400, 20px, `line-height: 34px; text-wrap: pretty`, max-width 690px, `margin-top: 82px`
+  - Copy (matches mockup): "TAP Catalog is a federal network of commercial real estate agencies. We help companies from startups to coorporations – to find rent, buy, and property showcase. Our team takes care of the search, negotiations, legal verification, and transaction support until the contract is signed."
+- **Right column** (1fr, with absolute-positioned image):
+  - Image: skyscraper `https://images.unsplash.com/photo-1486406146926-c627a92ad1ab` (same as hero but cropped), positioned `absolute; width: 400px; height: 500px; left: 966px; top: 269px` (bleeds beyond section bounds in the mockup). For responsive: use the same Unsplash photo, position right, bleed off right edge with overflow:hidden on parent.
+- **Stats row** (full-width below, `grid-column: 1 / -1`, flex, gap 120px):
+  - 3 columns, each `display: flex; flex-direction: column; align-items: center; gap: 22px`
+  - Number: Mulish **300 LIGHT**, **120px**, `line-height: 0.8; letter-spacing: -0.03em`
+  - Label: Mulish 400, 20px, `white-space: nowrap`
+  - **Use mockup's literal numbers**: "20+" / "30" / "99%" with "served clients" / "our database" / "quality property" (NOT BRAND.stats which says "15.000+ Properti Aktif" etc — those are wrong for this design)
+  - **OR** keep BRAND.stats but render in mockup's typography (120px, weight 300). Decision: use **mockup's literal stats for homepage** to match exactly; keep BRAND.stats for other contexts.
 
-### 5. Kota Populer
-- Section: `container mx-auto px-4 py-16 sm:py-20`.
-- `SectionHeading` (center): eyebrow "Lokasi", title "Kota Populer", subtitle "Listing properti di kota-kota besar Indonesia."
-- Bento grid `grid auto-rows-[160px] grid-cols-2 md:auto-rows-[200px] md:grid-cols-4 gap-4`:
-  - 6 cards dari `BRAND.popularCities.cities` (Jakarta, Bandung, Surabaya, Yogyakarta, Bali, Semarang).
-  - Layout: index 0 large (col-span-2 row-span-2), 1-5 smaller.
-  - Each: rounded-3xl overflow-hidden, next/image fill, overlay `from-accent/85 via-accent/20 to-transparent`, bottom-left city name (Poppins 600 18px italic `text-white` + `MapPin` 14px `text-gold`) + count (Poppins 500 10px uppercase tracked `text-white/60`).
-  - Reveal stagger 70ms.
-  - `getCityCounts()` async (same query as plan).
+### 3. How We Work — REVISED per HTML mockup
 
-### 6. Contact
-- Section: `bg-background pt-16 sm:pt-20`.
-- Display word: "Contact" — Poppins 800 italic, `clamp(5rem, 18vw, 12rem)`, `text-transparent [-webkit-text-stroke:2px_var(--primary)]` (outlined only), `leading-[0.9] tracking-tight`, centered or left-aligned bleeding off edge.
-- Panel: `bg-primary text-primary-foreground` — rounded-t-3xl or full-bleed, py-20.
-- 2-column `container mx-auto px-4 grid lg:grid-cols-2 gap-12`:
-  - **Left (form)**:
-    - Heading: Poppins 600 24px "Hubungi Kami" + subtitle Poppins 400 14px `text-primary-foreground/70`.
-    - Fields (vertical stack, gap-4):
-      - Nama (text input)
-      - Email (email input)
-      - No. Telepon (tel input)
-      - Pesan (textarea 4 rows)
-    - Input style: `rounded-xl bg-primary-foreground/95 text-foreground border-0 focus:ring-2 focus:ring-gold` — labels Poppins 500 11px uppercase tracked `text-primary-foreground/80` above each field.
-    - Submit: Poppins 600 13px tracked, `bg-primary-foreground text-primary` rounded-xl px-6 py-3, hover `bg-gold text-primary-foreground`.
-    - **Inert in v1** — no onSubmit handler, no API. `onSubmit` calls `e.preventDefault()` and shows a sonner success toast "Pesan terkirim! Kami akan menghubungi Anda segera." (placeholder copy; no network). Clearly NOT a real submission.
-  - **Right (info)**:
-    - Poppins 600 18px "Informasi Kontak"
-    - Vertical list with icons: `MapPin`+address, `Mail`+email, `Phone`+phone, `Clock`+jam operasional.
-    - Social icons row (Instagram, WhatsApp, Facebook) dalam 40px circle outline `border-primary-foreground/20`, hover `border-gold text-gold`.
-    - Optional: small embed preview or CTA "Lihat di Peta →" link ke `/peta`.
+- **Container**: `padding: 192px 72px 0` (very generous top padding)
+- **Title**: "How We Work" — Mulish 700, 62px, centered, `letter-spacing: -0.02em`
+- **4 cards** in `grid-template-columns: repeat(4, 1fr); gap: 16px` (NOT 5 like current — strict 4 columns):
+  - Each card: `height: 385px; border: 1px solid #723511; background: transparent; border-radius: 24px; padding: 73px 28px 0; display: flex; flex-direction: column; align-items: center; text-align: center`
+  - **Icon**: 66px × 66px circle, `background: #111; color: #fff`, lucide icon inside 30px × 30px (or 28×28), white stroke
+  - **Title**: Mulish 700, 26px, `margin: 41px 0 0; letter-spacing: -0.01em`
+  - **Description**: Mulish 400, 19px, `line-height: 27px; text-wrap: pretty; margin: 15px 0 0`
+  - **Steps (4) — copy from mockup exactly**:
+    1. **Free Consultation** — "consultation needs analysist. we determine what type of property you need" (MessageCircle icon)
+    2. **Search & Selection** — "we offer only verified properties that match your budget and goals" (Search icon)
+    3. **Data Verification** — "we conduct a review all documents and ownership" (FileText icon — note: mockup uses `file-text`, not `file-check`)
+    4. **Finishing** — "we provide support include contract and accompany you at all stages" (Handshake icon)
+  - **Note**: copy is in English (mockup literal). Decision: **keep English copy** for visual fidelity to mockup. Replace BRAND.howWeWork Indonesian copy with mockup's English.
+
+### 4. Properti (Explore + Properti Terbaru) — KEEP existing
+
+- Structure, ExploreTypes, PropertyCard, Properti Terbaru all kept from current implementation.
+- Uses BRAND.stats etc.
+- Out of scope for this rebuild revision.
+
+### 5. Kota Populer — KEEP existing
+
+- Out of scope for this rebuild revision.
+
+### 6. Contact — REVISED per HTML mockup (major changes)
+
+- **Container**: `position: relative; min-height: 768px`
+- **"Contact" display word** (THE signature element):
+  - `position: absolute; left: 72px; top: 160px; z-index: 2`
+  - Font: Mulish **800** (extrabold), **143px**, `letter-spacing: -0.03em`
+  - Color: `color: #fff` (white fill)
+  - Stroke: `-webkit-text-stroke: 4px var(--primary)` (4px brown stroke)
+  - **CRITICAL TRICK**: `paint-order: stroke fill` — this makes the stroke render BEHIND the fill, so where the text sits on the brown panel, the inside (white fill) is visible and the stroke (brown) blends with the brown panel. Where the text sits on the white background, the inside is white (matching background) and the brown stroke is the only visible part.
+  - Result: text appears as OUTLINED on white area, FILLED on brown area — exactly the mockup effect.
+- **Brown panel**: `position: absolute; left: 0; right: 0; top: 252px; bottom: 0; background: var(--primary); color: #fff; padding: 132px 72px 56px; display: grid; grid-template-columns: 1fr 560px; column-gap: 80px; align-items: start`
+  - The text "Contact" (at top: 160px) overlaps the panel (starting at top: 252px) — the bottom half of the text is on the panel.
+- **Left column** (form area — but mockup has content here too):
+  - Italic 26px subtitle: "Tell us what you are looking for — we reply with a shortlist within one working day." — Mulish 300 italic, `line-height: 38px; max-width: 440px; text-wrap: pretty`
+  - Contact info list (3 lines, gap 18px, font 20px):
+    - `Mail` icon (20px, opacity 0.8) + "hello@tapcatalog.com"
+    - `Phone` icon (20px, opacity 0.8) + "+62 21 5000 1200"
+    - `MapPin` icon (20px, opacity 0.8) + "Jl. Jend. Sudirman 52, Jakarta"
+- **Right column** (form, 560px wide):
+  - 3 fields (NOT 4 — mockup has no textarea):
+    1. "Full name" (text)
+    2. "Work email" (email)
+    3. "What are you looking for?" (text)
+  - Input style: `height: 56px; padding: 0 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,.45); background: transparent; color: #fff; font-size: 19px; outline: none`
+  - Submit button: `height: 56px; border: 0; border-radius: 12px; background: #fff; color: var(--primary); font-size: 19px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer` — hover: `background: #111; color: #fff`
+  - Form gap 16px
+  - Form is **inert** (just `e.preventDefault()` + state change to show "Thank you")
+- **Footer line** (full-width at bottom of panel, `grid-column: 1 / -1`):
+  - Flex between: "© 2026 TAP Catalog" (left) | "Commercial real estate network" (right)
+  - Font: 16px, `color: rgba(255,255,255,.7)`
 
 ---
 
