@@ -61,7 +61,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2 h-72 sm:h-96 mb-6 rounded-xl overflow-hidden">
+      <div className="grid grid-cols-3 gap-3 h-80 sm:h-[420px] mb-6 rounded-2xl overflow-hidden border border-border">
         <div
           onClick={() => openLightbox(0)}
           role="button"
@@ -120,7 +120,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
               key={img.id}
               onClick={() => openLightbox(i)}
               aria-label={`Lihat foto ${i + 1} dari ${images.length}`}
-              className="relative w-20 h-16 rounded-lg overflow-hidden shrink-0 border-2 border-transparent hover:border-brown-400 transition-colors"
+              className="relative w-20 h-16 rounded-xl overflow-hidden shrink-0 border-2 border-transparent hover:border-primary transition-colors"
             >
               <Image
                 src={img.url}
@@ -142,7 +142,7 @@ export default function PropertyGalleryClient({ images, title }: PropertyGallery
           aria-modal="true"
           aria-label={`Galeri foto: ${title}`}
           tabIndex={-1}
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center outline-none"
+          className="fixed inset-0 z-50 bg-accent/95 flex items-center justify-center outline-none"
           onClick={closeLightbox}
         >
           <button
