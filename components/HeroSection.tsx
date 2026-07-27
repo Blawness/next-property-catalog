@@ -1,20 +1,22 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
-import { ChevronDown } from "lucide-react"
-import { BRAND } from "@/lib/brand"
+import { ChevronRight } from "lucide-react"
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden h-[78vh] min-h-[560px] max-h-[820px]">
+    <section
+      id="home"
+      className="relative overflow-hidden h-[78vh] min-h-[560px] max-h-[820px]"
+    >
       <Image
-        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&h=1080&fit=crop&auto=format&q=80"
-        alt={BRAND.heroImageAlt}
+        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80"
+        alt="Commercial skyscraper"
         fill
         priority
         sizes="100vw"
         className="object-cover"
+        style={{ objectPosition: "center 42%" }}
       />
 
       <div
@@ -22,55 +24,30 @@ export default function HeroSection() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.10) 50%, rgba(0,0,0,0.55) 100%)",
+            "linear-gradient(180deg, #fff 0%, rgba(255,255,255,.92) 26%, rgba(255,255,255,.35) 48%, rgba(255,255,255,0) 66%)",
         }}
       />
 
-      <div
-        aria-hidden
-        className="absolute top-0 inset-x-0 h-px"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent 40%, oklch(0.72 0.09 78 / 0.6) 50%, transparent 60%)",
-        }}
-      />
-
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 text-center">
-        <h1 className="font-sans text-white tracking-tight leading-[1.05]">
-          <span className="block font-light italic text-3xl sm:text-4xl md:text-5xl">
-            Discover Your Mission
-          </span>
-          <span className="block font-bold text-4xl sm:text-5xl md:text-6xl mt-2">
-            Build Our Passion
-          </span>
+      <div className="relative h-full flex flex-col items-center pt-[105px]">
+        <h1 className="m-0 text-center font-sans text-foreground leading-[1.05] tracking-[-0.015em] text-balance text-[clamp(2rem,5.2vw,3.94rem)]">
+          <span className="block font-light italic">Discover Your Mission</span>
+          <span className="block font-bold">Build Our Passion</span>
         </h1>
 
-        <p className="mt-5 max-w-md text-sm sm:text-base text-white/70 leading-relaxed">
-          {BRAND.description}
-        </p>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/properti"
-            className="btn-press inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-sans text-[13px] font-semibold tracking-wide text-primary-foreground transition-colors hover:bg-primary/90"
+        <div className="mt-auto mb-[76px] flex flex-wrap items-center justify-center gap-[clamp(2rem,5vw,5.5rem)]">
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2.5 h-11 px-[26px] rounded-full font-sans text-[19px] font-bold tracking-[0.05em] uppercase bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
           >
-            BOOK NOW <span aria-hidden>→</span>
-          </Link>
-          <Link
-            href="/masuk"
-            className="btn-press inline-flex items-center gap-2 rounded-xl border border-white/40 px-6 py-3 font-sans text-[13px] font-semibold tracking-wide text-white transition-colors hover:bg-white/10"
+            Book now
+            <ChevronRight size={17} strokeWidth={2.1} />
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center h-11 px-7 rounded-full font-sans text-[19px] font-bold tracking-[0.05em] uppercase bg-[#111] text-white hover:bg-black/80 transition-colors"
           >
-            FOR SELLER
-          </Link>
-        </div>
-      </div>
-
-      <div className="absolute bottom-8 inset-x-0 flex flex-col items-center gap-1 pointer-events-none">
-        <div className="flex flex-col items-center gap-1 animate-bounce">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-white/40 font-medium">
-            Scroll
-          </span>
-          <ChevronDown size={16} className="text-white/40" />
+            For seller
+          </a>
         </div>
       </div>
     </section>
