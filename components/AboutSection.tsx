@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 const STATS = [
   { n: "20+", label: "served clients" },
   { n: "30", label: "our database" },
@@ -26,20 +24,21 @@ export default function AboutSection() {
 
       <div className="hidden md:block" aria-hidden />
 
+      {/*
+        Building silhouette rendered as a transparent PNG via background-image
+        (matches mockup HTML technique). The image is 945×531px; we render it at its
+        natural size and offset to show the building on the right.
+      */}
       <div
         role="img"
         aria-label="Commercial tower"
-        className="relative w-[260px] sm:w-[320px] md:w-[400px] h-[320px] sm:h-[400px] md:h-[500px] mt-12 md:mt-0 md:absolute md:right-[-80px] md:top-[180px] overflow-hidden rounded-2xl bg-[#0a0a0a]"
-      >
-        <Image
-          src="/mockup-assets/about us component.png"
-          alt="Commercial tower"
-          fill
-          sizes="(max-width: 768px) 100vw, 400px"
-          className="object-cover"
-          style={{ objectPosition: "right center" }}
-        />
-      </div>
+        className="w-[260px] sm:w-[320px] md:w-[400px] h-[320px] sm:h-[400px] md:h-[500px] mt-12 md:mt-0 md:absolute md:right-[-80px] md:top-[180px] bg-no-repeat"
+        style={{
+          backgroundImage: "url('/mockup-assets/about us component.png')",
+          backgroundSize: "945.3px 531.4px",
+          backgroundPosition: "-301.7px -30.4px",
+        }}
+      />
 
       <div className="col-span-full mt-[clamp(2rem,4vw,4rem)] flex flex-col sm:flex-row items-center justify-center gap-[clamp(2.5rem,7vw,7.5rem)] py-8">
         {STATS.map((s) => (
