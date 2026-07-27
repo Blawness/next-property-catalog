@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react'
-import { toast } from 'sonner'
 import ContactSection from '@/components/ContactSection'
 
 jest.mock('sonner', () => ({
