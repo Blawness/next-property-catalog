@@ -4,9 +4,7 @@ import { properties } from "@/db/schema"
 import { and, eq, isNull, count } from "drizzle-orm"
 import { Home, Building2, TreePalm, Store, type LucideIcon } from "lucide-react"
 import { PROPERTY_TYPES, PROPERTY_TYPE_LABELS } from "@/lib/constants"
-import SectionHeading from "@/components/SectionHeading"
 import Reveal from "@/components/Reveal"
-import { BRAND } from "@/lib/brand"
 
 const ICONS: Record<string, LucideIcon> = {
   rumah: Home,
@@ -28,37 +26,30 @@ export default async function ExploreTypes() {
   const counts = await getTypeCounts()
 
   return (
-    <section className="container mx-auto px-4 py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="Kategori"
-        title={BRAND.exploreTypes.heading}
-        subtitle="Temukan tipe properti yang paling sesuai dengan kebutuhan Anda"
-      />
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {PROPERTY_TYPES.map((type, i) => {
-          const Icon = ICONS[type]
-          return (
-            <Reveal key={type} delay={i * 80}>
-              <Link
-                href={`/properti?type=${type}`}
-                className="group flex items-center gap-4 rounded-2xl border-2 border-primary p-5 transition-colors hover:bg-primary hover:text-primary-foreground"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary-foreground/15 group-hover:text-primary-foreground">
-                  <Icon size={22} strokeWidth={1.75} />
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      {PROPERTY_TYPES.map((type, i) => {
+        const Icon = ICONS[type]
+        return (
+          <Reveal key={type} delay={i * 80}>
+            <Link
+              href={`/properti?type=${type}`}
+              className="group flex items-center gap-4 rounded-2xl border-2 border-primary p-5 transition-colors hover:bg-primary hover:text-primary-foreground"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary-foreground/15 group-hover:text-primary-foreground">
+                <Icon size={22} strokeWidth={1.75} />
+              </span>
+              <span className="flex flex-col">
+                <span className="font-sans text-[16px] font-semibold transition-colors">
+                  {PROPERTY_TYPE_LABELS[type]}
                 </span>
-                <span className="flex flex-col">
-                  <span className="font-sans text-[16px] font-semibold transition-colors">
-                    {PROPERTY_TYPE_LABELS[type]}
-                  </span>
-                  <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground transition-colors group-hover:text-primary-foreground/70">
-                    {counts[type] ?? 0} listing
-                  </span>
+                <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground transition-colors group-hover:text-primary-foreground/70">
+                  {counts[type] ?? 0} listing
                 </span>
-              </Link>
-            </Reveal>
-          )
-        })}
-      </div>
-    </section>
+              </span>
+            </Link>
+          </Reveal>
+        )
+      })}
+    </div>
   )
 }
