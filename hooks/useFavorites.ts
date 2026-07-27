@@ -40,7 +40,7 @@ export function useFavorites() {
         body: JSON.stringify({ propertyId }),
       })
       if (!res.ok) throw new Error("Toggle failed")
-    } catch (err) {
+    } catch {
       setFavorites(previous)
       toast.error("Gagal memperbarui favorit")
     }
