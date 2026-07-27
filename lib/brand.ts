@@ -88,9 +88,9 @@ export const BRAND = {
   },
 
   contact: {
-    email: "halo@tapcatalog.id",
-    phone: "+62 812-3456-7890",
-    address: "Jl. Sudirman Kav. 21, Jakarta Selatan",
+    email: "tigaanakpropetindo@gmail.com",
+    address:
+      "Alamat Kantor\nGedung Yayasan Purna Bakti (YARNATI)\nLt. 4 Ruang 407-408\nJl. Proklamasi No. 44\nPegangsaan, Menteng\nJakarta Pusat 10320",
     hours: "Senin – Jumat, 09.00 – 18.00 WIB",
   },
 

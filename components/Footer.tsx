@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { AtSign, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
+import { AtSign, Mail, MapPin, MessageCircle } from "lucide-react"
 import BrandMark from "@/components/BrandMark"
 import { BRAND } from "@/lib/brand"
 
@@ -86,15 +86,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-primary-foreground/70">
               <li className="flex items-start gap-2.5">
                 <MapPin size={14} className="mt-0.5 shrink-0 text-gold" />
-                {BRAND.contact.address}
+                <span className="whitespace-pre-line leading-[1.5]">
+                  {BRAND.contact.address}
+                </span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail size={14} className="shrink-0 text-gold" />
-                {BRAND.contact.email}
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone size={14} className="shrink-0 text-gold" />
-                {BRAND.contact.phone}
+                <a href={`mailto:${BRAND.contact.email}`} className="hover:text-gold">
+                  {BRAND.contact.email}
+                </a>
               </li>
             </ul>
           </div>

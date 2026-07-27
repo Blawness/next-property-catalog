@@ -1,14 +1,9 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
+import { Mail, MapPin, Send } from "lucide-react"
 import { toast } from "sonner"
-
-const CONTACT = {
-  email: "hello@tapcatalog.com",
-  phone: "+62 21 5000 1200",
-  address: "Jl. Jend. Sudirman 52, Jakarta",
-}
+import { BRAND } from "@/lib/brand"
 
 export default function ContactSection() {
   const [sent, setSent] = useState(false)
@@ -50,23 +45,21 @@ export default function ContactSection() {
 
           <div className="mt-[44px] flex flex-col gap-[18px] font-sans text-[20px] text-white">
             <span className="flex items-center gap-[14px]">
-              <span className="block w-5 h-5 opacity-80">
+              <span className="block w-5 h-5 shrink-0 opacity-80">
                 <Mail size={20} strokeWidth={2.1} />
               </span>
-              {CONTACT.email}
+              <a href={`mailto:${BRAND.contact.email}`} className="hover:underline">
+                {BRAND.contact.email}
+              </a>
             </span>
-            <span className="flex items-center gap-[14px]">
-              <span className="block w-5 h-5 opacity-80">
-                <Phone size={20} strokeWidth={2.1} />
-              </span>
-              {CONTACT.phone}
-            </span>
-            <span className="flex items-center gap-[14px]">
-              <span className="block w-5 h-5 opacity-80">
+            <div className="flex items-start gap-[14px]">
+              <span className="block w-5 h-5 shrink-0 mt-0.5 opacity-80">
                 <MapPin size={20} strokeWidth={2.1} />
               </span>
-              {CONTACT.address}
-            </span>
+              <span className="whitespace-pre-line leading-[1.5]">
+                {BRAND.contact.address}
+              </span>
+            </div>
           </div>
         </div>
 
