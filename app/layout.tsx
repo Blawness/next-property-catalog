@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
-import { Cormorant_Garamond } from "next/font/google"
+import { Poppins, Manrope } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
 import Navbar from "@/components/Navbar"
@@ -8,12 +7,14 @@ import ConditionalFooter from "@/components/ConditionalFooter"
 import Providers from "@/components/Providers"
 import { BRAND } from "@/lib/brand"
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
-const cormorant = Cormorant_Garamond({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
+})
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
 })
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${geist.variable} ${cormorant.variable}`} suppressHydrationWarning>
+    <html lang="id" className={`${poppins.variable} ${manrope.variable}`}>
       <body className="min-h-screen bg-background antialiased">
         <Providers>
           <Navbar />
