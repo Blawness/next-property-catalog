@@ -29,15 +29,15 @@ export default function AboutSection() {
       <div
         role="img"
         aria-label="Commercial tower"
-        className="relative w-[260px] sm:w-[320px] md:w-[400px] h-[320px] sm:h-[400px] md:h-[500px] mt-12 md:mt-0 md:absolute md:right-[-80px] md:top-[180px] overflow-hidden rounded-2xl"
+        className="relative w-[260px] sm:w-[320px] md:w-[400px] h-[320px] sm:h-[400px] md:h-[500px] mt-12 md:mt-0 md:absolute md:right-[-80px] md:top-[180px] overflow-hidden rounded-2xl bg-[#0a0a0a]"
       >
         <Image
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&h=1100&q=80"
+          src="/mockup-assets/about us component.png"
           alt="Commercial tower"
           fill
           sizes="(max-width: 768px) 100vw, 400px"
           className="object-cover"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: "right center" }}
         />
       </div>
 
