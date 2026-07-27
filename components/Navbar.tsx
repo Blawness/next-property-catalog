@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { PlusCircle, ChevronDown, MapPin, LayoutGrid, Home } from "lucide-react"
-import ThemeToggle from "@/components/ThemeToggle"
 import { BRAND } from "@/lib/brand"
 
 const NAV_LINKS = [
@@ -84,8 +83,6 @@ export default function Navbar() {
 
         {/* ── Right side ────────────────────────────────────── */}
         <div className="flex items-center gap-1 shrink-0">
-          <ThemeToggle />
-
           {session ? (
             <>
               {/* Dashboard / Pasang Iklan — desktop */}

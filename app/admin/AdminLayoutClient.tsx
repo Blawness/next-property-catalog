@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Building, Users, LogOut, Menu, X, Loader2 } from "lucide-react"
-import ThemeToggle from "@/components/ThemeToggle"
 import { BRAND } from "@/lib/brand"
 
 function SidebarContent({
@@ -62,7 +61,6 @@ function SidebarContent({
       <div className="p-3 border-t">
         <div className="text-xs text-muted-foreground px-2 mb-2 truncate">{email}</div>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link
             href="/"
             className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted transition-colors"
@@ -110,7 +108,6 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
           <span className="w-1.5 h-1.5 rounded-full bg-brown-500" />
           <span className="font-display font-bold text-base italic">{BRAND.name}</span>
         </Link>
-        <ThemeToggle />
       </div>
 
       {sidebarOpen && (
