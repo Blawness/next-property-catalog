@@ -36,10 +36,10 @@ export default function PropertyFilter() {
   const hasFilters = Array.from(searchParams.keys()).length > 0
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold flex items-center gap-2">
-          <SlidersHorizontal className="h-4 w-4" />
+        <h2 className="font-sans font-semibold text-[11px] uppercase tracking-[0.18em] text-foreground flex items-center gap-2">
+          <SlidersHorizontal className="h-3.5 w-3.5 text-primary" />
           Filter
         </h2>
         {hasFilters && (
@@ -52,12 +52,12 @@ export default function PropertyFilter() {
 
       <div className="space-y-3">
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Tipe Properti</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Tipe Properti</Label>
           <Select
             value={searchParams.get("type") ?? "semua"}
             onValueChange={(v) => updateFilter("type", v)}
           >
-            <SelectTrigger className="h-8 text-sm">
+            <SelectTrigger className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary">
               <SelectValue placeholder="Semua Tipe" />
             </SelectTrigger>
             <SelectContent>
@@ -70,12 +70,12 @@ export default function PropertyFilter() {
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Jual / Sewa</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Jual / Sewa</Label>
           <Select
             value={searchParams.get("listingType") ?? "semua"}
             onValueChange={(v) => updateFilter("listingType", v)}
           >
-            <SelectTrigger className="h-8 text-sm">
+            <SelectTrigger className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary">
               <SelectValue placeholder="Semua" />
             </SelectTrigger>
             <SelectContent>
@@ -88,12 +88,12 @@ export default function PropertyFilter() {
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Kota</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Kota</Label>
           <Select
             value={searchParams.get("city") ?? "semua"}
             onValueChange={(v) => updateFilter("city", v)}
           >
-            <SelectTrigger className="h-8 text-sm">
+            <SelectTrigger className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary">
               <SelectValue placeholder="Semua Kota" />
             </SelectTrigger>
             <SelectContent>
@@ -106,34 +106,34 @@ export default function PropertyFilter() {
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Harga Min (Juta)</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Harga Min (Juta)</Label>
           <Input
             type="number"
             placeholder="Contoh: 500"
-            className="h-8 text-sm"
+            className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary"
             defaultValue={searchParams.get("minPrice") ?? ""}
             onBlur={(e) => updateFilter("minPrice", e.target.value ? String(Number(e.target.value) * 1_000_000) : "")}
           />
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Harga Max (Juta)</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Harga Max (Juta)</Label>
           <Input
             type="number"
             placeholder="Contoh: 2000"
-            className="h-8 text-sm"
+            className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary"
             defaultValue={searchParams.get("maxPrice") ?? ""}
             onBlur={(e) => updateFilter("maxPrice", e.target.value ? String(Number(e.target.value) * 1_000_000) : "")}
           />
         </div>
 
         <div>
-          <Label className="text-xs text-muted-foreground mb-1 block">Min Kamar Tidur</Label>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Min Kamar Tidur</Label>
           <Select
             value={searchParams.get("minBedrooms") ?? "semua"}
             onValueChange={(v) => updateFilter("minBedrooms", v)}
           >
-            <SelectTrigger className="h-8 text-sm">
+            <SelectTrigger className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary">
               <SelectValue placeholder="Semua" />
             </SelectTrigger>
             <SelectContent>
