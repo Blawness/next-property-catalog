@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { toast } from 'sonner'
 import ContactSection from '@/components/ContactSection'
 
 jest.mock('sonner', () => ({
@@ -6,11 +7,16 @@ jest.mock('sonner', () => ({
 }))
 
 describe('ContactSection', () => {
-  it('renders huge Contact word, form and info', () => {
+  it('renders Contact word, italic subtitle, 3-form fields, contact list, footer', () => {
     render(<ContactSection />)
     expect(screen.getByText('Contact')).toBeInTheDocument()
-    expect(screen.getByLabelText(/Nama/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument()
-    expect(screen.getByText(/halo@tapcatalog\.id/)).toBeInTheDocument()
+    expect(screen.getByText(/Tell us what you are looking for/)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Full name')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Work email')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('What are you looking for?')).toBeInTheDocument()
+    expect(screen.getByText('hello@tapcatalog.com')).toBeInTheDocument()
+    expect(screen.getByText(/\+62 21 5000 1200/)).toBeInTheDocument()
+    expect(screen.getByText(/Sudirman 52, Jakarta/)).toBeInTheDocument()
+    expect(screen.getByText(/© 2026 TAP Catalog/)).toBeInTheDocument()
   })
 })
