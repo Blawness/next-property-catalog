@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 references/
 
-# heavy video assets (regenerate via scripts/encode-hero.sh)
+# raw hero source — keep out of git; regenerate optimized outputs via scripts/encode-hero.sh
 /public/hero.mp4
-/public/hero.av1.mp4
-/public/hero.webm
+# hero.av1.mp4 + hero.webm are the optimized outputs referenced by the hero <video>;
+# they MUST be committed so Vercel can serve them (no CDN setup required).
