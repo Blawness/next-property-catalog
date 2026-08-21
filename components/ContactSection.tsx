@@ -56,7 +56,7 @@ export default function ContactSection() {
           style={{
             padding: "clamp(4rem, 8vw, 8.25rem) clamp(1.5rem, 5vw, 4.5rem) 56px",
             display: "grid",
-            gridTemplateColumns: "1fr 560px",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 560px)",
             columnGap: "80px",
             alignItems: "center",
             rowGap: "clamp(2rem, 4vw, 3rem)",

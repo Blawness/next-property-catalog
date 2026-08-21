@@ -19,7 +19,7 @@ export default function AboutSection({ stats = DEFAULT_STATS }: AboutSectionProp
   return (
     <section
       id="about"
-      className="relative min-h-[768px] px-[clamp(1.5rem,5vw,4.5rem)] pt-[clamp(6rem,13vw,11rem)] pb-0 grid grid-cols-1 md:[grid-template-columns:690px_1fr] md:gap-x-[60px] md:items-start"
+      className="relative min-h-[768px] px-[clamp(1.5rem,5vw,4.5rem)] pt-[clamp(6rem,13vw,11rem)] pb-0 grid grid-cols-1 md:[grid-template-columns:690px_1fr] md:gap-x-[60px] md:items-start overflow-hidden"
     >
       <div>
         <Reveal>

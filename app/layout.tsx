@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={mulish.variable}>
-      <body className="min-h-screen bg-background antialiased">
+      <body className="min-h-screen bg-background antialiased overflow-x-hidden">
         <Providers>
           <Navbar />
           <main className="min-h-[60vh]">{children}</main>
