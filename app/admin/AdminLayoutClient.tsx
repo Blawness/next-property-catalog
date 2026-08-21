@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Building, Users, LogOut, Menu, X, Loader2 } from "lucide-react"
+import { LayoutDashboard, Building, Users, History, Mail, LogOut, Menu, X, Loader2 } from "lucide-react"
 import { BRAND } from "@/lib/brand"
 
 function SidebarContent({
@@ -92,6 +92,8 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
     { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/admin/properti", icon: Building, label: "Properti" },
     { href: "/admin/agent", icon: Users, label: "Agent" },
+    { href: "/admin/leads", icon: Mail, label: "Leads" },
+    { href: "/admin/aktivitas", icon: History, label: "Aktivitas" },
   ]
 
   return (

@@ -41,10 +41,17 @@ export async function GET(
   }
 }
 
+// PATCH allows partial updates; empty strings for required fields are rejected
+// with a 400 instead of bubbling to a 500 from the DB not-null constraint.
+const nonEmptyString = z
+  .string()
+  .min(1, "Tidak boleh kosong")
+  .refine((v) => v.trim().length > 0, "Tidak boleh kosong")
+
 const propertyUpdateSchema = z.object({
-  title: z.string().min(1).optional(),
+  title: nonEmptyString.optional(),
   description: z.string().optional(),
-  price: z.string().optional(),
+  price: nonEmptyString.optional(),
   type: z.enum(["rumah", "apartemen", "tanah", "ruko"]).optional(),
   listingType: z.enum(["jual", "sewa"]).optional(),
   status: z.enum(["active", "sold", "rented", "archived"]).optional(),

@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react'
+import { SessionProvider } from 'next-auth/react'
 import PropertyCard from '@/components/PropertyCard'
 import type { PropertyWithImages } from '@/lib/types'
+
+function renderWithSession(ui: React.ReactElement) {
+  return render(<SessionProvider>{ui}</SessionProvider>)
+}
 
 const mockProperty: PropertyWithImages = {
   id: '1',
@@ -25,12 +30,12 @@ const mockProperty: PropertyWithImages = {
 
 describe('PropertyCard', () => {
   it('renders property title', () => {
-    render(<PropertyCard property={mockProperty} />)
+    renderWithSession(<PropertyCard property={mockProperty} />)
     expect(screen.getByText('Test Property')).toBeInTheDocument()
   })
 
   it('formats price correctly', () => {
-    render(<PropertyCard property={mockProperty} />)
+    renderWithSession(<PropertyCard property={mockProperty} />)
     expect(screen.getByText(/1\.0 M/)).toBeInTheDocument()
     expect(screen.getByText('Rp')).toBeInTheDocument()
   })

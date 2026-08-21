@@ -109,8 +109,8 @@ export const BRAND = {
       { label: "Ruko", href: "/properti?type=ruko" },
     ],
     company: [
-      { label: "Tentang Kami", href: "/#tentang" },
-      { label: "Hubungi Kami", href: "/#kontak" },
+      { label: "Tentang Kami", href: "/#about" },
+      { label: "Hubungi Kami", href: "/#contact" },
       { label: "Kebijakan Privasi", href: "#" },
     ],
   },

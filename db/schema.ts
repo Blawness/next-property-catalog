@@ -102,3 +102,13 @@ export const adminActions = pgTable("admin_actions", {
   metadata: text("metadata"),
   createdAt: timestamp("created_at").defaultNow(),
 })
+
+export const leads = pgTable("leads", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  message: text("message").notNull(),
+  propertyId: text("property_id").references(() => properties.id, { onDelete: "set null" }),
+  status: text("status").default("new"),
+  createdAt: timestamp("created_at").defaultNow(),
+})

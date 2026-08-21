@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import { Metadata } from "next"
 import { db } from "@/db"
 import { properties, propertyImages, profiles } from "@/db/schema"
 import { eq, and, isNull } from "drizzle-orm"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { MapPin, ExternalLink } from "lucide-react"
+import { MapPin, ExternalLink, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import PropertyMap from "@/components/PropertyMap"
 import PropertyGalleryClient from "@/components/PropertyGalleryClient"
@@ -128,6 +129,26 @@ export default async function PropertyDetailPage({ params }: PageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl animate-in fade-in duration-300">
+      <nav aria-label="Breadcrumb" className="mb-5">
+        <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <li>
+            <Link href="/" className="transition-colors hover:text-primary">Beranda</Link>
+          </li>
+          <li aria-hidden className="flex items-center">
+            <ChevronRight className="h-3.5 w-3.5" />
+          </li>
+          <li>
+            <Link href="/properti" className="transition-colors hover:text-primary">Katalog</Link>
+          </li>
+          <li aria-hidden className="flex items-center">
+            <ChevronRight className="h-3.5 w-3.5" />
+          </li>
+          <li aria-current="page" className="line-clamp-1 max-w-[220px] font-medium text-foreground sm:max-w-[320px]">
+            {property.title}
+          </li>
+        </ol>
+      </nav>
+
       <PropertyGalleryClient images={images} title={property.title} />
 
       <script
@@ -222,6 +243,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
           agent={agent ? { fullName: agent.fullName, phone: agent.phone, avatarUrl: agent.avatarUrl } : null}
           createdAt={property.createdAt}
           propertyId={property.id}
+          propertyTitle={property.title}
         />
       </div>
     </div>

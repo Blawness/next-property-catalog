@@ -1,6 +1,6 @@
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
-import { inArray } from "drizzle-orm"
+import { properties, propertyImages, favorites } from "@/db/schema"
+import { inArray, eq } from "drizzle-orm"
 import type { PropertyWithImages } from "@/lib/types"
 import type { InferSelectModel } from "drizzle-orm"
 
@@ -9,6 +9,14 @@ type PropertyImageRow = InferSelectModel<typeof propertyImages>
 
 // NOTE: callers must filter `isNull(properties.deletedAt)` for public reads.
 // Admin routes may omit the filter to inspect soft-deleted rows.
+
+export async function getFavoritePropertyIds(userId: string): Promise<Set<string>> {
+  const rows = await db
+    .select({ propertyId: favorites.propertyId })
+    .from(favorites)
+    .where(eq(favorites.userId, userId))
+  return new Set(rows.map((r) => r.propertyId).filter((id): id is string => id !== null))
+}
 
 export async function getPropertiesWithImagesBatch(
   query: Promise<PropertyRow[]>,

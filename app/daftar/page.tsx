@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { BRAND } from "@/lib/brand"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import PasswordInput from "@/components/PasswordInput"
 import BrandMark from "@/components/BrandMark"
 
 export default function DaftarPage() {
@@ -101,9 +102,8 @@ export default function DaftarPage() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password" className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Password</Label>
-              <Input
+              <PasswordInput
                 id="password"
-                type="password"
                 placeholder="Min. 8 karakter"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

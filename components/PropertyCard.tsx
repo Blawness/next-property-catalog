@@ -2,10 +2,17 @@ import Link from "next/link"
 import Image from "next/image"
 import { MapPin, BedDouble, Bath, Maximize2 } from "lucide-react"
 import type { PropertyWithImages } from "@/lib/types"
-import { formatPriceCompact } from "@/lib/constants"
+import { formatPriceCompactValue } from "@/lib/constants"
 import PropertyPills from "@/components/PropertyPills"
+import FavoriteButton from "@/components/FavoriteButton"
 
-export default function PropertyCard({ property }: { property: PropertyWithImages }) {
+export default function PropertyCard({
+  property,
+  initialFavorited = false,
+}: {
+  property: PropertyWithImages
+  initialFavorited?: boolean
+}) {
   const primaryImage = property.images.find((i) => i.isPrimary) ?? property.images[0]
 
   const hasSpecs =
@@ -13,8 +20,7 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
       ? property.landArea != null
       : property.bedrooms != null || property.bathrooms != null || property.buildingArea != null
 
-  const priceText = formatPriceCompact(property.price, property.listingType)
-  const priceMain = priceText.replace(/^Rp\s*/, "")
+  const price = formatPriceCompactValue(property.price, property.listingType)
 
   return (
     <Link
@@ -47,12 +53,21 @@ export default function PropertyCard({ property }: { property: PropertyWithImage
         <div className="absolute left-3 top-3">
           <PropertyPills listingType={property.listingType} type={property.type} />
         </div>
+
+        <div className="absolute right-3 top-3">
+          <FavoriteButton propertyId={property.id} initialFavorited={initialFavorited} />
+        </div>
       </div>
 
       <div className="p-5">
-        <p className="mb-1.5 font-sans text-[22px] font-semibold leading-tight text-primary">
-          <span className="mr-0.5 align-top text-[0.55em] font-medium text-primary/80">Rp</span>
-          {priceMain}
+        <p className="mb-1.5 flex items-baseline gap-0.5 font-sans text-[22px] font-semibold leading-tight text-primary">
+          <span className="text-[0.55em] font-medium text-primary/80">{price.prefix}</span>
+          <span>{price.value}</span>
+          {price.suffix && (
+            <span className="ml-0.5 self-end text-[0.55em] font-medium text-primary/80">
+              {price.suffix}
+            </span>
+          )}
         </p>
 
         <h3 className="mb-2 line-clamp-1 font-sans text-[16px] font-medium leading-snug text-foreground transition-colors duration-200 group-hover:text-primary">

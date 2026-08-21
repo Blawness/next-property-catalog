@@ -43,6 +43,13 @@
       "when": 1785070540315,
       "tag": "0005_bizarre_carnage",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1785387933672,
+      "tag": "0006_charming_richard_fisk",
+      "breakpoints": true
     }
   ]
 }

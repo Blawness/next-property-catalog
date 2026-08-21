@@ -1,15 +1,18 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, desc, and, gte, lte, ilike, isNull } from "drizzle-orm"
+import { eq, desc, and, gte, lte, ilike, isNull, count } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyFilter from "@/components/PropertyFilter"
+import CatalogPagination from "@/components/CatalogPagination"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Suspense } from "react"
 import Link from "next/link"
 import type { PropertyWithImages } from "@/lib/types"
-import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
+import { getPropertiesWithImagesBatch, getFavoritePropertyIds } from "@/lib/db-helpers"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
 import { SlidersHorizontal, SearchX } from "lucide-react"
 import SectionHeading from "@/components/SectionHeading"
@@ -25,10 +28,15 @@ interface PageProps {
     minPrice?: string
     maxPrice?: string
     minBedrooms?: string
+    page?: string
   }>
 }
 
-async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promise<PropertyWithImages[]> {
+const PAGE_SIZE = 24
+
+async function getProperties(
+  filters: Awaited<PageProps["searchParams"]>,
+): Promise<{ items: PropertyWithImages[]; total: number; page: number }> {
   const conditions = [eq(properties.status, "active"), isNull(properties.deletedAt)]
 
   if (filters.type && PROPERTY_TYPES.includes(filters.type as typeof PROPERTY_TYPES[number])) {
@@ -47,14 +55,22 @@ async function getProperties(filters: Awaited<PageProps["searchParams"]>): Promi
     conditions.push(lte(properties.price, filters.maxPrice))
   }
 
-  return getPropertiesWithImagesBatch(
-    db
-      .select()
-      .from(properties)
-      .where(and(...conditions))
-      .orderBy(desc(properties.createdAt))
-      .limit(48),
-  )
+  const page = Math.max(1, parseInt(filters.page ?? "1", 10) || 1)
+
+  const [items, totalRow] = await Promise.all([
+    getPropertiesWithImagesBatch(
+      db
+        .select()
+        .from(properties)
+        .where(and(...conditions))
+        .orderBy(desc(properties.createdAt))
+        .limit(PAGE_SIZE)
+        .offset((page - 1) * PAGE_SIZE),
+    ),
+    db.select({ n: count() }).from(properties).where(and(...conditions)),
+  ])
+
+  return { items, total: totalRow[0]?.n ?? 0, page }
 }
 
 const SKELETON_CARDS = Array.from({ length: 6 })
@@ -75,7 +91,11 @@ function PropertyGridSkeleton() {
 }
 
 async function PropertyGrid({ filters }: { filters: Awaited<PageProps["searchParams"]> }) {
-  const items = await getProperties(filters)
+  const [{ items, total, page }, session] = await Promise.all([
+    getProperties(filters),
+    getServerSession(authOptions),
+  ])
+  const favoriteIds = session?.user?.id ? await getFavoritePropertyIds(session.user.id) : new Set<string>()
 
   if (items.length === 0) {
     return (
@@ -96,18 +116,24 @@ async function PropertyGrid({ filters }: { filters: Awaited<PageProps["searchPar
     )
   }
 
+  const totalPages = Math.ceil(total / PAGE_SIZE)
+  const start = (page - 1) * PAGE_SIZE + 1
+  const end = start + items.length - 1
+
   return (
     <div>
       <p className="mb-5 text-sm text-muted-foreground">
-        Menampilkan <span className="font-semibold italic text-primary">{items.length}</span> properti
+        Menampilkan <span className="font-semibold italic text-primary">{start}–{end}</span> dari{" "}
+        <span className="font-semibold italic text-primary">{total}</span> properti
       </p>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((property, i) => (
           <Reveal key={property.id} delay={(i % 3) * 90}>
-            <PropertyCard property={property} />
+            <PropertyCard property={property} initialFavorited={favoriteIds.has(property.id)} />
           </Reveal>
         ))}
       </div>
+      <CatalogPagination page={page} totalPages={totalPages} filters={filters} />
     </div>
   )
 }

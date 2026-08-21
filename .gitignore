@@ -40,3 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 references/
+
+# heavy video assets (regenerate via scripts/encode-hero.sh)
+/public/hero.mp4
+/public/hero.av1.mp4
+/public/hero.webm

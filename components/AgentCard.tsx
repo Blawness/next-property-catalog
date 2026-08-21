@@ -16,9 +16,10 @@ interface AgentCardProps {
   agent: Agent | null
   createdAt: Date | null
   propertyId?: string
+  propertyTitle?: string
 }
 
-export default function AgentCard({ agent, createdAt, propertyId }: AgentCardProps) {
+export default function AgentCard({ agent, createdAt, propertyId, propertyTitle }: AgentCardProps) {
   const { favorites, toggleFavorite } = useFavorites()
   const isFavorited = propertyId ? favorites.some((f) => f.id === propertyId) : false
 
@@ -50,7 +51,9 @@ export default function AgentCard({ agent, createdAt, propertyId }: AgentCardPro
             {agent.phone && (
               <Button className="w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90" asChild>
                 <a
-                  href={`https://wa.me/${agent.phone.replace(/\D/g, "")}`}
+                  href={`https://wa.me/${agent.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
+                    `Halo, saya tertarik dengan properti "${propertyTitle ?? "ini"}". Bisa info lebih lanjut?`,
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
