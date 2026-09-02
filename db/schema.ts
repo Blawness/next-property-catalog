@@ -51,8 +51,27 @@ export const properties = pgTable("properties", {
   agentId: text("agent_id").references(() => profiles.id),
   status: statusEnum("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
+  // Bumped on every admin edit so sitemap.xml can report a truthful
+  // `lastModified` — `createdAt` told crawlers listings never change.
+  updatedAt: timestamp("updated_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
-})
+}, (table) => ({
+  // The public catalog always filters on status + deletedAt, then sorts by
+  // either createdAt (default) or price. One composite index per sort key.
+  activeCreatedIdx: index("properties_active_created_idx").on(
+    table.status,
+    table.deletedAt,
+    table.createdAt,
+  ),
+  activePriceIdx: index("properties_active_price_idx").on(
+    table.status,
+    table.deletedAt,
+    table.price,
+  ),
+  cityIdx: index("properties_city_idx").on(table.city),
+  typeIdx: index("properties_type_idx").on(table.type),
+  agentIdx: index("properties_agent_id_idx").on(table.agentId),
+}))
 
 export const propertyImages = pgTable("property_images", {
   id: text("id")
@@ -64,7 +83,9 @@ export const propertyImages = pgTable("property_images", {
   url: text("url").notNull(),
   isPrimary: boolean("is_primary").default(false),
   order: integer("order").default(0),
-})
+}, (table) => ({
+  propertyIdx: index("property_images_property_id_idx").on(table.propertyId),
+}))
 
 export const favorites = pgTable("favorites", {
   id: text("id")
@@ -101,7 +122,9 @@ export const adminActions = pgTable("admin_actions", {
   entityId: text("entity_id"),
   metadata: text("metadata"),
   createdAt: timestamp("created_at").defaultNow(),
-})
+}, (table) => ({
+  createdAtIdx: index("admin_actions_created_at_idx").on(table.createdAt),
+}))
 
 export const leads = pgTable("leads", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -111,4 +134,6 @@ export const leads = pgTable("leads", {
   propertyId: text("property_id").references(() => properties.id, { onDelete: "set null" }),
   status: text("status").default("new"),
   createdAt: timestamp("created_at").defaultNow(),
-})
+}, (table) => ({
+  createdAtIdx: index("leads_created_at_idx").on(table.createdAt),
+}))
