@@ -1,6 +1,6 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, desc, and, gte, lte, ilike, isNull, count } from "drizzle-orm"
+import { eq, asc, desc, and, gte, lte, ilike, or, isNull, count } from "drizzle-orm"
 import PropertyCard from "@/components/PropertyCard"
 import PropertyFilter from "@/components/PropertyFilter"
 import CatalogPagination from "@/components/CatalogPagination"
@@ -13,7 +13,14 @@ import type { PropertyWithImages } from "@/lib/types"
 import { getPropertiesWithImagesBatch, getFavoritePropertyIds } from "@/lib/db-helpers"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants"
+import {
+  PROPERTY_TYPES,
+  LISTING_TYPES,
+  isSortKey,
+  escapeLikePattern,
+  parseMinBedrooms,
+  type SortKey,
+} from "@/lib/constants"
 import { SlidersHorizontal, SearchX } from "lucide-react"
 import SectionHeading from "@/components/SectionHeading"
 import Reveal from "@/components/Reveal"
@@ -28,11 +35,19 @@ interface PageProps {
     minPrice?: string
     maxPrice?: string
     minBedrooms?: string
+    q?: string
+    sort?: string
     page?: string
   }>
 }
 
 const PAGE_SIZE = 24
+
+const ORDER_BY: Record<SortKey, ReturnType<typeof desc>> = {
+  terbaru: desc(properties.createdAt),
+  termurah: asc(properties.price),
+  termahal: desc(properties.price),
+}
 
 async function getProperties(
   filters: Awaited<PageProps["searchParams"]>,
@@ -55,7 +70,25 @@ async function getProperties(
     conditions.push(lte(properties.price, filters.maxPrice))
   }
 
+  const minBedrooms = parseMinBedrooms(filters.minBedrooms)
+  if (minBedrooms !== null) {
+    conditions.push(gte(properties.bedrooms, minBedrooms))
+  }
+
+  const term = filters.q?.trim()
+  if (term) {
+    const pattern = `%${escapeLikePattern(term)}%`
+    conditions.push(
+      or(
+        ilike(properties.title, pattern),
+        ilike(properties.city, pattern),
+        ilike(properties.address, pattern),
+      )!,
+    )
+  }
+
   const page = Math.max(1, parseInt(filters.page ?? "1", 10) || 1)
+  const orderBy = ORDER_BY[isSortKey(filters.sort) ? filters.sort : "terbaru"]
 
   const [items, totalRow] = await Promise.all([
     getPropertiesWithImagesBatch(
@@ -63,7 +96,7 @@ async function getProperties(
         .select()
         .from(properties)
         .where(and(...conditions))
-        .orderBy(desc(properties.createdAt))
+        .orderBy(orderBy)
         .limit(PAGE_SIZE)
         .offset((page - 1) * PAGE_SIZE),
     ),

@@ -38,6 +38,7 @@ const sampleProperty: InferSelectModel<typeof properties> = {
   agentId: null,
   status: 'active',
   createdAt: null,
+  updatedAt: null,
   deletedAt: null,
 }
 

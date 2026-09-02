@@ -12,10 +12,11 @@ import PropertyMap from "@/components/PropertyMap"
 import PropertyGalleryClient from "@/components/PropertyGalleryClient"
 import PropertySpecs from "@/components/PropertySpecs"
 import AgentCard from "@/components/AgentCard"
+import PropertyLeadForm from "@/components/PropertyLeadForm"
 import { formatPriceFull, PROPERTY_TYPE_LABELS } from "@/lib/constants"
 import { BRAND } from "@/lib/brand"
 
-export const revalidate = 30
+export const revalidate = 300
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -237,6 +238,10 @@ export default async function PropertyDetailPage({ params }: PageProps) {
               </div>
             </>
           )}
+
+          <Separator />
+
+          <PropertyLeadForm propertyId={property.id} propertyTitle={property.title} />
         </div>
 
         <AgentCard

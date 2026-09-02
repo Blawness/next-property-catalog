@@ -11,8 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { SlidersHorizontal, X } from "lucide-react"
-import { CITIES, PROPERTY_TYPES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
+import { SlidersHorizontal, X, Search } from "lucide-react"
+import {
+  CITIES,
+  PROPERTY_TYPES,
+  PROPERTY_TYPE_LABELS,
+  LISTING_TYPE_LABELS,
+  SORT_KEYS,
+  SORT_LABELS,
+} from "@/lib/constants"
 
 export default function PropertyFilter() {
   const router = useRouter()
@@ -51,6 +58,50 @@ export default function PropertyFilter() {
       </div>
 
       <div className="space-y-3">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            const input = e.currentTarget.elements.namedItem("q") as HTMLInputElement
+            updateFilter("q", input.value.trim())
+          }}
+        >
+          <Label
+            htmlFor="q"
+            className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block"
+          >
+            Cari
+          </Label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="q"
+              name="q"
+              type="search"
+              placeholder="Judul, kota, alamat..."
+              className="h-9 pl-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary"
+              defaultValue={searchParams.get("q") ?? ""}
+              onBlur={(e) => updateFilter("q", e.target.value.trim())}
+            />
+          </div>
+        </form>
+
+        <div>
+          <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Urutkan</Label>
+          <Select
+            value={searchParams.get("sort") ?? "terbaru"}
+            onValueChange={(v) => updateFilter("sort", v === "terbaru" ? "" : v)}
+          >
+            <SelectTrigger className="h-9 text-sm rounded-xl bg-background border border-border focus:ring-2 focus:ring-primary">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_KEYS.map((k) => (
+                <SelectItem key={k} value={k}>{SORT_LABELS[k]}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         <div>
           <Label className="text-[11px] font-medium uppercase tracking-[0.16em] text-foreground/70 mb-1 block">Tipe Properti</Label>
           <Select

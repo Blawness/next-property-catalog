@@ -17,6 +17,7 @@ interface FormFields {
   buildingArea: string
   bedrooms: string
   bathrooms: string
+  agentId: string
 }
 
 type FormAction = { type: "SET_FIELD"; key: string; value: string }
@@ -35,6 +36,7 @@ const initialFields: FormFields = {
   buildingArea: "",
   bedrooms: "",
   bathrooms: "",
+  agentId: "",
 }
 
 function formReducer(state: FormFields, action: FormAction): FormFields {

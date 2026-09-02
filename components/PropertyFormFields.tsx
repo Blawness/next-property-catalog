@@ -10,6 +10,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { PROPERTY_TYPES, PROPERTY_TYPE_LABELS, LISTING_TYPE_LABELS } from "@/lib/constants"
+import type { AgentOption } from "@/hooks/useAgents"
+
+// Radix Select has no empty-string value, so "unassigned" needs a sentinel.
+const NO_AGENT = "__none__"
 
 interface PropertyFormFieldsProps {
   fields: {
@@ -26,11 +30,13 @@ interface PropertyFormFieldsProps {
     buildingArea: string
     bedrooms: string
     bathrooms: string
+    agentId?: string
   }
   setField: (key: string, value: string) => void
+  agents?: AgentOption[]
 }
 
-export default function PropertyFormFields({ fields, setField }: PropertyFormFieldsProps) {
+export default function PropertyFormFields({ fields, setField, agents = [] }: PropertyFormFieldsProps) {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-1 col-span-2">
@@ -166,6 +172,24 @@ export default function PropertyFormFields({ fields, setField }: PropertyFormFie
           value={fields.lng}
           onChange={(e) => setField("lng", e.target.value)}
         />
+      </div>
+
+      <div className="space-y-1 col-span-2">
+        <Label htmlFor="agentId">Agen Penanggung Jawab</Label>
+        <Select
+          value={fields.agentId ? fields.agentId : NO_AGENT}
+          onValueChange={(v) => setField("agentId", v === NO_AGENT ? "" : v)}
+        >
+          <SelectTrigger id="agentId">
+            <SelectValue placeholder="Belum ditentukan" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={NO_AGENT}>Belum ditentukan</SelectItem>
+            {agents.map((a) => (
+              <SelectItem key={a.id} value={a.id}>{a.fullName}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1 col-span-2">

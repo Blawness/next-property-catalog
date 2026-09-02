@@ -1,24 +1,32 @@
 import { db } from "@/db"
 import { properties } from "@/db/schema"
-import { eq, inArray, and, isNull } from "drizzle-orm"
+import { eq, and, desc, isNull, isNotNull } from "drizzle-orm"
 import SectionHeading from "@/components/SectionHeading"
 import MapView from "@/components/MapView"
 import { getPropertiesWithImagesBatch } from "@/lib/db-helpers"
 
 export const revalidate = 120
 
+// Every marker is shipped to the browser, so this page is capped rather than
+// unbounded. Previously it read the whole table twice — once to fetch all active
+// rows and filter coordinates in JS, then again by id.
+const MAP_MARKER_LIMIT = 500
+
 async function getPropertiesWithCoords() {
-  const rows = await db
-    .select()
-    .from(properties)
-    .where(and(eq(properties.status, "active"), isNull(properties.deletedAt)))
-
-  const withCoords = rows.filter((p) => p.lat && p.lng)
-
-  if (withCoords.length === 0) return []
-
   return getPropertiesWithImagesBatch(
-    db.select().from(properties).where(inArray(properties.id, withCoords.map((p) => p.id))),
+    db
+      .select()
+      .from(properties)
+      .where(
+        and(
+          eq(properties.status, "active"),
+          isNull(properties.deletedAt),
+          isNotNull(properties.lat),
+          isNotNull(properties.lng),
+        ),
+      )
+      .orderBy(desc(properties.createdAt))
+      .limit(MAP_MARKER_LIMIT),
   )
 }
 

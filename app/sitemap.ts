@@ -7,7 +7,7 @@ const BASE = process.env.NEXTAUTH_URL ?? "http://localhost:3000"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const rows = await db
-    .select({ id: properties.id, updatedAt: properties.createdAt })
+    .select({ id: properties.id, updatedAt: properties.updatedAt })
     .from(properties)
     .where(and(eq(properties.status, "active"), isNull(properties.deletedAt)))
     .orderBy(desc(properties.createdAt))

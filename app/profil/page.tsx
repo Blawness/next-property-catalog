@@ -11,6 +11,7 @@ import type { OurFileRouter } from "@/lib/uploadthing"
 import PropertyCard from "@/components/PropertyCard"
 import { useFavorites } from "@/hooks/useFavorites"
 import Reveal from "@/components/Reveal"
+import ProfileSettings from "@/components/ProfileSettings"
 import { Camera, Heart, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -106,6 +107,8 @@ export default function ProfilPage() {
           </span>
         </div>
       </div>
+
+      <ProfileSettings />
 
       <div>
         <h2 className="text-xl font-semibold mb-4">Properti Favorit</h2>

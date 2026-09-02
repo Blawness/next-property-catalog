@@ -34,7 +34,7 @@ export async function PATCH(req: NextRequest) {
 
     const updated = await db
       .update(properties)
-      .set({ status })
+      .set({ status, updatedAt: new Date() })
       .where(inArray(properties.id, ids))
       .returning({ id: properties.id })
 

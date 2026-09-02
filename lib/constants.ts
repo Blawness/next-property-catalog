@@ -69,3 +69,32 @@ export function formatPriceFull(price: string, listingType: string): string {
         : `Rp ${num.toLocaleString("id-ID")}`
   return listingType === "sewa" ? `${base}/bulan` : base
 }
+
+export const SORT_KEYS = ["terbaru", "termurah", "termahal"] as const
+
+export type SortKey = (typeof SORT_KEYS)[number]
+
+export const SORT_LABELS: Record<SortKey, string> = {
+  terbaru: "Terbaru",
+  termurah: "Harga Terendah",
+  termahal: "Harga Tertinggi",
+}
+
+export function isSortKey(v: string | undefined): v is SortKey {
+  return !!v && (SORT_KEYS as readonly string[]).includes(v)
+}
+
+// `%` and `_` are LIKE wildcards. A raw search term containing them would widen
+// the match instead of narrowing it (a lone "%" matches every row), so escape
+// them along with the backslash escape character itself.
+export function escapeLikePattern(term: string): string {
+  return term.replace(/[\\%_]/g, (c) => `\\${c}`)
+}
+
+// The bedroom filter is a "N+" selector, so only positive integers are meaningful.
+// Anything else (empty, "semua", garbage from a hand-edited URL) means "no filter".
+export function parseMinBedrooms(raw: string | undefined): number | null {
+  if (!raw) return null
+  const n = Number.parseInt(raw, 10)
+  return Number.isInteger(n) && n > 0 ? n : null
+}

@@ -1,6 +1,7 @@
 "use client"
 
 import { usePropertyForm } from "@/hooks/usePropertyForm"
+import { useAgents } from "@/hooks/useAgents"
 import PropertyFormFields from "@/components/PropertyFormFields"
 import ImageUploadSection from "@/components/ImageUploadSection"
 import { Button } from "@/components/ui/button"
@@ -12,6 +13,7 @@ import { toast } from "sonner"
 export default function CreatePropertyPage() {
   const { fields, imageUrls, setField, setImageUrls, setError, handleSubmit, loading, error } =
     usePropertyForm()
+  const { agents } = useAgents()
 
   const wrappedSubmit = async (e: React.FormEvent) => {
     await handleSubmit(e)
@@ -37,7 +39,7 @@ export default function CreatePropertyPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={wrappedSubmit} className="space-y-5">
-            <PropertyFormFields fields={fields} setField={setField} />
+            <PropertyFormFields fields={fields} setField={setField} agents={agents} />
             <ImageUploadSection imageUrls={imageUrls} setImageUrls={setImageUrls} onError={setError} />
 
             {error && <p className="text-sm text-destructive">{error}</p>}

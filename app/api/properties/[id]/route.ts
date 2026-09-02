@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { properties, propertyImages, adminActions } from "@/db/schema"
+import { properties, propertyImages, adminActions, profiles } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { rateLimit, getRateLimitKey } from "@/lib/rate-limit"
 import { z } from "zod"
 
@@ -63,6 +63,7 @@ const propertyUpdateSchema = z.object({
   buildingArea: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
   bedrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
   bathrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
+  agentId: z.string().optional(),
   imageUrls: z.array(z.string().url()).optional(),
 })
 
@@ -95,6 +96,19 @@ export async function PATCH(
 
     const { imageUrls, ...fields } = parsed.data
 
+    // An empty agentId clears the assignment; a non-empty one must name a real
+    // profile with role='agent'.
+    if (fields.agentId) {
+      const [agent] = await db
+        .select({ id: profiles.id })
+        .from(profiles)
+        .where(and(eq(profiles.id, fields.agentId), eq(profiles.role, "agent")))
+        .limit(1)
+      if (!agent) {
+        return NextResponse.json({ error: "Agen tidak valid" }, { status: 400 })
+      }
+    }
+
     const updateData: Record<string, string | number | null> = {}
     if (fields.title !== undefined) updateData.title = fields.title
     if (fields.description !== undefined) updateData.description = fields.description || null
@@ -110,9 +124,13 @@ export async function PATCH(
     if (fields.buildingArea !== undefined) updateData.buildingArea = fields.buildingArea ? parseInt(fields.buildingArea, 10) : null
     if (fields.bedrooms !== undefined) updateData.bedrooms = fields.bedrooms ? parseInt(fields.bedrooms, 10) : null
     if (fields.bathrooms !== undefined) updateData.bathrooms = fields.bathrooms ? parseInt(fields.bathrooms, 10) : null
+    if (fields.agentId !== undefined) updateData.agentId = fields.agentId || null
 
     if (Object.keys(updateData).length > 0) {
-      await db.update(properties).set(updateData).where(eq(properties.id, id))
+      await db
+        .update(properties)
+        .set({ ...updateData, updatedAt: new Date() })
+        .where(eq(properties.id, id))
     }
 
     if (imageUrls !== undefined) {
