@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import PropertyFormFields from "@/components/PropertyFormFields"
+import { useAgents } from "@/hooks/useAgents"
 import ImageManager from "@/components/ImageManager"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,6 +27,7 @@ export default function EditPropertyPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [imageUrls, setImageUrls] = useState<string[]>([])
+  const { agents } = useAgents()
 
   const [fields, setFields] = useState({
     title: "",
@@ -42,6 +44,7 @@ export default function EditPropertyPage() {
     buildingArea: "",
     bedrooms: "",
     bathrooms: "",
+    agentId: "",
   })
 
   useEffect(() => {
@@ -63,6 +66,7 @@ export default function EditPropertyPage() {
           buildingArea: data.buildingArea?.toString() ?? "",
           bedrooms: data.bedrooms?.toString() ?? "",
           bathrooms: data.bathrooms?.toString() ?? "",
+          agentId: data.agentId ?? "",
         })
         setImageUrls(data.images?.map((img: { url: string }) => img.url) ?? [])
       })
@@ -124,7 +128,7 @@ export default function EditPropertyPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
-            <PropertyFormFields fields={fields} setField={setField} />
+            <PropertyFormFields fields={fields} setField={setField} agents={agents} />
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">

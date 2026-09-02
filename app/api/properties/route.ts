@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
-import { properties, propertyImages } from "@/db/schema"
+import { properties, propertyImages, profiles } from "@/db/schema"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { PropertyStatus, PropertyType } from "@/lib/types"
@@ -33,8 +33,25 @@ const propertySchema = z.object({
   buildingArea: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
   bedrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
   bathrooms: z.string().refine((v) => v === "" || !isNaN(parseInt(v, 10)), "Harus angka").optional(),
+  agentId: z.string().optional(),
   imageUrls: z.array(z.string().url()).optional(),
 })
+
+// An admin may hand a listing to any agent, but only to a profile that really
+// carries role='agent' — otherwise the public AgentCard would show a buyer's
+// (or another admin's) contact details. Falls back to the acting admin.
+async function resolveAgentId(
+  requested: string | undefined,
+  fallback: string | undefined,
+): Promise<string | null | undefined> {
+  if (!requested) return fallback
+  const [agent] = await db
+    .select({ id: profiles.id })
+    .from(profiles)
+    .where(and(eq(profiles.id, requested), eq(profiles.role, "agent")))
+    .limit(1)
+  return agent?.id ?? null
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -144,6 +161,11 @@ export async function POST(req: NextRequest) {
 
     const { imageUrls = [], ...fields } = parsed.data
 
+    const agentId = await resolveAgentId(fields.agentId, session.user.id)
+    if (agentId === null) {
+      return NextResponse.json({ error: "Agen tidak valid" }, { status: 400 })
+    }
+
     const [property] = await db
       .insert(properties)
       .values({
@@ -160,7 +182,7 @@ export async function POST(req: NextRequest) {
         buildingArea: fields.buildingArea ? parseInt(fields.buildingArea, 10) : null,
         bedrooms: fields.bedrooms ? parseInt(fields.bedrooms, 10) : null,
         bathrooms: fields.bathrooms ? parseInt(fields.bathrooms, 10) : null,
-        agentId: session.user.id,
+        agentId,
       })
       .returning()
 
