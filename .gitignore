@@ -45,3 +45,7 @@ references/
 /public/hero.mp4
 # hero.av1.mp4 + hero.webm are the optimized outputs referenced by the hero <video>;
 # they MUST be committed so Vercel can serve them (no CDN setup required).
+
+# local analysis tooling output — keep on disk, not in git
+/.scan-report/
+/suggest-reports/
