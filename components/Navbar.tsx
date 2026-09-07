@@ -71,14 +71,14 @@ export default function Navbar() {
 
   if (pathname.startsWith("/admin")) return null
 
-  const isLinkActive = (id: string, href: string) => {
+  const isLinkActive = (id: string) => {
     if (pathname.startsWith("/admin")) return false
     if (id === "listings") return pathname.startsWith("/properti") || pathname.startsWith("/peta")
-    if (HOME_SECTIONS.includes(id) && pathname === "/" && activeSection) {
-      return activeSection === id
-    }
-    if (id === "home" && pathname === "/") return activeSection === null || activeSection === "home"
-    return pathname.startsWith(href.replace(/#.*$/, "")) && href !== "/#home"
+    // The remaining links point at homepage sections, so they can only be
+    // active on the homepage itself; "home" stands in until the observer
+    // reports a section.
+    if (pathname !== "/") return false
+    return activeSection ? activeSection === id : id === "home"
   }
 
   return (
@@ -98,7 +98,7 @@ export default function Navbar() {
           className="hidden items-center gap-7 text-[15px] font-medium lg:flex xl:gap-10 xl:text-[18px] 2xl:gap-[58px] 2xl:text-[21px]"
         >
           {NAV_LINKS.map(({ href, label, id }) => {
-            const active = isLinkActive(id, href)
+            const active = isLinkActive(id)
             return (
               <a
                 key={id}
@@ -226,7 +226,7 @@ export default function Navbar() {
               </div>
               <nav aria-label="Mobile navigation" className="flex flex-col p-2">
                 {NAV_LINKS.map(({ href, label, id }) => {
-                  const active = isLinkActive(id, href)
+                  const active = isLinkActive(id)
                   return (
                     <a
                       key={id}
