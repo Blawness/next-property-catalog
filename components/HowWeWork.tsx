@@ -70,17 +70,6 @@ export default function HowWeWork() {
                 delay={i * 110}
                 className="group relative flex w-full gap-5 lg:flex-col lg:gap-0"
               >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute -top-2 right-1 select-none font-sans text-[clamp(3.5rem,6vw,5.5rem)] leading-none font-light tracking-[-0.04em] transition-opacity duration-500 group-hover:opacity-100 lg:right-2 lg:opacity-70"
-                  style={{
-                    color: "transparent",
-                    WebkitTextStroke: "1.5px var(--gold)",
-                  }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-
                 {/* Marker rail: a vertical spine on mobile, a horizontal one across the row on desktop. */}
                 <div className="flex flex-col items-center lg:w-full lg:flex-row lg:items-center">
                   <span className="flex size-[60px] shrink-0 items-center justify-center rounded-full border border-primary/25 bg-background text-primary transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground sm:size-[66px]">
@@ -94,10 +83,22 @@ export default function HowWeWork() {
                   )}
                 </div>
 
-                <div className="pb-10 md:pb-0 lg:mt-8 lg:pb-0">
-                  <h3 className="font-sans text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold tracking-[-0.01em] text-foreground">
-                    {step.title}
-                  </h3>
+                <div className="min-w-0 pb-10 md:pb-0 lg:mt-8 lg:pb-0">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="font-sans text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold tracking-[-0.01em] text-foreground">
+                      {step.title}
+                    </h3>
+                    <span
+                      aria-hidden
+                      className="shrink-0 select-none font-sans text-[clamp(2.5rem,4vw,3.5rem)] leading-none font-light tracking-[-0.04em] opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                      style={{
+                        color: "transparent",
+                        WebkitTextStroke: "1.5px var(--gold)",
+                      }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
                   <p className="mt-3 max-w-[34ch] font-sans text-[15px] leading-relaxed text-pretty text-muted-foreground">
                     {step.description}
                   </p>
