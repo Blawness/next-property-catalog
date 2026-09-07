@@ -90,9 +90,9 @@ export default function Footer() {
                   {BRAND.contact.address}
                 </span>
               </li>
-              <li className="flex items-center gap-2.5">
+              <li className="flex min-w-0 items-center gap-2.5">
                 <Mail size={14} className="shrink-0 text-gold" />
-                <a href={`mailto:${BRAND.contact.email}`} className="hover:text-gold">
+                <a href={`mailto:${BRAND.contact.email}`} className="min-w-0 break-all hover:text-gold">
                   {BRAND.contact.email}
                 </a>
               </li>

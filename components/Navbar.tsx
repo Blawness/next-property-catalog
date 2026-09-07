@@ -95,8 +95,7 @@ export default function Navbar() {
 
         <nav
           aria-label="Primary"
-          className="hidden md:flex items-center"
-          style={{ gap: "58px", fontSize: "21px", fontWeight: 500 }}
+          className="hidden items-center gap-7 text-[15px] font-medium lg:flex xl:gap-10 xl:text-[18px] 2xl:gap-[58px] 2xl:text-[21px]"
         >
           {NAV_LINKS.map(({ href, label, id }) => {
             const active = isLinkActive(id, href)
@@ -106,7 +105,7 @@ export default function Navbar() {
                 href={href}
                 data-nav={id}
                 className={cn(
-                  "transition-colors",
+                  "whitespace-nowrap transition-colors",
                   active
                     ? "text-primary font-bold"
                     : "text-primary/45 hover:text-primary",
@@ -198,7 +197,7 @@ export default function Navbar() {
               <button
                 type="button"
                 aria-label="Buka menu navigasi"
-                className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-primary hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="lg:hidden flex h-9 w-9 items-center justify-center rounded-lg text-primary hover:bg-muted transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Menu size={20} />
               </button>

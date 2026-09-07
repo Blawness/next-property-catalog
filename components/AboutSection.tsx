@@ -19,7 +19,7 @@ export default function AboutSection({ stats = DEFAULT_STATS }: AboutSectionProp
   return (
     <section
       id="about"
-      className="relative min-h-[768px] px-[clamp(1.5rem,5vw,4.5rem)] pt-[clamp(6rem,13vw,11rem)] pb-0 grid grid-cols-1 md:[grid-template-columns:690px_1fr] md:gap-x-[60px] md:items-start overflow-hidden"
+      className="relative min-h-[768px] px-[clamp(1.5rem,5vw,4.5rem)] pt-[clamp(6rem,13vw,11rem)] pb-0 grid grid-cols-1 md:[grid-template-columns:minmax(0,690px)_1fr] md:gap-x-[60px] md:items-start overflow-hidden"
     >
       <div>
         <Reveal>
@@ -60,7 +60,7 @@ export default function AboutSection({ stats = DEFAULT_STATS }: AboutSectionProp
         />
       </Reveal>
 
-      <div className="col-span-full mt-[clamp(2rem,4vw,4rem)] flex flex-col sm:flex-row items-center justify-center gap-[clamp(2.5rem,7vw,7.5rem)] py-8">
+      <div className="col-span-full mt-[clamp(2rem,4vw,4rem)] flex flex-col flex-wrap items-center justify-center gap-x-[clamp(2rem,6vw,7.5rem)] gap-y-12 py-8 sm:flex-row">
         {stats.map((s, i) => (
           <Reveal key={s.label} delay={i * 120} className="flex flex-col items-center gap-[22px]">
             <span className="font-sans text-[clamp(3.5rem,7.5vw,7.5rem)] leading-[0.8] font-light tracking-[-0.03em] text-foreground">
