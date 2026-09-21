@@ -136,7 +136,12 @@ export const adminActions = pgTable("admin_actions", {
 export const leads = pgTable("leads", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
-  email: text("email").notNull(),
+  // Both mirror next-property-agency, which shares this database: it added
+  // `phone` and dropped NOT NULL from `email` (its lead form is phone-first).
+  // Declared here so `drizzle-kit generate` does not try to undo either —
+  // re-adding NOT NULL would fail against rows that already have no email.
+  phone: text("phone"),
+  email: text("email"),
   message: text("message").notNull(),
   propertyId: text("property_id").references(() => properties.id, { onDelete: "set null" }),
   status: text("status").default("new"),
