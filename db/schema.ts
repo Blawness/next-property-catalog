@@ -28,6 +28,13 @@ export const profiles = pgTable("profiles", {
   phone: text("phone"),
   avatarUrl: text("avatar_url"),
   role: roleEnum("role").default("buyer"),
+  // Declared but unused here. The sibling project next-property-agency shares
+  // this database and added these two nullable columns for its public agent
+  // profiles. Without them in this schema, `drizzle-kit generate` would diff
+  // them as removed and write a DROP COLUMN migration that destroys that
+  // site's agent bios. Leave them in place.
+  title: text("title"),
+  bio: text("bio"),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
